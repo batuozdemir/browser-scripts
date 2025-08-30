@@ -7,6 +7,8 @@
 // @match        https://aistudio.google.com/*
 // @grant        none
 // @run-at       document-idle
+// @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/ai-studio.js
+// @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/ai-studio.js
 // ==/UserScript==
 
 (function() {
