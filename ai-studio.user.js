@@ -18,7 +18,7 @@
     // ===================================================================
     // === HELPER: waitForElement
     // ===================================================================
-    
+    // Deneme2
     function waitForElement(selector, callback = null, timeout = 15000) {
         if (typeof callback === 'number') {
             timeout = callback;
