@@ -11,6 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/ai-studio.js
 // ==/UserScript==
 
+
 (function() {
     'use strict';
 
