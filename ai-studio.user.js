@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Advanced Settings Setter (URL-Configurable)
 // @namespace    http://tampermonkey.net/
-// @version      3.8
+// @version      3.9
 // @description  Applies advanced settings to AI Studio from URL parameters or internal defaults.
 // @author       You
 // @match        https://aistudio.google.com/*
@@ -260,22 +260,34 @@ function setupGlobalClickListener() {
 
     function setSystemPrompt(promptText) {
         return new Promise(resolve => {
-            // FIX: The selector for the system instructions button has been updated in the AI Studio UI.
+            // 1. Selector for the open button (from previous fix)
             const openButton = document.querySelector('button[data-test-system-instructions-card]');
             if (!openButton) {
-                console.error("[Tampermonkey] Failed to set system prompt: button not found");
+                console.error("[Tampermonkey] Failed to set system prompt: open button not found");
                 resolve();
                 return;
             }
             openButton.click();
+
+            // 2. Wait for the textarea to appear
             waitForElement('textarea[aria-label="System instructions"]', (textArea) => {
+                // FIX: Focus the textarea before setting its value to ensure it's interactive.
+                textArea.focus();
                 textArea.value = promptText;
                 textArea.dispatchEvent(new Event('input', { bubbles: true }));
-                // This selector for the close button appears to be unchanged for now.
-                const closeButton = document.querySelector('button[aria-label="Close system instructions"]');
-                if (closeButton) closeButton.click();
+
+                // FIX: The close button selector has changed.
+                // Old: 'button[aria-label="Close system instructions"]'
+                // New: 'button[aria-label="Close panel"]'
+                const closeButton = document.querySelector('button[aria-label="Close panel"]');
+                if (closeButton) {
+                    closeButton.click();
+                } else {
+                    console.error("[Tampermonkey] Could not find the system instructions close button.");
+                }
+
                 // Give a moment for the panel to close before resolving
-                setTimeout(resolve, 100);
+                setTimeout(resolve, 150);
             }, 5000);
         });
     }
