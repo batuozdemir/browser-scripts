@@ -260,7 +260,8 @@ function setupGlobalClickListener() {
 
     function setSystemPrompt(promptText) {
         return new Promise(resolve => {
-            const openButton = document.querySelector('button[data-test-si]');
+            // FIX: The selector for the system instructions button has been updated in the AI Studio UI.
+            const openButton = document.querySelector('button[data-test-system-instructions-card]');
             if (!openButton) {
                 console.error("[Tampermonkey] Failed to set system prompt: button not found");
                 resolve();
@@ -270,6 +271,7 @@ function setupGlobalClickListener() {
             waitForElement('textarea[aria-label="System instructions"]', (textArea) => {
                 textArea.value = promptText;
                 textArea.dispatchEvent(new Event('input', { bubbles: true }));
+                // This selector for the close button appears to be unchanged for now.
                 const closeButton = document.querySelector('button[aria-label="Close system instructions"]');
                 if (closeButton) closeButton.click();
                 // Give a moment for the panel to close before resolving
@@ -277,6 +279,7 @@ function setupGlobalClickListener() {
             }, 5000);
         });
     }
+
 
     function setFirstMessage(messageText) {
         const textArea = document.querySelector('textarea[aria-label="Type something or tab to choose an example prompt"]');
