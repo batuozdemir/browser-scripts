@@ -16,12 +16,14 @@
 
     // Configuration
     const SELECTORS = {
+        // We know 'leading-actions-wrapper' exists and contains the Tools button.
+        // We want to insert next to it.
         container: '.leading-actions-wrapper',
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
         optionThinking: '[data-test-id="bard-mode-option-thinkingwith3pro"]',
         optionFast: '[data-test-id="bard-mode-option-fast"]',
         toolsDrawer: 'toolbox-drawer',
-        sendButton: 'button[aria-label="Send message"]' // Common selector, may need adjustment
+        sendButton: 'button[aria-label="Send message"]'
     };
 
     // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
