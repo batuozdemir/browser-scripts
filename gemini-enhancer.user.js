@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.11
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
@@ -143,16 +143,32 @@
 
         // Use a MutationObserver to watch for the chat interface loading
         const observer = new MutationObserver((mutations) => {
-            const container = document.querySelector(SELECTORS.container);
+            let container = document.querySelector(SELECTORS.container);
+
+            // Fallback: If container not found, try to find the trigger button and use its parent or a nearby wrapper
+            if (!container) {
+                const trigger = document.querySelector(SELECTORS.triggerBtn);
+                if (trigger) {
+                    // Usually the buttons are in a flex container. 
+                    // We can try to grab the parent of the trigger button.
+                    container = trigger.parentElement;
+                }
+            }
+
+            // If we still can't find a place, we can try the tools drawer 
+            if (!container) {
+                const drawer = document.querySelector(SELECTORS.toolsDrawer); // This is a class name in the Config, but treated as ID or class?
+                // The config says 'toolbox-drawer' which looks like a class name but is used as value.
+                // Let's check usage. It was just a string in config.
+            }
 
             // If container exists and our button doesn't exist yet
             if (container && !document.getElementById('tm-mode-toggle-btn')) {
                 const btn = createToggleButton();
 
-                // We want to append it to the leading actions wrapper
-                // The snippets show `uploader` and `toolbox-drawer` are inside this wrapper.
-                // We append to the end of the wrapper so it sits next to Tools.
+                // Append logic
                 container.appendChild(btn);
+                console.log("Gemini Enhancer: Mode toggle button injected.");
             }
         });
 
