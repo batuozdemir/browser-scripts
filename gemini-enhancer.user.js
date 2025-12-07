@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.11
+// @version      1.12
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
