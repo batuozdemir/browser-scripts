@@ -79,7 +79,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // === UTILITIES
     // ===================================================================
 
-    function waitForElement(selector, callback, timeout = 10000) {
+    function waitForElement(selector, callback, timeout = 10000, onTimeout = null) {
         const el = document.querySelector(selector);
         if (el) { callback(el); return; }
         const observer = new MutationObserver((mutations, obs) => {
@@ -87,7 +87,10 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             if (element) { obs.disconnect(); callback(element); }
         });
         observer.observe(document.documentElement, { childList: true, subtree: true });
-        setTimeout(() => { observer.disconnect(); }, timeout);
+        setTimeout(() => { 
+            observer.disconnect(); 
+            if (onTimeout) onTimeout();
+        }, timeout);
     }
 
     const style = document.createElement('style');
@@ -197,7 +200,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
             selector.click();
 
-            waitForElement('button[id*="model-carousel-row-models"]', () => {
+            waitForElement('ms-model-carousel-row', () => {
                 // 20ms buffer for Safari painting
                 setTimeout(() => {
                     let targetBtn = null;
@@ -238,7 +241,12 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                     }, 50);
 
                 }, 20); 
-            }, 3000);
+            }, 3000, () => {
+                console.warn("[Tampermonkey] Model menu timeout");
+                const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                if (backdrop) backdrop.click();
+                resolve();
+            });
         });
     }
 
@@ -261,7 +269,12 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                     if (backdrop) backdrop.click();
                     setTimeout(resolve, 150);
                 }, 150);
-            }, 5000); // Wait up to 5 seconds
+            }, 5000, () => {
+                console.warn("[Tampermonkey] System Prompt textarea timeout");
+                const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                if (backdrop) backdrop.click();
+                resolve();
+            }); // Wait up to 5 seconds
         });
     }
 
