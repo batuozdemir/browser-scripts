@@ -138,44 +138,51 @@
     }
 
     function init() {
-        // Hook Keybinds globally (Capture phase to ensure we intercept before Gemini)
+        console.log("Gemini Enhancer: Initializing...");
+
+        // Hook Keybinds globally
         document.addEventListener('keydown', handleInputKeydown, true);
 
-        // Use a MutationObserver to watch for the chat interface loading
-        const observer = new MutationObserver((mutations) => {
-            let container = document.querySelector(SELECTORS.container);
+        // UI Injection Logic
+        const injectButton = () => {
+            const container = document.querySelector(SELECTORS.container);
 
-            // Fallback: If container not found, try to find the trigger button and use its parent or a nearby wrapper
-            if (!container) {
-                const trigger = document.querySelector(SELECTORS.triggerBtn);
-                if (trigger) {
-                    // Usually the buttons are in a flex container. 
-                    // We can try to grab the parent of the trigger button.
-                    container = trigger.parentElement;
-                }
-            }
-
-            // If we still can't find a place, we can try the tools drawer 
-            if (!container) {
-                const drawer = document.querySelector(SELECTORS.toolsDrawer); // This is a class name in the Config, but treated as ID or class?
-                // The config says 'toolbox-drawer' which looks like a class name but is used as value.
-                // Let's check usage. It was just a string in config.
-            }
-
-            // If container exists and our button doesn't exist yet
             if (container && !document.getElementById('tm-mode-toggle-btn')) {
+                console.log("Gemini Enhancer: Container found, injecting button...");
                 const btn = createToggleButton();
 
-                // Append logic
+                // Append as first child to be prominent, or last to be next to Tools
+                // The snippet shows Tools is inside. Let's append to end to sit next to it.
                 container.appendChild(btn);
-                console.log("Gemini Enhancer: Mode toggle button injected.");
+                console.log("Gemini Enhancer: Button successfully injected.");
             }
+        };
+
+        // 1. Immediate attempt
+        injectButton();
+
+        // 2. Observer for SPA changes (Model changes, Chat resets)
+        const observer = new MutationObserver((mutations) => {
+            // Check if our button was removed or if container appeared
+            injectButton();
         });
 
         observer.observe(document.body, {
             childList: true,
             subtree: true
         });
+
+        // 3. Polling fallback (common for aggressive SPAs like Gemini)
+        // Check every second for 10 seconds to ensure it catches late loads
+        let checks = 0;
+        const interval = setInterval(() => {
+            injectButton();
+            checks++;
+            if (checks > 10 && document.getElementById('tm-mode-toggle-btn')) {
+                clearInterval(interval);
+            }
+            if (checks > 60) clearInterval(interval); // Stop after 1 minute
+        }, 1000);
     }
 
     // Start the script
