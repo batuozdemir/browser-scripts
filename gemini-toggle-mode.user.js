@@ -7,11 +7,11 @@
 // @match        https://gemini.google.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
-// @downloadURL  https://raw.githubusercontent.com/bozdemir14/aistudio-userscript/refs/heads/main/gemini-toggle-mode.user.js
-// @updateURL    https://raw.githubusercontent.com/bozdemir14/aistudio-userscript/refs/heads/main/gemini-toggle-mode.user.js
+// @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-toggle-mode.user.js
+// @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-toggle-mode.user.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // Configuration: The IDs provided in your snippets
@@ -103,11 +103,11 @@
         // Use a MutationObserver to watch for the chat interface loading
         const observer = new MutationObserver((mutations) => {
             const container = document.querySelector(SELECTORS.container);
-            
+
             // If container exists and our button doesn't exist yet
             if (container && !document.getElementById('tm-mode-toggle-btn')) {
                 const btn = createToggleButton();
-                
+
                 // We want to append it to the leading actions wrapper
                 // The snippets show `uploader` and `toolbox-drawer` are inside this wrapper.
                 // We append to the end of the wrapper so it sits next to Tools.

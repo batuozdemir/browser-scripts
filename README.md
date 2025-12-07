@@ -6,7 +6,7 @@ This is intended for use with Tampermonkey, Greasemonkey, or other userscript ma
 
 ## Key features
 
-- Automatically set model (e.g. `gemini-2.5-pro`).
+- Automatically set model (e.g. `gemini-3-pro`).
 - Configure thinking budget (automatic/manual toggle + slider).
 - Set temperature slider value.
 - Toggle grounding (Search-as-a-tool) on/off.

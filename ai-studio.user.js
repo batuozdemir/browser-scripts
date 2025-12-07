@@ -1,18 +1,18 @@
 // ==UserScript==
 // @name         AI Studio Advanced Settings (Zero-Flash & Flexible Models)
 // @namespace    http://tampermonkey.net/
-// @version      7.5
+// @version      7.6
 // @description  Applies settings silently. Supports flexible model versioning (Gemini 3 priority).
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
 // @grant        none
 // @inject-into  content
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/bozdemir14/aistudio-userscript/refs/heads/main/ai-studio.user.js
-// @updateURL    https://raw.githubusercontent.com/bozdemir14/aistudio-userscript/refs/heads/main/ai-studio.user.js
+// @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/ai-studio.user.js
+// @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/ai-studio.user.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     if (window.self !== window.top) return;
@@ -20,12 +20,12 @@
     // ===================================================================
     // === CONFIGURATION
     // ===================================================================
-    
+
     const MODEL_PREFS = {
-        PRO:   ['gemini-3-pro', 'gemini-3-pro-latest', 'gemini-3-pro-preview', 'gemini-2.5-pro'],
+        PRO: ['gemini-3-pro', 'gemini-3-pro-latest', 'gemini-3-pro-preview', 'gemini-2.5-pro'],
         // Updated order: 3 > Flash Latest > 2.5
         FLASH: ['gemini-3-flash-latest', 'gemini-3-flash', 'gemini-3-flash-preview', 'gemini-flash-latest', 'gemini-2.5-flash'],
-        NANO:  ['gemini-3-flash-image', 'gemini-3-flash-image-preview', 'gemini-2.5-flash-image']
+        NANO: ['gemini-3-flash-image', 'gemini-3-flash-image-preview', 'gemini-2.5-flash-image']
     };
 
     const DEFAULT_SETTINGS = {
@@ -87,8 +87,8 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             if (element) { obs.disconnect(); callback(element); }
         });
         observer.observe(document.documentElement, { childList: true, subtree: true });
-        setTimeout(() => { 
-            observer.disconnect(); 
+        setTimeout(() => {
+            observer.disconnect();
             if (onTimeout) onTimeout();
         }, timeout);
     }
@@ -144,7 +144,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     async function runMainLogic() {
         if (isBusy) return;
-        
+
         // Only run main logic automatically if we are in a New Chat context
         // or if specific params are present.
         if (!location.href.includes('/new_chat') && !location.search.includes('model=')) {
@@ -164,7 +164,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
         };
 
         toggleAutomationMode(true);
-        
+
         try {
             await selectBestModel(settings.modelList);
             setThinkingBudget(settings.budget);
@@ -240,7 +240,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                         setTimeout(resolve, 150);
                     }, 50);
 
-                }, 20); 
+                }, 20);
             }, 3000, () => {
                 console.warn("[Tampermonkey] Model menu timeout");
                 const backdrop = document.querySelector('.cdk-overlay-backdrop');
@@ -369,7 +369,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             if (modelSelector && !modelSelector.parentNode.querySelector('.model-switch-buttons')) {
                 const div = document.createElement('div');
                 div.className = 'model-switch-buttons as-btn-group';
-                
+
                 div.appendChild(createBtn('Pro', async () => {
                     toggleAutomationMode(true); await selectBestModel(MODEL_PREFS.PRO); toggleAutomationMode(false); focusMainInput();
                 }));
@@ -390,7 +390,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                 if (container && !container.nextElementSibling?.classList.contains('thinking-level-buttons')) {
                     const div = document.createElement('div');
                     div.className = 'thinking-level-buttons as-btn-group';
-                    div.style.marginLeft = '16px'; 
+                    div.style.marginLeft = '16px';
                     div.appendChild(createBtn('High', () => setThinkingLevel('High')));
                     div.appendChild(createBtn('Low', () => setThinkingLevel('Low')));
                     container.parentNode.insertBefore(div, container.nextSibling);
@@ -404,7 +404,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     function setupGlobalListeners() {
         document.body.addEventListener('click', (e) => {
             // Manual Focus handling
-            if (e.target.closest('[data-test-id="searchAsAToolTooltip"] button') || 
+            if (e.target.closest('[data-test-id="searchAsAToolTooltip"] button') ||
                 e.target.closest('mat-slide-toggle[data-test-toggle="manual-budget"]')) {
                 focusMainInput();
             }
@@ -418,10 +418,10 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // ===================================================================
     // === INIT
     // ===================================================================
-    
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => { 
-            setupGlobalListeners(); 
+        document.addEventListener('DOMContentLoaded', () => {
+            setupGlobalListeners();
             startWatchdog();
             // Run logic once in case we landed directly on /new_chat
             runMainLogic();
