@@ -6,19 +6,19 @@ This is intended for use with Tampermonkey, Greasemonkey, or other userscript ma
 
 ## Key features
 
-- Automatically set model (e.g. `gemini-3-pro`).
-- Configure thinking budget (automatic/manual toggle + slider).
-- Set temperature slider value.
-- Toggle grounding (Search-as-a-tool) on/off.
-- Set the system prompt (system instructions) programmatically.
-- Optionally paste a YouTube URL and run a summarization prompt.
-- Optionally set the first user message in the chat input and submit it.
-- Listens for UI interactions and keeps convenient defaults (e.g. resets temperature when switching models or starting new chat).
+- **AI Studio:** Automatically set model (e.g. `gemini-3-pro`).
+- **AI Studio:** Configure thinking budget (automatic/manual toggle + slider).
+- **AI Studio:** Set temperature slider value.
+- **AI Studio:** Toggle grounding (Search-as-a-tool) on/off.
+- **AI Studio:** Set the system prompt (system instructions) programmatically.
+- **Gemini:** Toggle between "Thinking" and "Fast" models with one click.
+- **Gemini:** Use `Cmd+Enter` to submit and `Enter` to create a new line in the chat.
+- Listens for UI interactions and keeps convenient defaults.
 
 ## Installation
 
 1. Install a userscript manager in your browser (Tampermonkey is recommended).
-2. Create a new script and paste the contents of `ai-studio.user.js`, or install directly from the script's `downloadURL` if hosted.
+2. Create a new script and paste the contents of `ai-studio.user.js` or `gemini-enhancer.user.js` (depending on which tool you use), or install directly from the script's `downloadURL` if hosted.
 3. Enable the script and navigate to https://aistudio.google.com/.
 
 Note: The script runs at `document-idle` and targets pages under `https://aistudio.google.com/*`.

@@ -1,29 +1,67 @@
 // ==UserScript==
-// @name         Gemini Mode Toggle (Thinking/Fast)
+// @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Adds a one-click button to toggle between "Thinking with 3 Pro" and "Fast" modes in Google Gemini.
+// @version      1.1
+// @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
-// @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-toggle-mode.user.js
-// @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-toggle-mode.user.js
+// @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-enhancer.user.js
+// @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-enhancer.user.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // Configuration: The IDs provided in your snippets
+    // Configuration
     const SELECTORS = {
         container: '.leading-actions-wrapper',
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
         optionThinking: '[data-test-id="bard-mode-option-thinkingwith3pro"]',
         optionFast: '[data-test-id="bard-mode-option-fast"]',
-        toolsDrawer: 'toolbox-drawer'
+        toolsDrawer: 'toolbox-drawer',
+        sendButton: 'button[aria-label="Send message"]' // Common selector, may need adjustment
     };
 
-    // SVG Icons for the button (Brain for Thinking, Lightning for Fast)
+    // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
+    function handleInputKeydown(e) {
+        // Ensure we are in the chat input (contenteditable)
+        // Gemini uses a generic contenteditable div
+        if (!e.target.isContentEditable) return;
+
+        // CMD+ENTER (or CTRL+ENTER) -> Submit
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const sendBtn = document.querySelector(SELECTORS.sendButton) ||
+                document.querySelector('button[aria-label="Send"]');
+
+            if (sendBtn) {
+                if (!sendBtn.disabled) {
+                    sendBtn.click();
+                }
+            } else {
+                console.warn("Gemini Enhancer: Send button not found. Selector might need update.");
+            }
+            return;
+        }
+
+        // ENTER (No Modifiers) -> New Line
+        if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Standard way to insert text in contenteditable
+            // Note: execCommand is deprecated but still the most reliable cross-browser way for simple inserts
+            // unless accessing internal component APIs.
+            document.execCommand('insertText', false, '\n');
+            return;
+        }
+    }
+
+    // --- Feature 2: Mode Toggle Button ---
     const ICON_SVG = `
     <svg height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
         <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33-14-56.5-41.5T360-344v-28h80v28q0 17 11.5 28.5T480-304q17 0 28.5-11.5T520-344v-28h80v28q0 57-35.5 98.5T480-202v40h-40Z"/>
@@ -100,6 +138,9 @@
     }
 
     function init() {
+        // Hook Keybinds globally (Capture phase to ensure we intercept before Gemini)
+        document.addEventListener('keydown', handleInputKeydown, true);
+
         // Use a MutationObserver to watch for the chat interface loading
         const observer = new MutationObserver((mutations) => {
             const container = document.querySelector(SELECTORS.container);
