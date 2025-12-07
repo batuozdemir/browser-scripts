@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.13
+// @version      1.17
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
@@ -64,45 +64,11 @@
     }
 
     // --- Feature 2: Mode Toggle Button ---
-    const ICON_SVG = `
-    <svg height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
-        <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33-14-56.5-41.5T360-344v-28h80v28q0 17 11.5 28.5T480-304q17 0 28.5-11.5T520-344v-28h80v28q0 57-35.5 98.5T480-202v40h-40Z"/>
-    </svg>`;
+    // SVG Icon is now created via DOM methods to satisfy Trusted Types
 
-    // Inject custom styles to ensure visibility
-    const style = document.createElement('style');
-    style.textContent = `
-        .gemini-enhancer-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 48px; /* Match standard toolbar height */
-            padding: 0 12px;
-            border-radius: 24px;
-            color: var(--gem-sys-color-on-surface, #444746);
-            cursor: pointer;
-            background: transparent;
-            border: 1px solid transparent;
-            font-family: Google Sans, Roboto, sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            margin-left: 8px;
-            transition: background 0.2s;
-        }
-        .gemini-enhancer-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        /* Dark mode adjustment (heuristic) */
-        @media (prefers-color-scheme: dark) {
-            .gemini-enhancer-btn {
-                color: #e3e3e3;
-            }
-            .gemini-enhancer-btn:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-        }
-    `;
-    document.head.appendChild(style);
+
+    // Style injection moved to init for centralized management
+
 
     function createToggleButton() {
         const btn = document.createElement('button');
@@ -110,13 +76,31 @@
         btn.id = "tm-mode-toggle-btn";
         btn.type = "button"; // Prevent form submission
 
-        // Simple inner HTML
-        btn.innerHTML = `
-            <span style="display: flex; align-items: center; margin-right: 6px;">
-                ${ICON_SVG}
-            </span>
-            <span>Mode</span>
-        `;
+        // Create Icon Wrapper
+        const iconSpan = document.createElement('span');
+        iconSpan.style.display = 'flex';
+        iconSpan.style.alignItems = 'center';
+        iconSpan.style.marginRight = '6px';
+
+        // Create SVG using DOM methods to avoid innerHTML (TrustedHTML policy)
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("height", "24");
+        svg.setAttribute("viewBox", "0 -960 960 960");
+        svg.setAttribute("width", "24");
+        svg.setAttribute("fill", "currentColor");
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33-14-56.5-41.5T360-344v-28h80v28q0 17 11.5 28.5T480-304q17 0 28.5-11.5T520-344v-28h80v28q0 57-35.5 98.5T480-202v40h-40Z");
+
+        svg.appendChild(path);
+        iconSpan.appendChild(svg);
+
+        // Create Text
+        const textSpan = document.createElement('span');
+        textSpan.textContent = "Mode";
+
+        btn.appendChild(iconSpan);
+        btn.appendChild(textSpan);
 
         btn.onclick = (e) => {
             e.preventDefault();
@@ -175,34 +159,108 @@
         document.addEventListener('keydown', handleInputKeydown, true);
 
         // UI Injection Logic
+        const validPaths = [
+            '/app',
+            '/u/',
+            '/chat'
+        ];
+
+        // Simple check to ensure we are on a relevant page
+        if (!validPaths.some(path => window.location.pathname.includes(path)) && window.location.pathname !== '/') {
+            // console.log("Gemini Enhancer: Not on a chat page?", window.location.pathname);
+        }
+
+        const findContainer = () => {
+            // Attempt 1: The specific wrapper we used before
+            let c = document.querySelector('.leading-actions-wrapper');
+            if (c) return c;
+
+            // Attempt 2: "Tools" button parent (the drawer toggle)
+            const toolsBtn = document.querySelector('button[aria-label="Extensions"]') ||
+                document.querySelector('button[aria-label="Upload image"]') ||
+                document.querySelector('[data-test-id="bard-mode-menu-button"]')?.parentElement; // The mode toggle itself if it exists (we want to be near it)
+
+            if (toolsBtn) {
+                // Usually the button is in a flex container. We want that container.
+                return toolsBtn.parentElement;
+            }
+
+            // Attempt 3: Look for the input area's top toolbar (where the mode switcher usually lives in new UI)
+            // This is harder without a specific class. 
+            // Only return if we are confident.
+            return null;
+        };
+
         const injectButton = () => {
-            const container = document.querySelector(SELECTORS.container);
+            // Check if button already exists
+            if (document.getElementById('tm-mode-toggle-btn')) return;
 
-            if (container && !document.getElementById('tm-mode-toggle-btn')) {
-                console.log("Gemini Enhancer: Container found, injecting button...");
-                const btn = createToggleButton();
+            const container = findContainer();
 
-                if (container) {
-                    // Check if container has display:none or hidden
-                    const style = window.getComputedStyle(container);
-                    if (style.display === 'none' || style.visibility === 'hidden') {
-                        console.warn("Gemini Enhancer: Target container is hidden!", container);
-                    }
+            if (container) {
+                console.log("Gemini Enhancer: Container found:", container);
+
+                // Debug: Check visibility
+                const style = window.getComputedStyle(container);
+                if (style.display === 'none' || style.visibility === 'hidden') {
+                    console.warn("Gemini Enhancer: Container is hidden, searching for better candidate...");
+                    return; // Don't inject into hidden container
                 }
 
-                // Append as first child to be prominent, or last to be next to Tools
-                // The snippet shows Tools is inside. Let's append to end to sit next to it.
+                const btn = createToggleButton();
+
+                // Append to end to be on the right side of Tools
                 container.appendChild(btn);
-                console.log("Gemini Enhancer: Button successfully injected into:", container);
+                console.log("Gemini Enhancer: Button injected.");
+            } else {
+                // Rate limited logging
+                if (Math.random() < 0.05) console.log("Gemini Enhancer: Container not found yet.");
             }
         };
 
-        // 1. Immediate attempt
+        // Create styles with better visibility
+        const style = document.createElement('style');
+        style.textContent = `
+            .gemini-enhancer-btn {
+                display: flex;
+                align-items: center;
+                height: 40px; /* Match standard pill height */
+                padding: 0 16px; 
+                margin-left: 8px; /* Spacing from Tools */
+                border-radius: 20px;
+                border: 1px solid transparent; 
+                background-color: transparent;
+                /* Force standard dark mode colors if variables fail */
+                color: #e3e3e3; 
+                fill: #e3e3e3; /* For SVG */
+                
+                font-family: 'Google Sans', Roboto, sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            .gemini-enhancer-btn:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            /* Light mode override only if explicitly detected */
+            @media (prefers-color-scheme: light) {
+                 .gemini-enhancer-btn {
+                    color: #444746;
+                    fill: #444746;
+                 }
+                 .gemini-enhancer-btn:hover {
+                    background-color: rgba(0, 0, 0, 0.05);
+                 }
+            }
+        `;
+        document.head.appendChild(style);
         injectButton();
 
-        // 2. Observer for SPA changes (Model changes, Chat resets)
+        // Run on mutations
         const observer = new MutationObserver((mutations) => {
-            // Check if our button was removed or if container appeared
+            // throttle?
             injectButton();
         });
 
@@ -211,17 +269,9 @@
             subtree: true
         });
 
-        // 3. Polling fallback (common for aggressive SPAs like Gemini)
-        // Check every second for 10 seconds to ensure it catches late loads
-        let checks = 0;
-        const interval = setInterval(() => {
-            injectButton();
-            checks++;
-            if (checks > 10 && document.getElementById('tm-mode-toggle-btn')) {
-                clearInterval(interval);
-            }
-            if (checks > 60) clearInterval(interval); // Stop after 1 minute
-        }, 1000);
+        // Periodic check for slower loads
+        const interval = setInterval(injectButton, 2000);
+        setTimeout(() => clearInterval(interval), 30000); // Stop after 30s
     }
 
     // Start the script
