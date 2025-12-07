@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Advanced Settings (Zero-Flash & Flexible Models)
 // @namespace    http://tampermonkey.net/
-// @version      7.6
+// @version      7.7
 // @description  Applies settings silently. Supports flexible model versioning (Gemini 3 priority).
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -252,29 +252,30 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     function setSystemPrompt(promptText) {
         return new Promise(resolve => {
-            const openBtn = document.querySelector('button[data-test-system-instructions-card]');
-            if (!openBtn) { resolve(); return; }
-
-            // The old check for content before opening the panel was brittle.
-            // A better approach is to open it, check the content, and then decide.
-            openBtn.click();
-            waitForElement('textarea[aria-label="System instructions"]', (textArea) => {
-                if (textArea.value !== promptText) {
-                    textArea.value = promptText;
-                    textArea.dispatchEvent(new Event('input', { bubbles: true }));
-                    textArea.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-                setTimeout(() => {
+            // Wait for the button to appear first (up to 5s)
+            waitForElement('button[data-test-system-instructions-card]', (openBtn) => {
+                openBtn.click();
+                waitForElement('textarea[aria-label="System instructions"]', (textArea) => {
+                    if (textArea.value !== promptText) {
+                        textArea.value = promptText;
+                        textArea.dispatchEvent(new Event('input', { bubbles: true }));
+                        textArea.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    setTimeout(() => {
+                        const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                        if (backdrop) backdrop.click();
+                        setTimeout(resolve, 150);
+                    }, 150);
+                }, 5000, () => {
+                    console.warn("[Tampermonkey] System Prompt textarea timeout");
                     const backdrop = document.querySelector('.cdk-overlay-backdrop');
                     if (backdrop) backdrop.click();
-                    setTimeout(resolve, 150);
-                }, 150);
+                    resolve();
+                });
             }, 5000, () => {
-                console.warn("[Tampermonkey] System Prompt textarea timeout");
-                const backdrop = document.querySelector('.cdk-overlay-backdrop');
-                if (backdrop) backdrop.click();
+                console.warn("[Tampermonkey] System Prompt button not found");
                 resolve();
-            }); // Wait up to 5 seconds
+            });
         });
     }
 
