@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Studio Advanced Settings (Zero-Flash & Flexible Models)
 // @namespace    http://tampermonkey.net/
-// @version      7.7
-// @description  Applies settings silently. Supports flexible model versioning (Gemini 3 priority).
+// @version      8.0
+// @description  Applies settings silently. Supports flexible model versioning (Gemini 3 priority). Refactored for maintainability.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
 // @grant        none
@@ -18,7 +18,7 @@
     if (window.self !== window.top) return;
 
     // ===================================================================
-    // === CONFIGURATION
+    // === CONFIGURATION & CONSTANTS
     // ===================================================================
 
     const MODEL_PREFS = {
@@ -26,6 +26,46 @@
         // Updated order: 3 > Flash Latest > 2.5
         FLASH: ['gemini-3-flash-latest', 'gemini-3-flash', 'gemini-3-flash-preview', 'gemini-flash-latest', 'gemini-2.5-flash'],
         NANO: ['gemini-3-flash-image', 'gemini-3-flash-image-preview', 'gemini-2.5-flash-image']
+    };
+
+    const SELECTORS = {
+        // Main Inputs
+        MAIN_PROMPT_AREA: 'textarea[aria-label="Type something or tab to choose an example prompt"], textarea[aria-label="Start typing a prompt"]',
+        RUN_BUTTON: 'button[aria-label="Run"][type="submit"]',
+
+        // Model Selection
+        MODEL_SELECTOR_CARD: '.model-selector-card',
+        MODEL_SELECTOR_SUBTITLE: '.subtitle',
+        MODEL_CAROUSEL_ROW: 'ms-model-carousel-row',
+        MODEL_CAROUSEL_BUTTONS: 'ms-model-carousel-row button',
+        MODEL_CAROUSEL_BTN_ID_PREFIX: 'model-carousel-row-models/',
+
+        // System Instructions
+        SYSTEM_INSTRUCTIONS_BTN: 'button[data-test-system-instructions-card]',
+        SYSTEM_INSTRUCTIONS_TEXTAREA: 'textarea[aria-label="System instructions"]',
+
+        // Thinking & Budget
+        THINKING_TOGGLE: 'mat-slide-toggle[data-test-toggle="enable-thinking"] button',
+        MANUAL_BUDGET_TOGGLE: 'mat-slide-toggle[data-test-toggle="manual-budget"] button',
+        MANUAL_BUDGET_TOGGLE_WRAPPER: 'mat-slide-toggle[data-test-toggle="manual-budget"]',
+        BUDGET_SLIDER: '[data-test-id="user-setting-budget-animation-wrapper"] input[type="range"]',
+        THINKING_LEVEL_SELECT: 'mat-select[aria-label="Thinking Level"]',
+        THINKING_LEVEL_OPTIONS: '.cdk-overlay-pane mat-option',
+        ALL_MAT_OPTIONS: 'mat-option',
+
+        // Grounding
+        GROUNDING_TOGGLE: '[data-test-id="searchAsAToolTooltip"] button[role="switch"]',
+        GROUNDING_WRAPPER: '[data-test-id="searchAsAToolTooltip"] button',
+
+        // UI Injection / Settings Panel
+        SETTINGS_MODEL_SELECTOR: '.settings-item.settings-model-selector',
+        SETTINGS_HEADER: 'h3.item-description-title',
+        SETTINGS_ITEM_CONTAINER: '.settings-item',
+
+        // Overlays & Misc
+        OVERLAY_BACKDROP: '.cdk-overlay-backdrop',
+        YOUTUBE_CHUNK: 'ms-youtube-chunk',
+        NEW_CHAT_LINK: 'a[href="/prompts/new_chat"]'
     };
 
     const DEFAULT_SETTINGS = {
@@ -79,6 +119,17 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // === UTILITIES
     // ===================================================================
 
+    /**
+     * Standard debounce function to limit rate of execution.
+     */
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
     function waitForElement(selector, callback, timeout = 10000, onTimeout = null) {
         const el = document.querySelector(selector);
         if (el) { callback(el); return; }
@@ -128,7 +179,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     function focusMainInput() {
         setTimeout(() => {
-            const el = document.querySelector('textarea[aria-label="Type something or tab to choose an example prompt"], textarea[aria-label="Start typing a prompt"]');
+            const el = document.querySelector(SELECTORS.MAIN_PROMPT_AREA);
             if (el) {
                 el.focus();
                 const val = el.value;
@@ -189,10 +240,10 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     function selectBestModel(candidateList) {
         return new Promise(resolve => {
-            const selector = document.querySelector('.model-selector-card');
+            const selector = document.querySelector(SELECTORS.MODEL_SELECTOR_CARD);
             if (!selector) { resolve(); return; }
 
-            const currentSubtitle = selector.querySelector('.subtitle')?.textContent?.trim();
+            const currentSubtitle = selector.querySelector(SELECTORS.MODEL_SELECTOR_SUBTITLE)?.textContent?.trim();
             if (currentSubtitle && candidateList.some(m => currentSubtitle.includes(m))) {
                 resolve();
                 return;
@@ -200,14 +251,14 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
             selector.click();
 
-            waitForElement('ms-model-carousel-row', () => {
+            waitForElement(SELECTORS.MODEL_CAROUSEL_ROW, () => {
                 // 20ms buffer for Safari painting
                 setTimeout(() => {
                     let targetBtn = null;
 
                     // Strategy A: Exact ID Match
                     for (const modelId of candidateList) {
-                        targetBtn = document.getElementById(`model-carousel-row-models/${modelId}`);
+                        targetBtn = document.getElementById(`${SELECTORS.MODEL_CAROUSEL_BTN_ID_PREFIX}${modelId}`);
                         if (targetBtn) {
                             console.log(`[Tampermonkey] Found via ID: ${modelId}`);
                             break;
@@ -216,7 +267,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
                     // Strategy B: Fallback text scan
                     if (!targetBtn) {
-                        const allButtons = Array.from(document.querySelectorAll('ms-model-carousel-row button'));
+                        const allButtons = Array.from(document.querySelectorAll(SELECTORS.MODEL_CAROUSEL_BUTTONS));
                         for (const modelId of candidateList) {
                             targetBtn = allButtons.find(b => b.textContent.includes(modelId));
                             if (targetBtn) {
@@ -230,12 +281,12 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                         targetBtn.click();
                     } else {
                         console.warn("[Tampermonkey] No model found from list:", candidateList);
-                        const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                        const backdrop = document.querySelector(SELECTORS.OVERLAY_BACKDROP);
                         if (backdrop) backdrop.click();
                     }
 
                     setTimeout(() => {
-                        const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                        const backdrop = document.querySelector(SELECTORS.OVERLAY_BACKDROP);
                         if (backdrop) backdrop.click();
                         setTimeout(resolve, 150);
                     }, 50);
@@ -243,7 +294,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                 }, 20);
             }, 3000, () => {
                 console.warn("[Tampermonkey] Model menu timeout");
-                const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                const backdrop = document.querySelector(SELECTORS.OVERLAY_BACKDROP);
                 if (backdrop) backdrop.click();
                 resolve();
             });
@@ -253,22 +304,22 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     function setSystemPrompt(promptText) {
         return new Promise(resolve => {
             // Wait for the button to appear first (up to 5s)
-            waitForElement('button[data-test-system-instructions-card]', (openBtn) => {
+            waitForElement(SELECTORS.SYSTEM_INSTRUCTIONS_BTN, (openBtn) => {
                 openBtn.click();
-                waitForElement('textarea[aria-label="System instructions"]', (textArea) => {
+                waitForElement(SELECTORS.SYSTEM_INSTRUCTIONS_TEXTAREA, (textArea) => {
                     if (textArea.value !== promptText) {
                         textArea.value = promptText;
                         textArea.dispatchEvent(new Event('input', { bubbles: true }));
                         textArea.dispatchEvent(new Event('change', { bubbles: true }));
                     }
                     setTimeout(() => {
-                        const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                        const backdrop = document.querySelector(SELECTORS.OVERLAY_BACKDROP);
                         if (backdrop) backdrop.click();
                         setTimeout(resolve, 150);
                     }, 150);
                 }, 5000, () => {
                     console.warn("[Tampermonkey] System Prompt textarea timeout");
-                    const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                    const backdrop = document.querySelector(SELECTORS.OVERLAY_BACKDROP);
                     if (backdrop) backdrop.click();
                     resolve();
                 });
@@ -280,18 +331,18 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     }
 
     function setThinkingBudget(val) {
-        const thinkingToggle = document.querySelector('mat-slide-toggle[data-test-toggle="enable-thinking"] button');
+        const thinkingToggle = document.querySelector(SELECTORS.THINKING_TOGGLE);
         if (thinkingToggle && thinkingToggle.getAttribute('aria-checked') === 'false') {
             thinkingToggle.click();
         }
-        const manualToggle = document.querySelector('mat-slide-toggle[data-test-toggle="manual-budget"] button');
+        const manualToggle = document.querySelector(SELECTORS.MANUAL_BUDGET_TOGGLE);
         if (manualToggle) {
             const isManual = manualToggle.getAttribute('aria-checked') === 'true';
             if (val === -1 && isManual) manualToggle.click();
             else if (val >= 0 && !isManual) manualToggle.click();
         }
         if (val >= 0) {
-            const slider = document.querySelector('[data-test-id="user-setting-budget-animation-wrapper"] input[type="range"]');
+            const slider = document.querySelector(SELECTORS.BUDGET_SLIDER);
             if (slider) {
                 slider.value = val;
                 slider.dispatchEvent(new Event('input', { bubbles: true }));
@@ -301,14 +352,14 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     }
 
     async function setThinkingLevel(level) {
-        const select = document.querySelector('mat-select[aria-label="Thinking Level"]');
+        const select = document.querySelector(SELECTORS.THINKING_LEVEL_SELECT);
         if (!select) return;
         if (select.textContent.includes(level)) { focusMainInput(); return; }
 
         toggleAutomationMode(true);
         select.click();
-        waitForElement('.cdk-overlay-pane mat-option', () => {
-            const options = document.querySelectorAll('mat-option');
+        waitForElement(SELECTORS.THINKING_LEVEL_OPTIONS, () => {
+            const options = document.querySelectorAll(SELECTORS.ALL_MAT_OPTIONS);
             for (const opt of options) {
                 if (opt.textContent.includes(level)) { opt.click(); break; }
             }
@@ -318,23 +369,23 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     }
 
     function setGrounding(desiredState) {
-        const toggle = document.querySelector('[data-test-id="searchAsAToolTooltip"] button[role="switch"]');
+        const toggle = document.querySelector(SELECTORS.GROUNDING_TOGGLE);
         if (toggle && (toggle.getAttribute('aria-checked') === 'true') !== desiredState) {
             toggle.click();
         }
     }
 
     function attachYouTubeVideo(url, prompt) {
-        const area = document.querySelector('textarea[aria-label="Type something or tab to choose an example prompt"]');
+        const area = document.querySelector(SELECTORS.MAIN_PROMPT_AREA);
         if (!area) return;
         area.focus();
         area.value = url;
         area.dispatchEvent(new Event('input', { bubbles: true }));
-        waitForElement('ms-youtube-chunk', () => {
+        waitForElement(SELECTORS.YOUTUBE_CHUNK, () => {
             area.value = prompt;
             area.dispatchEvent(new Event('input', { bubbles: true }));
             setTimeout(() => {
-                const run = document.querySelector('button[aria-label="Run"][type="submit"]');
+                const run = document.querySelector(SELECTORS.RUN_BUTTON);
                 if (run) run.click();
             }, 500);
         });
@@ -354,7 +405,8 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     // Persistent Observer to handle SPA navigation and UI updates
     function startWatchdog() {
-        const observer = new MutationObserver(() => {
+        // Debounce the observer callback to improve performance
+        const handleMutation = debounce(() => {
             // 1. Check for URL Changes
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
@@ -366,7 +418,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             }
 
             // 2. Inject Model Buttons (Persistent)
-            const modelSelector = document.querySelector('.settings-item.settings-model-selector');
+            const modelSelector = document.querySelector(SELECTORS.SETTINGS_MODEL_SELECTOR);
             if (modelSelector && !modelSelector.parentNode.querySelector('.model-switch-buttons')) {
                 const div = document.createElement('div');
                 div.className = 'model-switch-buttons as-btn-group';
@@ -384,10 +436,10 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             }
 
             // 3. Inject Thinking Buttons (Persistent)
-            const headers = Array.from(document.querySelectorAll('h3.item-description-title'));
+            const headers = Array.from(document.querySelectorAll(SELECTORS.SETTINGS_HEADER));
             const thinkingHeader = headers.find(h => h.textContent.trim() === 'Thinking level');
             if (thinkingHeader) {
-                const container = thinkingHeader.closest('.settings-item');
+                const container = thinkingHeader.closest(SELECTORS.SETTINGS_ITEM_CONTAINER);
                 if (container && !container.nextElementSibling?.classList.contains('thinking-level-buttons')) {
                     const div = document.createElement('div');
                     div.className = 'thinking-level-buttons as-btn-group';
@@ -397,20 +449,21 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                     container.parentNode.insertBefore(div, container.nextSibling);
                 }
             }
-        });
+        }, 200); // 200ms debounce
 
+        const observer = new MutationObserver(handleMutation);
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
     function setupGlobalListeners() {
         document.body.addEventListener('click', (e) => {
             // Manual Focus handling
-            if (e.target.closest('[data-test-id="searchAsAToolTooltip"] button') ||
-                e.target.closest('mat-slide-toggle[data-test-toggle="manual-budget"]')) {
+            if (e.target.closest(SELECTORS.GROUNDING_WRAPPER) ||
+                e.target.closest(SELECTORS.MANUAL_BUDGET_TOGGLE_WRAPPER)) {
                 focusMainInput();
             }
             // Fallback for "New Chat" click if URL observer misses it
-            if (e.target.closest('a[href="/prompts/new_chat"]')) {
+            if (e.target.closest(SELECTORS.NEW_CHAT_LINK)) {
                 setTimeout(runMainLogic, 500);
             }
         }, true);
