@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.12
+// @version      1.13
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
@@ -69,29 +69,58 @@
         <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33-14-56.5-41.5T360-344v-28h80v28q0 17 11.5 28.5T480-304q17 0 28.5-11.5T520-344v-28h80v28q0 57-35.5 98.5T480-202v40h-40Z"/>
     </svg>`;
 
-    function createToggleButton() {
-        // Create the button structure mimicking Gemini's native buttons
-        const btn = document.createElement('button');
-        btn.className = "mdc-button mat-mdc-button-base toolbox-drawer-button toolbox-drawer-button-with-label mat-mdc-button mat-unthemed";
-        btn.style.marginLeft = "8px"; // Add a little spacing
-        btn.id = "tm-mode-toggle-btn";
+    // Inject custom styles to ensure visibility
+    const style = document.createElement('style');
+    style.textContent = `
+        .gemini-enhancer-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px; /* Match standard toolbar height */
+            padding: 0 12px;
+            border-radius: 24px;
+            color: var(--gem-sys-color-on-surface, #444746);
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid transparent;
+            font-family: Google Sans, Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 8px;
+            transition: background 0.2s;
+        }
+        .gemini-enhancer-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        /* Dark mode adjustment (heuristic) */
+        @media (prefers-color-scheme: dark) {
+            .gemini-enhancer-btn {
+                color: #e3e3e3;
+            }
+            .gemini-enhancer-btn:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    `;
+    document.head.appendChild(style);
 
-        // Inner HTML structure to match the "Tools" button layout
+    function createToggleButton() {
+        const btn = document.createElement('button');
+        btn.className = "gemini-enhancer-btn";
+        btn.id = "tm-mode-toggle-btn";
+        btn.type = "button"; // Prevent form submission
+
+        // Simple inner HTML
         btn.innerHTML = `
-            <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
-            <span class="mat-icon notranslate gds-icon-l toolbox-drawer-button-icon google-symbols mat-ligature-font mat-icon-no-color" style="display:flex; align-items:center;">
+            <span style="display: flex; align-items: center; margin-right: 6px;">
                 ${ICON_SVG}
             </span>
-            <span class="mdc-button__label">
-                <span>Toggle Mode</span>
-            </span>
-            <span class="mat-focus-indicator"></span>
-            <span class="mat-mdc-button-touch-target"></span>
-            <span class="mat-ripple mat-mdc-button-ripple"></span>
+            <span>Mode</span>
         `;
 
         btn.onclick = (e) => {
             e.preventDefault();
+            e.stopPropagation(); // Stop bubbling
             toggleMode();
         };
 
@@ -153,10 +182,18 @@
                 console.log("Gemini Enhancer: Container found, injecting button...");
                 const btn = createToggleButton();
 
+                if (container) {
+                    // Check if container has display:none or hidden
+                    const style = window.getComputedStyle(container);
+                    if (style.display === 'none' || style.visibility === 'hidden') {
+                        console.warn("Gemini Enhancer: Target container is hidden!", container);
+                    }
+                }
+
                 // Append as first child to be prominent, or last to be next to Tools
                 // The snippet shows Tools is inside. Let's append to end to sit next to it.
                 container.appendChild(btn);
-                console.log("Gemini Enhancer: Button successfully injected.");
+                console.log("Gemini Enhancer: Button successfully injected into:", container);
             }
         };
 
