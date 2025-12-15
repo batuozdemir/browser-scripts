@@ -1,12 +1,12 @@
-// ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.17
+// @version      1.18
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
+// @run-at       document-idle
 // @downloadURL  https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-enhancer.user.js
 // @updateURL    https://raw.githubusercontent.com/batuozdemir/browser-scripts/refs/heads/main/gemini-enhancer.user.js
 // ==/UserScript==
@@ -83,6 +83,7 @@
         iconSpan.style.marginRight = '6px';
 
         // Create SVG using DOM methods to avoid innerHTML (TrustedHTML policy)
+        // Using "Tune" icon (sliders) to represent Mode/Settings
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("height", "24");
         svg.setAttribute("viewBox", "0 -960 960 960");
@@ -90,7 +91,7 @@
         svg.setAttribute("fill", "currentColor");
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33-14-56.5-41.5T360-344v-28h80v28q0 17 11.5 28.5T480-304q17 0 28.5-11.5T520-344v-28h80v28q0 57-35.5 98.5T480-202v40h-40Z");
+        path.setAttribute("d", "M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-200v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-200v-240h80v80h160v80H680v80h-80ZM120-680v-80h400v80H120Z");
 
         svg.appendChild(path);
         iconSpan.appendChild(svg);
@@ -230,9 +231,9 @@
                 border-radius: 20px;
                 border: 1px solid transparent; 
                 background-color: transparent;
-                /* Force standard dark mode colors if variables fail */
-                color: #e3e3e3; 
-                fill: #e3e3e3; /* For SVG */
+                /* Use standard Material/Gemini variables for automatic theme matching */
+                color: var(--md-sys-color-on-surface, #e3e3e3); 
+                fill: var(--md-sys-color-on-surface, #e3e3e3); /* For SVG */
                 
                 font-family: 'Google Sans', Roboto, sans-serif;
                 font-size: 14px;
@@ -241,18 +242,7 @@
                 transition: background-color 0.2s;
             }
             .gemini-enhancer-btn:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-            
-            /* Light mode override only if explicitly detected */
-            @media (prefers-color-scheme: light) {
-                 .gemini-enhancer-btn {
-                    color: #444746;
-                    fill: #444746;
-                 }
-                 .gemini-enhancer-btn:hover {
-                    background-color: rgba(0, 0, 0, 0.05);
-                 }
+                background-color: var(--md-sys-color-surface-container-highest, rgba(255, 255, 255, 0.1));
             }
         `;
         document.head.appendChild(style);

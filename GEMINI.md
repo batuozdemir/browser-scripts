@@ -3,6 +3,9 @@
 ## Project Overview
 This repository contains a collection of userscripts designed to enhance Google's AI Studio (`aistudio.google.com`) and Gemini (`gemini.google.com`) web interfaces. These scripts automate configuration settings, add convenience features, and improve the writing experience.
 
+## Agent Instructions
+- When there is a change, new feature, bugfix, increase version number. (decide if it's by 0.01, 0.1 or 1 according to the size/impact of the change)
+
 ## Artifacts
 
 ### 1. AI Studio Advanced Settings (`ai-studio.user.js`)
@@ -20,7 +23,8 @@ This repository contains a collection of userscripts designed to enhance Google'
 **Scope:** `https://gemini.google.com/*`
 **Purpose:** Adds "pro" features and better input control to the standard Gemini chat interface.
 **Key Features:**
-- **Mode Toggle:** Adds a button to the toolbar to toggle between "Thinking" (Pro) and "Fast" (Flash) models.
+- **Mode Toggle:** Adds a button to the toolbar to toggle between "Thinking" (Pro) and "Fast" (Flash) models. **Now theme-aware (auto-dark/light mode).**
+- **Native Look & Feel:** Uses standard Material 3 tokens (CSS variables) and icons to match Gemini's UI perfectly.
 - **Input Keybindings:**
     - `Cmd+Enter` (or `Ctrl+Enter`): Submits the message (clicks the Send button).
     - `Enter` (without modifiers): Inserts a newline instead of submitting (prevents default behavior).

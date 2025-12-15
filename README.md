@@ -11,7 +11,7 @@ This is intended for use with Tampermonkey, Greasemonkey, or other userscript ma
 - **AI Studio:** Set temperature slider value.
 - **AI Studio:** Toggle grounding (Search-as-a-tool) on/off.
 - **AI Studio:** Set the system prompt (system instructions) programmatically.
-- **Gemini:** Toggle between "Thinking" and "Fast" models with one click.
+- **Gemini:** Toggle between "Thinking" and "Fast" models with one click (seamlessly integrated with dark/light mode).
 - **Gemini:** Use `Cmd+Enter` to submit and `Enter` to create a new line in the chat.
 - Listens for UI interactions and keeps convenient defaults.
 
