@@ -1,3 +1,4 @@
+// ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
 // @version      1.18
