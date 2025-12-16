@@ -241,37 +241,34 @@
                 transition: background-color 0.2s;
 
                 /* 
-                   Color Strategy:
-                   1. Use correct Material Design token for secondary/icon content: --md-sys-color-on-surface-variant
-                   2. Provide EXPLICIT hex fallbacks for Light Mode (default) and Dark Mode (media query).
-                   This fixes the issue where text was too light in Light Mode or too bright in Dark Mode.
+                   Color Strategy (Robust):
+                   1. Inherit the primary text color from the parent container/body.
+                      This ensures we always have the correct "Theme Color" (Black in Light, White in Dark).
+                   2. Apply opacity to content to create the "Secondary/Variant" look.
+                      (0.7 opacity on Primary is a standard way to approximate Variant text).
                 */
-                color: var(--md-sys-color-on-surface-variant, #444746); /* Light Mode Hex: Neutral-variant 30 */
-                fill: currentColor;
+                color: inherit;
             }
             
-            .gemini-enhancer-btn:hover {
-                /* Hover: On-surface-variant with opacity */
-                background-color: var(--md-sys-color-surface-container-highest, rgba(68, 71, 70, 0.08));
+            .gemini-enhancer-btn > span {
+                opacity: 0.7; /* Create the "Secondary" text look */
             }
 
-            /* Safari Fix: Explicit dimensions for icon wrapper */
             .gemini-enhancer-icon {
                 display: flex;
                 align-items: center;
                 margin-right: 6px;
                 min-width: 24px;   /* Prevents collapsing in Safari */
                 flex-shrink: 0;    /* Prevents collapsing in Safari */
+                fill: currentColor;
             }
-
-            /* Dark Mode Overrides */
-            @media (prefers-color-scheme: dark) {
-                .gemini-enhancer-btn {
-                    color: var(--md-sys-color-on-surface-variant, #c4c7c5); /* Dark Mode Hex: Neutral-variant 80 */
-                }
-                .gemini-enhancer-btn:hover {
-                    background-color: var(--md-sys-color-surface-container-highest, rgba(227, 227, 227, 0.08));
-                }
+            
+            .gemini-enhancer-btn:hover {
+                 /* 
+                    Neutral Gray hover that works in both Light and Dark modes.
+                    rgba(127, 127, 127, 0.15) looks good on both White and Black backgrounds.
+                 */
+                background-color: rgba(127, 127, 127, 0.15);
             }
         `;
         document.head.appendChild(style);

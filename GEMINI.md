@@ -5,6 +5,7 @@ This repository contains a collection of userscripts designed to enhance Google'
 
 ## Agent Instructions
 - When there is a change, new feature, bugfix, increase version number. (decide if it's by 0.01, 0.1 or 1 according to the size/impact of the change)
+- Ask user for "Inspect" input when necessary.
 
 ## Artifacts
 
