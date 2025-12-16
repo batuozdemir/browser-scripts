@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.18
+// @version      1.19
 // @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
 // @author       You
 // @match        https://gemini.google.com/*
@@ -79,9 +79,10 @@
 
         // Create Icon Wrapper
         const iconSpan = document.createElement('span');
-        iconSpan.style.display = 'flex';
-        iconSpan.style.alignItems = 'center';
-        iconSpan.style.marginRight = '6px';
+        iconSpan.className = 'gemini-enhancer-icon';
+        // Inline styles migrated to CSS class for better maintainability/overrides, 
+        // but keeping minimal display properties here is harmless if we want. 
+        // We will move them to CSS to be clean.
 
         // Create SVG using DOM methods to avoid innerHTML (TrustedHTML policy)
         // Using "Tune" icon (sliders) to represent Mode/Settings
@@ -226,24 +227,51 @@
             .gemini-enhancer-btn {
                 display: flex;
                 align-items: center;
-                height: 40px; /* Match standard pill height */
+                height: 40px; 
                 padding: 0 16px; 
                 margin-left: 8px; /* Spacing from Tools */
                 border-radius: 20px;
                 border: 1px solid transparent; 
                 background-color: transparent;
-                /* Use standard Material/Gemini variables for automatic theme matching */
-                color: var(--md-sys-color-on-surface, #e3e3e3); 
-                fill: var(--md-sys-color-on-surface, #e3e3e3); /* For SVG */
                 
                 font-family: 'Google Sans', Roboto, sans-serif;
                 font-size: 14px;
                 font-weight: 500;
                 cursor: pointer;
                 transition: background-color 0.2s;
+
+                /* 
+                   Color Strategy:
+                   1. Use correct Material Design token for secondary/icon content: --md-sys-color-on-surface-variant
+                   2. Provide EXPLICIT hex fallbacks for Light Mode (default) and Dark Mode (media query).
+                   This fixes the issue where text was too light in Light Mode or too bright in Dark Mode.
+                */
+                color: var(--md-sys-color-on-surface-variant, #444746); /* Light Mode Hex: Neutral-variant 30 */
+                fill: currentColor;
             }
+            
             .gemini-enhancer-btn:hover {
-                background-color: var(--md-sys-color-surface-container-highest, rgba(255, 255, 255, 0.1));
+                /* Hover: On-surface-variant with opacity */
+                background-color: var(--md-sys-color-surface-container-highest, rgba(68, 71, 70, 0.08));
+            }
+
+            /* Safari Fix: Explicit dimensions for icon wrapper */
+            .gemini-enhancer-icon {
+                display: flex;
+                align-items: center;
+                margin-right: 6px;
+                min-width: 24px;   /* Prevents collapsing in Safari */
+                flex-shrink: 0;    /* Prevents collapsing in Safari */
+            }
+
+            /* Dark Mode Overrides */
+            @media (prefers-color-scheme: dark) {
+                .gemini-enhancer-btn {
+                    color: var(--md-sys-color-on-surface-variant, #c4c7c5); /* Dark Mode Hex: Neutral-variant 80 */
+                }
+                .gemini-enhancer-btn:hover {
+                    background-color: var(--md-sys-color-surface-container-highest, rgba(227, 227, 227, 0.08));
+                }
             }
         `;
         document.head.appendChild(style);
