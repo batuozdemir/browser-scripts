@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.21
+// @version      1.22
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
