@@ -24,7 +24,7 @@ This repository contains a collection of userscripts designed to enhance Google'
 **Scope:** `https://gemini.google.com/*`
 **Purpose:** Adds "pro" features and better input control to the standard Gemini chat interface.
 **Key Features:**
-- **Mode Toggle:** Adds a button to the toolbar to toggle between "Thinking" (Pro) and "Fast" (Flash) models. **Now theme-aware (auto-dark/light mode).**
+- **Mode Selection:** Adds a button group (F, T, P) to the toolbar for direct selection of "Fast", "Thinking", and "Pro" models.
 - **Native Look & Feel:** Uses standard Material 3 tokens (CSS variables) and icons to match Gemini's UI perfectly.
 - **Input Keybindings:**
     - `Cmd+Enter` (or `Ctrl+Enter`): Submits the message (clicks the Send button).

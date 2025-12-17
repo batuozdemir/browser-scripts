@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.20
-// @description  Enhancements for Google Gemini: Thinking Mode Toggle & Custom Keybindings (Cmd+Enter to send).
+// @version      1.21
+// @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -17,20 +17,19 @@
 
     // Configuration
     const SELECTORS = {
-        // We know 'leading-actions-wrapper' exists and contains the Tools button.
-        // We want to insert next to it.
         container: '.leading-actions-wrapper',
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
-        optionThinking: '[data-test-id="bard-mode-option-thinkingwith3pro"]',
+        // Updated Selectors based on user request (12/2025)
         optionFast: '[data-test-id="bard-mode-option-fast"]',
+        optionThinking: '[data-test-id="bard-mode-option-thinking"]',
+        optionPro: '[data-test-id="bard-mode-option-pro"]',
+
         toolsDrawer: 'toolbox-drawer',
         sendButton: 'button[aria-label="Send message"]'
     };
 
     // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
     function handleInputKeydown(e) {
-        // Ensure we are in the chat input (contenteditable)
-        // Gemini uses a generic contenteditable div
         if (!e.target.isContentEditable) return;
 
         // CMD+ENTER (or CTRL+ENTER) -> Submit
@@ -41,12 +40,8 @@
             const sendBtn = document.querySelector(SELECTORS.sendButton) ||
                 document.querySelector('button[aria-label="Send"]');
 
-            if (sendBtn) {
-                if (!sendBtn.disabled) {
-                    sendBtn.click();
-                }
-            } else {
-                console.warn("Gemini Enhancer: Send button not found. Selector might need update.");
+            if (sendBtn && !sendBtn.disabled) {
+                sendBtn.click();
             }
             return;
         }
@@ -55,242 +50,157 @@
         if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
             e.preventDefault();
             e.stopPropagation();
-
-            // Standard way to insert text in contenteditable
-            // Note: execCommand is deprecated but still the most reliable cross-browser way for simple inserts
-            // unless accessing internal component APIs.
             document.execCommand('insertText', false, '\n');
             return;
         }
     }
 
-    // --- Feature 2: Mode Toggle Button ---
-    // SVG Icon is now created via DOM methods to satisfy Trusted Types
+    // --- Feature 2: Mode Selection Buttons (F, T, P) ---
 
+    function createModeButtons() {
+        const container = document.createElement('div');
+        container.className = "gemini-mode-group";
+        container.id = "tm-mode-group";
 
-    // Style injection moved to init for centralized management
+        const modes = [
+            { label: 'F', selector: SELECTORS.optionFast, title: 'Fast' },
+            { label: 'T', selector: SELECTORS.optionThinking, title: 'Thinking' },
+            { label: 'P', selector: SELECTORS.optionPro, title: 'Pro' }
+        ];
 
+        modes.forEach(mode => {
+            const btn = document.createElement('button');
+            btn.className = "gemini-mode-btn";
+            btn.textContent = mode.label;
+            btn.title = mode.title;
+            btn.type = "button";
 
-    function createToggleButton() {
-        const btn = document.createElement('button');
-        btn.className = "gemini-enhancer-btn";
-        btn.id = "tm-mode-toggle-btn";
-        btn.type = "button"; // Prevent form submission
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setMode(mode.selector);
+            };
 
-        // Create Icon Wrapper
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'gemini-enhancer-icon';
-        // Inline styles migrated to CSS class for better maintainability/overrides, 
-        // but keeping minimal display properties here is harmless if we want. 
-        // We will move them to CSS to be clean.
+            container.appendChild(btn);
+        });
 
-        // Create SVG using DOM methods to avoid innerHTML (TrustedHTML policy)
-        // Using "Tune" icon (sliders) to represent Mode/Settings
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.setAttribute("height", "24");
-        svg.setAttribute("viewBox", "0 -960 960 960");
-        svg.setAttribute("width", "24");
-        svg.setAttribute("fill", "currentColor");
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", "M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-200v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-200v-240h80v80h160v80H680v80h-80ZM120-680v-80h400v80H120Z");
-
-        svg.appendChild(path);
-        iconSpan.appendChild(svg);
-
-        // Create Text
-        const textSpan = document.createElement('span');
-        textSpan.textContent = "Mode";
-
-        btn.appendChild(iconSpan);
-        btn.appendChild(textSpan);
-
-        btn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation(); // Stop bubbling
-            toggleMode();
-        };
-
-        return btn;
+        return container;
     }
 
-    function toggleMode() {
+    function setMode(targetSelector) {
         const trigger = document.querySelector(SELECTORS.triggerBtn);
         if (!trigger) {
-            console.error("Gemini Toggle: Mode dropdown trigger not found.");
+            console.error("Gemini Enhancer: Mode dropdown trigger not found.");
             return;
         }
 
-        // 1. Get current text to determine direction
-        const currentText = trigger.innerText || "";
-        const isCurrentlyThinking = currentText.includes("Thinking");
-
-        // 2. Click the dropdown trigger to open the menu
+        console.log("Gemini Enhancer: Opening menu...");
         trigger.click();
 
-        // 3. Wait for the Angular Material menu to render in the DOM
+        // Wait for Angular Material menu overlay
         setTimeout(() => {
-            let targetSelector = isCurrentlyThinking ? SELECTORS.optionFast : SELECTORS.optionThinking;
-            let targetOption = document.querySelector(targetSelector);
-
+            const targetOption = document.querySelector(targetSelector);
             if (targetOption) {
                 targetOption.click();
-                console.log(`Gemini Toggle: Switched to ${isCurrentlyThinking ? "Fast" : "Thinking"}`);
+                console.log(`Gemini Enhancer: Selected mode ${targetSelector}`);
             } else {
-                // Fallback: If the specific IDs change, try finding by text
-                // This is a safety net
-                const allItems = document.querySelectorAll('.mat-mdc-menu-item');
-                for (let item of allItems) {
-                    if (isCurrentlyThinking && item.innerText.includes("Fast")) {
-                        item.click();
-                        break;
-                    } else if (!isCurrentlyThinking && item.innerText.includes("Thinking")) {
-                        item.click();
-                        break;
-                    }
-                }
-                // Close menu if we failed to find target (clicking body usually closes it)
-                if (!targetOption) document.body.click();
+                console.warn(`Gemini Enhancer: Target option ${targetSelector} not found. Closing menu.`);
+                // Close menu by clicking body (standard behavior)
+                document.body.click();
             }
-        }, 50); // 50ms delay is usually sufficient for DOM rendering
+        }, 50); // Short delay for DOM render
     }
 
     function init() {
         console.log("Gemini Enhancer: Initializing...");
 
-        // Hook Keybinds globally
+        // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
 
         // UI Injection Logic
-        const validPaths = [
-            '/app',
-            '/u/',
-            '/chat'
-        ];
-
-        // Simple check to ensure we are on a relevant page
-        if (!validPaths.some(path => window.location.pathname.includes(path)) && window.location.pathname !== '/') {
-            // console.log("Gemini Enhancer: Not on a chat page?", window.location.pathname);
-        }
-
         const findContainer = () => {
-            // Attempt 1: The specific wrapper we used before
+            // Attempt 1: The specific wrapper
             let c = document.querySelector('.leading-actions-wrapper');
             if (c) return c;
 
-            // Attempt 2: "Tools" button parent (the drawer toggle)
+            // Attempt 2: "Tools" button parent or similar
             const toolsBtn = document.querySelector('button[aria-label="Extensions"]') ||
                 document.querySelector('button[aria-label="Upload image"]') ||
-                document.querySelector('[data-test-id="bard-mode-menu-button"]')?.parentElement; // The mode toggle itself if it exists (we want to be near it)
+                document.querySelector('[data-test-id="bard-mode-menu-button"]')?.parentElement;
 
-            if (toolsBtn) {
-                // Usually the button is in a flex container. We want that container.
-                return toolsBtn.parentElement;
-            }
-
-            // Attempt 3: Look for the input area's top toolbar (where the mode switcher usually lives in new UI)
-            // This is harder without a specific class. 
-            // Only return if we are confident.
+            if (toolsBtn) return toolsBtn.parentElement;
             return null;
         };
 
-        const injectButton = () => {
-            // Check if button already exists
-            if (document.getElementById('tm-mode-toggle-btn')) return;
+        const injectButtons = () => {
+            if (document.getElementById('tm-mode-group')) return;
 
             const container = findContainer();
-
             if (container) {
-                console.log("Gemini Enhancer: Container found:", container);
-
-                // Debug: Check visibility
+                // Check visibility
                 const style = window.getComputedStyle(container);
-                if (style.display === 'none' || style.visibility === 'hidden') {
-                    console.warn("Gemini Enhancer: Container is hidden, searching for better candidate...");
-                    return; // Don't inject into hidden container
-                }
+                if (style.display === 'none' || style.visibility === 'hidden') return;
 
-                const btn = createToggleButton();
-
-                // Append to end to be on the right side of Tools
-                container.appendChild(btn);
-                console.log("Gemini Enhancer: Button injected.");
-            } else {
-                // Rate limited logging
-                if (Math.random() < 0.05) console.log("Gemini Enhancer: Container not found yet.");
+                const btnGroup = createModeButtons();
+                container.appendChild(btnGroup);
+                console.log("Gemini Enhancer: Mode buttons injected.");
             }
         };
 
-        // Create styles with better visibility
+        // Create styles
         const style = document.createElement('style');
         style.textContent = `
-            .gemini-enhancer-btn {
+            .gemini-mode-group {
                 display: flex;
                 align-items: center;
-                height: 40px; 
-                padding: 0 16px; 
-                margin-left: 8px; /* Spacing from Tools */
-                border-radius: 20px;
-                border: 1px solid transparent; 
+                gap: 4px;
+                margin-left: 12px;
+                padding-left: 12px;
+                border-left: 1px solid rgba(128, 128, 128, 0.3);
+                height: 32px;
+            }
+
+            .gemini-mode-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px; 
+                height: 28px;
+                border-radius: 50%; /* Circle */
+                border: 1px solid rgba(128, 128, 128, 0.2); 
                 background-color: transparent;
                 
                 font-family: 'Google Sans', Roboto, sans-serif;
-                font-size: 14px;
-                font-weight: 500;
-                cursor: pointer;
-                transition: background-color 0.2s;
-
-                /* 
-                   Color Strategy (Robust):
-                   1. Inherit the primary text color from the parent container/body.
-                      This ensures we always have the correct "Theme Color" (Black in Light, White in Dark).
-                   2. Apply opacity to content to create the "Secondary/Variant" look.
-                      (0.7 opacity on Primary is a standard way to approximate Variant text).
-                */
+                font-size: 13px;
+                font-weight: 600;
                 color: inherit;
-            }
-            
-            .gemini-enhancer-btn > span {
-                opacity: 0.7; /* Create the "Secondary" text look */
+                opacity: 0.6;
+                cursor: pointer;
+                transition: all 0.2s;
             }
 
-            .gemini-enhancer-icon {
-                display: flex;
-                align-items: center;
-                margin-right: 6px;
-                min-width: 24px;   /* Prevents collapsing in Safari */
-                flex-shrink: 0;    /* Prevents collapsing in Safari */
-                fill: currentColor;
+            .gemini-mode-btn:hover {
+                background-color: rgba(128, 128, 128, 0.15);
+                opacity: 1;
+                transform: scale(1.05);
             }
             
-            .gemini-enhancer-btn:hover {
-                 /* 
-                    Neutral Gray hover that works in both Light and Dark modes.
-                    rgba(127, 127, 127, 0.15) looks good on both White and Black backgrounds.
-                 */
-                background-color: rgba(127, 127, 127, 0.15);
+            .gemini-mode-btn:active {
+                transform: scale(0.95);
             }
         `;
         document.head.appendChild(style);
-        injectButton();
+        injectButtons();
 
-        // Run on mutations
-        const observer = new MutationObserver((mutations) => {
-            // throttle?
-            injectButton();
-        });
+        // Watch for SPA changes
+        const observer = new MutationObserver(() => injectButtons());
+        observer.observe(document.body, { childList: true, subtree: true });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // Periodic check for slower loads
-        const interval = setInterval(injectButton, 2000);
-        setTimeout(() => clearInterval(interval), 30000); // Stop after 30s
+        // Backup interval
+        const interval = setInterval(injectButtons, 2000);
+        setTimeout(() => clearInterval(interval), 30000);
     }
 
-    // Start the script
     init();
 
 })();
