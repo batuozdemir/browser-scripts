@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.22
+// @version      1.23
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -23,6 +23,10 @@
         optionFast: '[data-test-id="bard-mode-option-fast"]',
         optionThinking: '[data-test-id="bard-mode-option-thinking"]',
         optionPro: '[data-test-id="bard-mode-option-pro"]',
+
+        // Temp Chat Feature
+        tempChatTrigger: 'button[data-test-id="temp-chat-button"]',
+        tempChatIndicator: '.temporary-chat-card',
 
         toolsDrawer: 'toolbox-drawer',
         sendButton: 'button[aria-label="Send message"]'
@@ -55,7 +59,33 @@
         }
     }
 
-    // --- Feature 2: Mode Selection Buttons (F, T, P) ---
+    // --- Feature 2: Mode Selection Buttons (F, T, P) + Temp Chat ---
+
+    function toggleTempChat() {
+        const btn = document.querySelector(SELECTORS.tempChatTrigger);
+        if (!btn) {
+            console.warn("Gemini Enhancer: Temp chat button not found.");
+            return;
+        }
+
+        const isAlreadyActive = !!document.querySelector(SELECTORS.tempChatIndicator);
+
+        console.log(`Gemini Enhancer: Toggling Temp Chat. Currently Active: ${isAlreadyActive}`);
+        btn.click();
+
+        // Smart Retry for 'Gems' (User reported needing 2 clicks sometimes)
+        // If we firmly intended to START a temp chat (it wasn't active), 
+        // we check if it actually started.
+        if (!isAlreadyActive) {
+            setTimeout(() => {
+                const nowActive = !!document.querySelector(SELECTORS.tempChatIndicator);
+                if (!nowActive) {
+                    console.log("Gemini Enhancer: Temp chat didn't start (Gem issue detected?). Retrying click.");
+                    btn.click();
+                }
+            }, 300); // 300ms delay to allow UI update
+        }
+    }
 
     function createModeButtons() {
         const container = document.createElement('div');
@@ -112,6 +142,40 @@
             container.appendChild(btn);
         });
 
+        // Splitter
+        const splitter = document.createElement('div');
+        splitter.style.width = '1px';
+        splitter.style.height = '16px';
+        splitter.style.backgroundColor = 'rgba(128, 128, 128, 0.3)';
+        splitter.style.margin = '0 4px';
+        container.appendChild(splitter);
+
+        // Temp Chat Button
+        const tempBtn = document.createElement('button');
+        tempBtn.className = "gemini-mode-btn";
+        tempBtn.title = "Toggle Temporary Chat";
+        tempBtn.type = "button";
+
+        // Temp Chat Icon (History Toggle / Clock-ish)
+        const tempSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        tempSvg.setAttribute("viewBox", "0 0 24 24");
+        tempSvg.setAttribute("fill", "currentColor");
+        const tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        tempPath.setAttribute("d", "M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z");
+        tempSvg.appendChild(tempPath);
+        tempBtn.appendChild(tempSvg);
+
+        const tempSpan = document.createElement('span');
+        tempSpan.textContent = "Temp";
+        tempBtn.appendChild(tempSpan);
+
+        tempBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleTempChat();
+        };
+        container.appendChild(tempBtn);
+
         return container;
     }
 
@@ -137,6 +201,40 @@
                 document.body.click();
             }
         }, 50); // Short delay for DOM render
+    }
+
+    // --- Feature 3: URL Parameters ---
+    function checkUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+
+        // ?model=fast|thinking|pro
+        const modelParam = params.get('model');
+        if (modelParam) {
+            // Delay slightly to ensure UI is ready
+            setTimeout(() => {
+                const map = {
+                    'fast': SELECTORS.optionFast,
+                    'thinking': SELECTORS.optionThinking,
+                    'pro': SELECTORS.optionPro
+                };
+                if (map[modelParam.toLowerCase()]) {
+                    console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' from URL`);
+                    setMode(map[modelParam.toLowerCase()]);
+                }
+            }, 1000); // 1s wait for initial load
+        }
+
+        // ?temp-chat=1|true
+        const tempChatParam = params.get('temp-chat');
+        if (tempChatParam === '1' || tempChatParam === 'true') {
+            setTimeout(() => {
+                const isAlreadyActive = !!document.querySelector(SELECTORS.tempChatIndicator);
+                if (!isAlreadyActive) {
+                    console.log("Gemini Enhancer: Auto-enabling Temp Chat from URL");
+                    toggleTempChat();
+                }
+            }, 1500); // Wait bit longer than model to avoid collision
+        }
     }
 
     function init() {
@@ -234,6 +332,9 @@
         // Backup interval
         const interval = setInterval(injectButtons, 2000);
         setTimeout(() => clearInterval(interval), 30000);
+
+        // Check URL Params
+        checkUrlParams();
     }
 
     init();
