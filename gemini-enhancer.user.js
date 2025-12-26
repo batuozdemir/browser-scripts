@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.24
+// @version      1.25
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -227,13 +227,38 @@
         // ?temp=1|true
         const tempChatParam = params.get('temp');
         if (tempChatParam === '1' || tempChatParam === 'true') {
-            setTimeout(() => {
+            console.log("Gemini Enhancer: URL requests Temp Chat. Polling for button...");
+
+            const maxAttempts = 100; // 10 seconds max (100 * 100ms)
+            let attempts = 0;
+
+            const pollInterval = setInterval(() => {
+                attempts++;
                 const isAlreadyActive = !!document.querySelector(SELECTORS.tempChatIndicator);
-                if (!isAlreadyActive) {
-                    console.log("Gemini Enhancer: Auto-enabling Temp Chat from URL");
-                    toggleTempChat();
+                const btn = document.querySelector(SELECTORS.tempChatTrigger);
+
+                if (isAlreadyActive) {
+                    console.log("Gemini Enhancer: Temp chat is already active. Stopping poll.");
+                    clearInterval(pollInterval);
+                    return;
                 }
-            }, 1500); // Wait bit longer than model to avoid collision
+
+                if (btn) {
+                    // Button found and chat not active yet
+                    console.log(`Gemini Enhancer: Found Temp Chat button on attempt ${attempts}. Clicking...`);
+                    toggleTempChat();
+
+                    // Double check shorty after to ensure it took hold, then stop
+                    setTimeout(() => {
+                        if (document.querySelector(SELECTORS.tempChatIndicator)) {
+                            clearInterval(pollInterval);
+                        }
+                    }, 200);
+                } else if (attempts >= maxAttempts) {
+                    console.warn("Gemini Enhancer: Timed out waiting for Temp Chat button.");
+                    clearInterval(pollInterval);
+                }
+            }, 100);
         }
     }
 
