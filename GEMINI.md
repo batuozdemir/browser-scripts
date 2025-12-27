@@ -29,6 +29,10 @@ This repository contains a collection of userscripts designed to enhance Google'
 - **Input Keybindings:**
     - `Cmd+Enter` (or `Ctrl+Enter`): Submits the message (clicks the Send button).
     - `Enter` (without modifiers): Inserts a newline instead of submitting (prevents default behavior).
+- **Temp Chat Support:**
+    - Adds a dedicated "Temp" button to the toolbar.
+    - Handles sidebar state automatically (opens/closes as needed to access the feature).
+    - Supports `?temp=true` URL parameter for instant temporary chat activation.
 
 ### 3. Autoplay Bypass (`autoplay-bypass-ads.user.js`)
 **Scope:** General / YouTube (presumed based on name)
