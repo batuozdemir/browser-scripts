@@ -67,75 +67,74 @@
     /**
      * Toggles the Temporary Chat feature.
      * Safely handles cases where the sidebar is closed (hiding the button).
+     * Uses CSS masking to make the sidebar operation invisible/instant.
      */
     async function toggleTempChat() {
-        // 1. Check if Temp Chat is already active
-        const isAlreadyActive = !!document.querySelector(SELECTORS.tempChatIndicator);
-        if (isAlreadyActive) {
-            console.log("Gemini Enhancer: Temp Chat already active.");
-            return;
-        }
-
         console.log("Gemini Enhancer: Attempting to toggle Temp Chat...");
 
-        // 2. Helper to find the actual Temp Chat Trigger button
+        // Helper to find the actual Temp Chat Trigger button
         const findTempBtn = () => document.querySelector(SELECTORS.tempChatTrigger);
         let btn = findTempBtn();
 
         let sidebarWasClosed = false;
 
-        // 3. If button not visible, it's likely because the Sidebar is closed.
+        // If button not visible, it's likely because the Sidebar is closed.
         if (!btn) {
             console.log("Gemini Enhancer: Temp chat button not found. Checking Sidebar...");
             const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
 
-            // Assume if we can see the Menu Button, we might need to open it.
-            // Note: Gemini UI is dynamic. If 'side-nav-menu-button' is present, it usually means sidebar is collapsible.
             if (menuBtn) {
-                console.log("Gemini Enhancer: Opening Sidebar to find button...");
+                console.log("Gemini Enhancer: Opening Sidebar (Silently) to find button...");
+
+                // 1. Enter Silent Mode (Hide Sidebar & Disable Transitions)
+                document.body.classList.add('gemini-silent-toggle');
+
                 menuBtn.click();
                 sidebarWasClosed = true;
 
-                // Wait for sidebar animation/render
-                await new Promise(r => setTimeout(r, 600));
-                btn = findTempBtn(); // Try again
+                // 2. Poll for the button (Robust Wait)
+                // We poll for up to 2 seconds
+                for (let i = 0; i < 20; i++) {
+                    await new Promise(r => setTimeout(r, 50));
+                    btn = findTempBtn();
+                    if (btn) break;
+                }
             } else {
-                console.warn("Gemini Enhancer: Cannot find Sidebar Menu button either.");
+                console.warn("Gemini Enhancer: Cannot find Sidebar Menu button.");
             }
         }
 
         if (!btn) {
-            console.error("Gemini Enhancer: Still cannot find Temp Chat button after attempting to open sidebar. Aborting.");
+            console.error("Gemini Enhancer: Still cannot find Temp Chat button. Aborting.");
+            // Cleanup if we messed up
             if (sidebarWasClosed) {
-                // Clean up: Close it back if we failed
                 const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
                 if (menuBtn) menuBtn.click();
+
+                // Remove silent class after a slight delay
+                setTimeout(() => document.body.classList.remove('gemini-silent-toggle'), 100);
             }
             return;
         }
 
-        // 4. Click the Temp Chat Button
+        // 3. Click the Temp Chat Button (Toggle ON or OFF)
         console.log("Gemini Enhancer: Clicking Temp Chat button.");
         btn.click();
 
-        // 5. Verify and handling "Gem" double-click issues
-        // Wait a bit to see if it took effect
-        await new Promise(r => setTimeout(r, 400));
+        // 4. Wait a small bit to ensure click registered
+        await new Promise(r => setTimeout(r, 100));
 
-        const nowActive = !!document.querySelector(SELECTORS.tempChatIndicator);
-        if (!nowActive) {
-            console.log("Gemini Enhancer: Chat didn't activate (Gem issue?). Clicking again.");
-            btn.click();
-            await new Promise(r => setTimeout(r, 400));
-        }
-
-        // 6. Restore Sidebar State if we opened it
+        // 5. Restore Sidebar State if we opened it
         if (sidebarWasClosed) {
             console.log("Gemini Enhancer: Restoring sidebar state (Closing)...");
             const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
             if (menuBtn) {
                 menuBtn.click();
             }
+            // Keep silent mode on until the "close" operation is likely done
+            setTimeout(() => {
+                document.body.classList.remove('gemini-silent-toggle');
+            }, 300);
         }
     }
 
@@ -279,28 +278,23 @@
         // ?temp=1|true
         const tempChatParam = params.get('temp');
         if (tempChatParam === '1' || tempChatParam === 'true') {
-            console.log("Gemini Enhancer: URL requests Temp Chat. Waiting for app to load...");
-
-            const maxAttempts = 100; // 10 seconds max
+            const maxAttempts = 50; // 5 seconds
             let attempts = 0;
 
             const pollInterval = setInterval(() => {
                 attempts++;
 
-                // We just need the "Menu" button to exist (meaning app shell is loaded)
-                // OR the Temp Chat trigger itself.
-                const appReady = document.querySelector(SELECTORS.sidebarMenuButton) ||
-                    document.querySelector(SELECTORS.tempChatTrigger);
+                // Wait for App to be somewhat ready (Sidebar toggle available)
+                const appReady = document.querySelector(SELECTORS.sidebarMenuButton);
 
                 if (appReady) {
-                    console.log(`Gemini Enhancer: App ready on attempt ${attempts}. Initiating Temp Chat toggle.`);
                     clearInterval(pollInterval);
-
-                    // Call the smart toggle which handles sidebar
-                    toggleTempChat();
-
+                    // Check if already active to avoid toggling OFF if user manually enabled it quickly
+                    if (!document.querySelector(SELECTORS.tempChatIndicator)) {
+                        console.log("Gemini Enhancer: Triggering Temp Chat from URL...");
+                        toggleTempChat();
+                    }
                 } else if (attempts >= maxAttempts) {
-                    console.warn("Gemini Enhancer: Timed out waiting for App to load.");
                     clearInterval(pollInterval);
                 }
             }, 100);
