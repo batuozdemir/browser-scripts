@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.26
+// @version      1.27
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -390,6 +390,12 @@
 
             .gemini-mode-btn:active {
                 transform: scale(0.96);
+            }
+
+            /* Silent Toggle (Hides Sidebar Transitions) */
+            body.gemini-silent-toggle mat-sidenav {
+                visibility: hidden !important;
+                transition: none !important;
             }
         `;
         document.head.appendChild(style);
