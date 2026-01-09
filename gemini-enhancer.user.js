@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.27
+// @version      1.28
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -76,24 +76,16 @@
         const findTempBtn = () => document.querySelector(SELECTORS.tempChatTrigger);
         let btn = findTempBtn();
 
-        let sidebarWasClosed = false;
-
         // If button not visible, it's likely because the Sidebar is closed.
         if (!btn) {
             console.log("Gemini Enhancer: Temp chat button not found. Checking Sidebar...");
             const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
 
             if (menuBtn) {
-                console.log("Gemini Enhancer: Opening Sidebar (Silently) to find button...");
-
-                // 1. Enter Silent Mode (Hide Sidebar & Disable Transitions)
-                document.body.classList.add('gemini-silent-toggle');
-
+                console.log("Gemini Enhancer: Opening Sidebar to find button...");
                 menuBtn.click();
-                sidebarWasClosed = true;
 
-                // 2. Poll for the button (Robust Wait)
-                // We poll for up to 2 seconds
+                // Poll for the button (Robust Wait)
                 for (let i = 0; i < 20; i++) {
                     await new Promise(r => setTimeout(r, 50));
                     btn = findTempBtn();
@@ -106,36 +98,12 @@
 
         if (!btn) {
             console.error("Gemini Enhancer: Still cannot find Temp Chat button. Aborting.");
-            // Cleanup if we messed up
-            if (sidebarWasClosed) {
-                const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-                if (menuBtn) menuBtn.click();
-
-                // Remove silent class after a slight delay
-                setTimeout(() => document.body.classList.remove('gemini-silent-toggle'), 100);
-            }
             return;
         }
 
-        // 3. Click the Temp Chat Button (Toggle ON or OFF)
+        // Click the Temp Chat Button (Toggle ON or OFF)
         console.log("Gemini Enhancer: Clicking Temp Chat button.");
         btn.click();
-
-        // 4. Wait a small bit to ensure click registered
-        await new Promise(r => setTimeout(r, 100));
-
-        // 5. Restore Sidebar State if we opened it
-        if (sidebarWasClosed) {
-            console.log("Gemini Enhancer: Restoring sidebar state (Closing)...");
-            const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-            if (menuBtn) {
-                menuBtn.click();
-            }
-            // Keep silent mode on until the "close" operation is likely done
-            setTimeout(() => {
-                document.body.classList.remove('gemini-silent-toggle');
-            }, 300);
-        }
     }
 
     function createModeButtons() {
@@ -386,11 +354,7 @@
                 transform: scale(0.96);
             }
 
-            /* Silent Toggle (Hides Sidebar Transitions) */
-            body.gemini-silent-toggle mat-sidenav {
-                visibility: hidden !important;
-                transition: none !important;
-            }
+
         `;
         document.head.appendChild(style);
         injectButtons();
