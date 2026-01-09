@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.29
+// @version      1.30
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -271,8 +271,6 @@
             }, 1000); // 1s wait for initial load
         }
 
-        // ?temp=1|true
-        const tempChatParam = params.get('temp');
         // ?temp=1|true
         const tempChatParam = params.get('temp');
         if (tempChatParam === '1' || tempChatParam === 'true') {
