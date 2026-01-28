@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.30
+// @version      1.31
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -64,11 +64,34 @@
 
     // --- Feature 2: Mode Selection Buttons (F, T, P) + Temp Chat ---
 
+    // Global lock to prevent concurrent temp chat activation attempts
+    let isTempChatActivating = false;
+
+    /**
+     * Checks if the sidebar is currently open.
+     */
+    function isSidebarOpen() {
+        // The sidebar menu button has aria-expanded when open
+        const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
+        if (menuBtn) {
+            return menuBtn.getAttribute('aria-expanded') === 'true';
+        }
+        // Fallback: check if the temp chat button is visible (it's in the sidebar)
+        return !!document.querySelector(SELECTORS.tempChatTrigger);
+    }
+
     /**
      * Toggles the Temporary Chat feature.
      * Returns true if successful (indicator visible), false otherwise.
      */
     async function toggleTempChat() {
+        // Prevent concurrent calls
+        if (isTempChatActivating) {
+            console.log("Gemini Enhancer: Temp Chat activation already in progress, skipping.");
+            return false;
+        }
+
+        isTempChatActivating = true;
         console.log("Gemini Enhancer: Attempting to toggle Temp Chat...");
 
         // Helper to find the actual Temp Chat Trigger button
@@ -80,7 +103,7 @@
             console.log("Gemini Enhancer: Temp chat button not found. Checking Sidebar...");
             const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
 
-            if (menuBtn) {
+            if (menuBtn && !isSidebarOpen()) {
                 console.log("Gemini Enhancer: Opening Sidebar to find button...");
                 menuBtn.click();
 
@@ -98,40 +121,109 @@
 
         if (!btn) {
             console.error("Gemini Enhancer: Still cannot find Temp Chat button. Aborting.");
+            isTempChatActivating = false;
             return false;
         }
 
         // 2. Helper to check if Temp Chat is Active
         const isTempChatActive = () => !!document.querySelector(SELECTORS.tempChatIndicator);
 
-        // 3. Smart Toggle Logic (Handle Gem Double-Click Issue)
-        // Try Clicking once
-        console.log("Gemini Enhancer: Clicking Temp Chat button (Attempt 1)...");
+        // 3. Click and wait for activation (increased wait time for reliability)
+        console.log("Gemini Enhancer: Clicking Temp Chat button...");
         btn.click();
 
-        // Fast poll for success (Up to 500ms)
-        for (let i = 0; i < 10; i++) {
-            if (isTempChatActive()) return true;
+        // Wait up to 1.5s for indicator to appear (30 * 50ms)
+        for (let i = 0; i < 30; i++) {
+            if (isTempChatActive()) {
+                isTempChatActivating = false;
+                return true;
+            }
             await new Promise(r => setTimeout(r, 50));
         }
 
-        // Check if we wanted to turn it OFF (and it was already ON)
-        // If we were toggling, and it's still off, maybe we needed a second click?
-        // Note: This function is primarily for turning it ON or toggling.
-        // If it's still NOT active, assume we failed (or it was a double-click scenario).
+        isTempChatActivating = false;
+        return isTempChatActive();
+    }
 
-        if (!isTempChatActive()) {
-            console.log("Gemini Enhancer: Temp Chat did not activate. Retrying click (Attempt 2)...");
-            btn.click();
+    /**
+     * Activates Temporary Chat (one-way, for URL parameter use).
+     * Unlike toggleTempChat, this will NOT click if already active.
+     * Returns true if temp chat is active after the call.
+     */
+    async function activateTempChatFromUrl() {
+        // Check if already active first
+        if (document.querySelector(SELECTORS.tempChatIndicator)) {
+            console.log("Gemini Enhancer: Temp Chat already active.");
+            return true;
+        }
 
-            // Poll again
-            for (let i = 0; i < 10; i++) {
-                if (isTempChatActive()) return true;
-                await new Promise(r => setTimeout(r, 50));
+        // Prevent concurrent calls
+        if (isTempChatActivating) {
+            console.log("Gemini Enhancer: Temp Chat activation already in progress.");
+            return false;
+        }
+
+        isTempChatActivating = true;
+        console.log("Gemini Enhancer: Activating Temp Chat from URL...");
+
+        // Helper to find the button
+        const findTempBtn = () => document.querySelector(SELECTORS.tempChatTrigger);
+        let btn = findTempBtn();
+
+        // Ensure Sidebar Open / Button Visible
+        if (!btn) {
+            const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
+
+            if (menuBtn && !isSidebarOpen()) {
+                console.log("Gemini Enhancer: Opening Sidebar...");
+                menuBtn.click();
+
+                // Wait for button to appear (up to 3s)
+                for (let i = 0; i < 60; i++) {
+                    await new Promise(r => setTimeout(r, 50));
+                    btn = findTempBtn();
+                    if (btn) break;
+                }
+            } else if (menuBtn) {
+                // Sidebar might be open, just wait a bit for the button
+                for (let i = 0; i < 20; i++) {
+                    await new Promise(r => setTimeout(r, 50));
+                    btn = findTempBtn();
+                    if (btn) break;
+                }
             }
         }
 
-        return isTempChatActive();
+        if (!btn) {
+            console.error("Gemini Enhancer: Cannot find Temp Chat button.");
+            isTempChatActivating = false;
+            return false;
+        }
+
+        // Double-check we're not already active (might have changed while waiting)
+        if (document.querySelector(SELECTORS.tempChatIndicator)) {
+            console.log("Gemini Enhancer: Temp Chat became active while waiting.");
+            isTempChatActivating = false;
+            return true;
+        }
+
+        // Click and wait
+        console.log("Gemini Enhancer: Clicking Temp Chat button...");
+        btn.click();
+
+        // Wait up to 2s for indicator (40 * 50ms)
+        for (let i = 0; i < 40; i++) {
+            if (document.querySelector(SELECTORS.tempChatIndicator)) {
+                console.log("Gemini Enhancer: Temp Chat activated successfully.");
+                isTempChatActivating = false;
+                return true;
+            }
+            await new Promise(r => setTimeout(r, 50));
+        }
+
+        console.warn("Gemini Enhancer: Temp Chat indicator not found after click.");
+        isTempChatActivating = false;
+        return false;
     }
 
     function createModeButtons() {
@@ -274,48 +366,42 @@
         // ?temp=1|true
         const tempChatParam = params.get('temp');
         if (tempChatParam === '1' || tempChatParam === 'true') {
-            const maxAttempts = 60; // 6 seconds max
-            let attempts = 0;
-            let retryCount = 0;
-            const maxRetries = 3;
+            // Use sequential async loop instead of setInterval to prevent overlapping calls
+            (async function attemptTempChatActivation() {
+                const maxAttempts = 10; // 10 attempts with increasing delays
+                const baseDelay = 500; // Start with 500ms
 
-            const tryActivate = async () => {
-                const sidebarBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-                if (sidebarBtn) {
+                for (let attempt = 0; attempt < maxAttempts; attempt++) {
                     // Check if already active
                     if (document.querySelector(SELECTORS.tempChatIndicator)) {
                         console.log("Gemini Enhancer: Temp Chat already active.");
-                        return true; // Done
+                        return;
                     }
 
-                    console.log(`Gemini Enhancer: Triggering Temp Chat (Retry ${retryCount})...`);
-                    const success = await toggleTempChat();
+                    // Wait for sidebar button to exist (app ready)
+                    const sidebarBtn = document.querySelector(SELECTORS.sidebarMenuButton);
+                    if (!sidebarBtn) {
+                        console.log(`Gemini Enhancer: Waiting for app to load (attempt ${attempt + 1})...`);
+                        await new Promise(r => setTimeout(r, baseDelay));
+                        continue;
+                    }
+
+                    console.log(`Gemini Enhancer: Attempting Temp Chat activation (attempt ${attempt + 1}/${maxAttempts})...`);
+                    const success = await activateTempChatFromUrl();
+
                     if (success) {
                         console.log("Gemini Enhancer: Temp Chat activated successfully via URL.");
-                        return true; // Done
-                    } else {
-                        // Failed to activate (maybe button wasn't ready despite sidebar existing)
-                        if (retryCount < maxRetries) {
-                            retryCount++;
-                            console.log(`Gemini Enhancer: Activation failed. Retrying in 500ms...`);
-                            setTimeout(tryActivate, 500);
-                            return true; // Keep trying
-                        }
+                        return;
                     }
-                }
-                return false; // Not ready yet
-            };
 
-            const pollInterval = setInterval(async () => {
-                attempts++;
-                const done = await tryActivate();
-                if (done) {
-                    clearInterval(pollInterval);
-                } else if (attempts >= maxAttempts) {
-                    clearInterval(pollInterval);
-                    console.warn("Gemini Enhancer: Timed out waiting for app to be ready for Temp Chat URL param.");
+                    // Wait before next attempt (increasing delay)
+                    const delay = baseDelay + (attempt * 200);
+                    console.log(`Gemini Enhancer: Activation attempt failed. Waiting ${delay}ms before retry...`);
+                    await new Promise(r => setTimeout(r, delay));
                 }
-            }, 100);
+
+                console.warn("Gemini Enhancer: Failed to activate Temp Chat after all attempts.");
+            })();
         }
     }
 
