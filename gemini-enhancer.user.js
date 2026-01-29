@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.31
+// @version      1.32
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -14,6 +14,13 @@
 
 (function () {
     'use strict';
+
+    // Singleton guard - prevent double execution on SPA navigation
+    if (window.__geminiEnhancerLoaded) {
+        console.log("Gemini Enhancer: Already loaded, skipping duplicate injection.");
+        return;
+    }
+    window.__geminiEnhancerLoaded = true;
 
     // Configuration
     const SELECTORS = {
@@ -343,7 +350,15 @@
     }
 
     // --- Feature 3: URL Parameters ---
+    let urlParamsHandled = false;
+
     function checkUrlParams() {
+        if (urlParamsHandled) {
+            console.log("Gemini Enhancer: URL params already handled, skipping.");
+            return;
+        }
+        urlParamsHandled = true;
+
         const params = new URLSearchParams(window.location.search);
 
         // ?model=fast|thinking|pro
