@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.32
+// @version      1.33
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -39,8 +39,28 @@
         sidebarMenuButton: 'button[data-test-id="side-nav-menu-button"]',
 
         toolsDrawer: 'toolbox-drawer',
-        sendButton: 'button[aria-label="Send message"]'
+        sendButton: 'button[aria-label="Send message"]',
+        inputField: 'rich-textarea .ql-editor[contenteditable="true"]'
     };
+
+    // --- Feature 0: Auto-Focus Input Field ---
+    /**
+     * Focuses the text input field. Polls until the element is available.
+     * @param {number} maxAttempts - Maximum number of polling attempts.
+     * @param {number} delay - Delay in ms between attempts.
+     */
+    async function focusInputField(maxAttempts = 20, delay = 150) {
+        for (let i = 0; i < maxAttempts; i++) {
+            const editor = document.querySelector(SELECTORS.inputField);
+            if (editor) {
+                editor.focus();
+                console.log('Gemini Enhancer: Input field focused.');
+                return;
+            }
+            await new Promise(r => setTimeout(r, delay));
+        }
+        console.warn('Gemini Enhancer: Could not find input field to focus.');
+    }
 
     // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
     function handleInputKeydown(e) {
@@ -341,6 +361,8 @@
             if (targetOption) {
                 targetOption.click();
                 console.log(`Gemini Enhancer: Selected mode ${targetSelector}`);
+                // Re-focus input after mode switch
+                focusInputField();
             } else {
                 console.warn(`Gemini Enhancer: Target option ${targetSelector} not found. Closing menu.`);
                 // Close menu by clicking body (standard behavior)
@@ -520,6 +542,9 @@
 
         // Check URL Params
         checkUrlParams();
+
+        // Auto-focus input field on load
+        focusInputField();
     }
 
     init();
