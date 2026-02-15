@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.33
+// @version      1.34
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -54,7 +54,13 @@
             const editor = document.querySelector(SELECTORS.inputField);
             if (editor) {
                 editor.focus();
-                console.log('Gemini Enhancer: Input field focused.');
+                // Move cursor to end of existing text (contenteditable div)
+                const selection = window.getSelection();
+                if (selection) {
+                    selection.selectAllChildren(editor);
+                    selection.collapseToEnd();
+                }
+                console.log('Gemini Enhancer: Input field focused (cursor at end).');
                 return;
             }
             await new Promise(r => setTimeout(r, delay));
