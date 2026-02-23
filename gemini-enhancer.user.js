@@ -177,12 +177,19 @@
      * @returns {HTMLElement|null} The visible temp chat button, or null.
      */
     async function ensureTempBtnVisible() {
-        // Phase 1: Wait for button to appear on its own (up to 1.5s)
-        // If sidebar is already open, the button will render during this window.
-        for (let i = 0; i < 30; i++) {
-            const btn = findVisibleTempBtn();
-            if (btn) return btn;
-            await new Promise(r => setTimeout(r, 50));
+        // Phase 1: Quick check — is the button already visible?
+        const immediateBtn = findVisibleTempBtn();
+        if (immediateBtn) return immediateBtn;
+
+        // If the button is in the DOM but hidden → sidebar is definitely closed.
+        // Skip straight to Phase 2 (no point waiting).
+        if (!isSidebarClosed()) {
+            // Sidebar appears open but button not visible yet → brief wait for render
+            for (let i = 0; i < 6; i++) { // 300ms max
+                await new Promise(r => setTimeout(r, 50));
+                const btn = findVisibleTempBtn();
+                if (btn) return btn;
+            }
         }
 
         // Phase 2: Button didn't appear. Sidebar is likely closed → open it.
