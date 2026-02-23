@@ -46,6 +46,8 @@ This repository contains a collection of userscripts designed to enhance Google'
 
 ## ⚠️ Critical Gotchas
 - **Temp Chat Button Visibility:** The temp chat button (`button[data-test-id="temp-chat-button"]`) exists in the DOM **even when the sidebar is closed**, but it is **hidden**. Always use the `isElementVisible()` helper to check if it's interactable. Checking `querySelector()` alone is NOT sufficient — it will find the hidden button and skip the sidebar-opening logic. This has caused regressions before (v1.35 fix).
+- **Sidebar State Detection:** Do NOT use `aria-expanded` on the sidebar menu button — Gemini does not set this attribute. Use `isSidebarClosed()` which checks if the temp chat button is in the DOM but hidden. (v1.36 fix)
+- **Two-Phase Sidebar Approach:** When activating temp chat, ALWAYS wait for the button to appear naturally first (Phase 1) before attempting to open the sidebar (Phase 2). If the sidebar is already open but still rendering, immediately clicking the menu button will CLOSE it. This caused a regression in v1.35 and was fixed in v1.36 via `ensureTempBtnVisible()`.
 
 ## Configuration
 - **Hardcoded Defaults:** Configuration objects (e.g., `DEFAULT_SETTINGS` in `ai-studio.user.js`) are defined at the top of the scripts for easy user modification.

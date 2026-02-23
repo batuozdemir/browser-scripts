@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.35
+// @version      1.36
 // @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -23,8 +23,15 @@
 // │     - The temp chat button exists in the DOM even when the sidebar │
 // │       is closed, but it is HIDDEN. Always check visibility via     │
 // │       isElementVisible() before assuming the button is clickable.  │
+// │     - CRITICAL: Do NOT use aria-expanded on the sidebar menu       │
+// │       button to detect sidebar state — Gemini does not set it.     │
+// │       Instead, check if the temp chat button is in the DOM but     │
+// │       hidden (= sidebar closed) vs visible (= sidebar open).      │
+// │     - CRITICAL: Always wait for the button to appear naturally     │
+// │       FIRST (sidebar may already be open but still rendering).     │
+// │       Only toggle the sidebar as a LAST RESORT after the wait.     │
 // │     - Functions: activateTempChatFromUrl(), toggleTempChat()        │
-// │     - Helper: isElementVisible()                                   │
+// │     - Helper: isElementVisible(), isSidebarClosed()                │
 // │                                                                    │
 // │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)        │
 // │     - Must remain on all contenteditable fields.                   │
@@ -87,6 +94,23 @@
         return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
     }
 
+    /**
+     * Reliably detects if the sidebar is CLOSED.
+     * DO NOT use aria-expanded — Gemini's sidebar button does not set it.
+     * Instead: if the temp chat button is in the DOM but hidden → sidebar is closed.
+     */
+    function isSidebarClosed() {
+        const tempBtn = document.querySelector(SELECTORS.tempChatTrigger);
+        if (!tempBtn) return true; // button not in DOM at all → treat as closed
+        return !isElementVisible(tempBtn); // in DOM but hidden → closed
+    }
+
+    /** Helper to find the temp chat button only if it's VISIBLE */
+    function findVisibleTempBtn() {
+        const el = document.querySelector(SELECTORS.tempChatTrigger);
+        return (el && isElementVisible(el)) ? el : null;
+    }
+
     // --- Feature 0: Auto-Focus Input Field ---
     /**
      * Focuses the text input field. Polls until the element is available.
@@ -145,24 +169,53 @@
     let isTempChatActivating = false;
 
     /**
-     * Checks if the sidebar is currently open.
+     * Ensures the temp chat button is visible, opening the sidebar if needed.
+     * CRITICAL SEQUENCE (do NOT reorder):
+     *   Phase 1: Wait for button to appear naturally (sidebar may be open but still rendering).
+     *   Phase 2: Only if button never appeared, open sidebar and wait again.
+     * This prevents accidentally CLOSING an already-open sidebar.
+     * @returns {HTMLElement|null} The visible temp chat button, or null.
      */
-    function isSidebarOpen() {
-        // The sidebar menu button has aria-expanded when open
-        const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-        if (menuBtn) {
-            return menuBtn.getAttribute('aria-expanded') === 'true';
+    async function ensureTempBtnVisible() {
+        // Phase 1: Wait for button to appear on its own (up to 1.5s)
+        // If sidebar is already open, the button will render during this window.
+        for (let i = 0; i < 30; i++) {
+            const btn = findVisibleTempBtn();
+            if (btn) return btn;
+            await new Promise(r => setTimeout(r, 50));
         }
-        // Fallback: check if the temp chat button is visible (it's in the sidebar)
-        return !!document.querySelector(SELECTORS.tempChatTrigger);
+
+        // Phase 2: Button didn't appear. Sidebar is likely closed → open it.
+        const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
+        if (!menuBtn) {
+            console.warn("Gemini Enhancer: Sidebar menu button not found.");
+            return null;
+        }
+
+        // Confirm sidebar is truly closed before clicking (avoid toggling an open sidebar)
+        if (isSidebarClosed()) {
+            console.log("Gemini Enhancer: Sidebar is closed. Opening...");
+            menuBtn.click();
+        } else {
+            console.log("Gemini Enhancer: Sidebar appears open, waiting longer for button...");
+        }
+
+        // Wait for the VISIBLE button (up to 3s after sidebar click)
+        for (let i = 0; i < 60; i++) {
+            const btn = findVisibleTempBtn();
+            if (btn) return btn;
+            await new Promise(r => setTimeout(r, 50));
+        }
+
+        console.error("Gemini Enhancer: Temp Chat button never became visible.");
+        return null;
     }
 
     /**
-     * Toggles the Temporary Chat feature.
+     * Toggles the Temporary Chat feature (for toolbar button click).
      * Returns true if successful (indicator visible), false otherwise.
      */
     async function toggleTempChat() {
-        // Prevent concurrent calls
         if (isTempChatActivating) {
             console.log("Gemini Enhancer: Temp Chat activation already in progress, skipping.");
             return false;
@@ -171,45 +224,16 @@
         isTempChatActivating = true;
         console.log("Gemini Enhancer: Attempting to toggle Temp Chat...");
 
-        // Helper to find the actual Temp Chat Trigger button (VISIBLE only)
-        const findVisibleTempBtn = () => {
-            const el = document.querySelector(SELECTORS.tempChatTrigger);
-            return (el && isElementVisible(el)) ? el : null;
-        };
-        let btn = findVisibleTempBtn();
-
-        // 1. Ensure Sidebar Open / Button Visible
-        // NOTE: The temp chat button may exist in the DOM but be hidden when sidebar is closed.
-        // We MUST check visibility, not just existence. See AI AGENT NOTES at top of file.
-        if (!btn) {
-            console.log("Gemini Enhancer: Temp chat button not visible. Checking Sidebar...");
-            const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-
-            if (menuBtn && !isSidebarOpen()) {
-                console.log("Gemini Enhancer: Opening Sidebar to find button...");
-                menuBtn.click();
-
-                // Poll for the VISIBLE button (up to 3 seconds)
-                for (let i = 0; i < 60; i++) {
-                    await new Promise(r => setTimeout(r, 50));
-                    btn = findVisibleTempBtn();
-                    if (btn) break;
-                }
-            } else {
-                console.warn("Gemini Enhancer: Cannot find Sidebar Menu button.");
-            }
-        }
+        const btn = await ensureTempBtnVisible();
 
         if (!btn) {
-            console.error("Gemini Enhancer: Still cannot find Temp Chat button. Aborting.");
+            console.error("Gemini Enhancer: Cannot find Temp Chat button. Aborting.");
             isTempChatActivating = false;
             return false;
         }
 
-        // 2. Helper to check if Temp Chat is Active
         const isTempChatActive = () => !!document.querySelector(SELECTORS.tempChatIndicator);
 
-        // 3. Click and wait for activation (increased wait time for reliability)
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
         btn.click();
 
@@ -232,13 +256,11 @@
      * Returns true if temp chat is active after the call.
      */
     async function activateTempChatFromUrl() {
-        // Check if already active first
         if (document.querySelector(SELECTORS.tempChatIndicator)) {
             console.log("Gemini Enhancer: Temp Chat already active.");
             return true;
         }
 
-        // Prevent concurrent calls
         if (isTempChatActivating) {
             console.log("Gemini Enhancer: Temp Chat activation already in progress.");
             return false;
@@ -247,38 +269,7 @@
         isTempChatActivating = true;
         console.log("Gemini Enhancer: Activating Temp Chat from URL...");
 
-        // Helper to find the VISIBLE button (not just in DOM — see AI AGENT NOTES)
-        const findVisibleTempBtn = () => {
-            const el = document.querySelector(SELECTORS.tempChatTrigger);
-            return (el && isElementVisible(el)) ? el : null;
-        };
-        let btn = findVisibleTempBtn();
-
-        // Ensure Sidebar Open / Button Visible
-        // NOTE: The temp chat button exists in the DOM even when the sidebar is closed,
-        // but it is HIDDEN. We must check visibility before assuming it's clickable.
-        if (!btn) {
-            const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-
-            if (menuBtn && !isSidebarOpen()) {
-                console.log("Gemini Enhancer: Opening Sidebar for Temp Chat...");
-                menuBtn.click();
-
-                // Wait for VISIBLE button to appear (up to 3s)
-                for (let i = 0; i < 60; i++) {
-                    await new Promise(r => setTimeout(r, 50));
-                    btn = findVisibleTempBtn();
-                    if (btn) break;
-                }
-            } else if (menuBtn) {
-                // Sidebar might be open, just wait a bit for the button to become visible
-                for (let i = 0; i < 20; i++) {
-                    await new Promise(r => setTimeout(r, 50));
-                    btn = findVisibleTempBtn();
-                    if (btn) break;
-                }
-            }
-        }
+        const btn = await ensureTempBtnVisible();
 
         if (!btn) {
             console.error("Gemini Enhancer: Cannot find Temp Chat button.");
@@ -293,7 +284,6 @@
             return true;
         }
 
-        // Click and wait
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
         btn.click();
 
