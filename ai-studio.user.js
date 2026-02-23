@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Studio Advanced Settings (Zero-Flash & Flexible Models)
 // @namespace    http://tampermonkey.net/
-// @version      8.0
-// @description  Applies settings silently. Supports flexible model versioning (Gemini 3 priority). Refactored for maintainability.
+// @version      8.1
+// @description  Applies settings silently. Supports flexible model versioning (Gemini 3.1 priority). Refactored for maintainability.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
 // @grant        none
@@ -22,10 +22,10 @@
     // ===================================================================
 
     const MODEL_PREFS = {
-        PRO: ['gemini-3-pro', 'gemini-3-pro-latest', 'gemini-3-pro-preview', 'gemini-2.5-pro'],
-        // Updated order: 3 > Flash Latest > 2.5
-        FLASH: ['gemini-3-flash-latest', 'gemini-3-flash', 'gemini-3-flash-preview', 'gemini-flash-latest', 'gemini-2.5-flash'],
-        NANO: ['gemini-3-flash-image', 'gemini-3-flash-image-preview', 'gemini-2.5-flash-image']
+        // Priority order: 3.1 > 3 > 2.5
+        PRO: ['gemini-3.1-pro', 'gemini-3.1-pro-latest', 'gemini-3.1-pro-preview', 'gemini-3-pro', 'gemini-3-pro-latest', 'gemini-3-pro-preview', 'gemini-2.5-pro'],
+        FLASH: ['gemini-3.1-flash-latest', 'gemini-3.1-flash', 'gemini-3.1-flash-preview', 'gemini-3-flash-latest', 'gemini-3-flash', 'gemini-3-flash-preview', 'gemini-flash-latest', 'gemini-2.5-flash'],
+        NANO: ['gemini-3.1-flash-image', 'gemini-3.1-flash-image-preview', 'gemini-3-flash-image', 'gemini-3-flash-image-preview', 'gemini-2.5-flash-image']
     };
 
     const SELECTORS = {
@@ -124,7 +124,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
      */
     function debounce(func, wait) {
         let timeout;
-        return function(...args) {
+        return function (...args) {
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), wait);
         };

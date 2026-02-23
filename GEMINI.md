@@ -44,6 +44,9 @@ This repository contains a collection of userscripts designed to enhance Google'
 - **Event Simulation:** Simulates `click`, `input`, and `keydown` events to interact with Angular/Material components that rely on specific event sequences.
 - **Robustness:** Includes finding elements by ID, text content fallback, and waiting mechanisms (`waitForElement`) to handle network latency.
 
+## ⚠️ Critical Gotchas
+- **Temp Chat Button Visibility:** The temp chat button (`button[data-test-id="temp-chat-button"]`) exists in the DOM **even when the sidebar is closed**, but it is **hidden**. Always use the `isElementVisible()` helper to check if it's interactable. Checking `querySelector()` alone is NOT sufficient — it will find the hidden button and skip the sidebar-opening logic. This has caused regressions before (v1.35 fix).
+
 ## Configuration
 - **Hardcoded Defaults:** Configuration objects (e.g., `DEFAULT_SETTINGS` in `ai-studio.user.js`) are defined at the top of the scripts for easy user modification.
 - **Selectors:** All CSS selectors are centralized in a `SELECTORS` constant to ease maintenance when Google updates their UI class names.
