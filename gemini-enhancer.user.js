@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.02
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -196,8 +196,58 @@
     // --- Feature 2: Mode + Thinking Selection ---
 
     /**
+     * Aggressively hides the CDK overlay container so menus are completely invisible
+     * during programmatic model/thinking selection. Uses both inline styles (immediate)
+     * and a CSS class (catches overlays created mid-operation).
+     */
+    function hideMenuOverlays() {
+        document.body.classList.add('gemini-enhancer-hiding-menus');
+        const overlay = document.querySelector('.cdk-overlay-container');
+        if (overlay) {
+            overlay.style.setProperty('visibility', 'hidden', 'important');
+            overlay.style.setProperty('position', 'fixed', 'important');
+            overlay.style.setProperty('left', '-9999px', 'important');
+            overlay.style.setProperty('top', '-9999px', 'important');
+        }
+    }
+
+    function showMenuOverlays() {
+        document.body.classList.remove('gemini-enhancer-hiding-menus');
+        const overlay = document.querySelector('.cdk-overlay-container');
+        if (overlay) {
+            overlay.style.removeProperty('visibility');
+            overlay.style.removeProperty('position');
+            overlay.style.removeProperty('left');
+            overlay.style.removeProperty('top');
+        }
+    }
+
+    /**
+     * Polls for an element matching selector to appear, with a tight timeout.
+     * Uses 10ms intervals for near-instant response.
+     * @param {string} selector
+     * @param {number} timeoutMs
+     * @returns {Promise<Element|null>}
+     */
+    function waitForSelector(selector, timeoutMs = 300) {
+        return new Promise((resolve) => {
+            const el = document.querySelector(selector);
+            if (el) return resolve(el);
+            const start = Date.now();
+            const iv = setInterval(() => {
+                const found = document.querySelector(selector);
+                if (found || Date.now() - start > timeoutMs) {
+                    clearInterval(iv);
+                    resolve(found || null);
+                }
+            }, 10);
+        });
+    }
+
+    /**
      * Selects a model from the mode picker menu.
-     * @param {string} modelKey - Key into SELECTORS (e.g., 'optionFlash') or a full selector string.
+     * Menu overlays are hidden during the operation.
+     * @param {string} modelKey - Key into SELECTORS (e.g., 'optionFlash').
      * @returns {Promise<boolean>} true if model was selected successfully.
      */
     async function selectModel(modelKey) {
@@ -207,18 +257,15 @@
             return false;
         }
 
-        console.log("Gemini Enhancer: Opening model menu...");
         trigger.click();
 
-        // Wait for menu overlay to render
-        await new Promise(r => setTimeout(r, 150));
-
-        // Try primary selector
+        // Wait for menu to render (poll for the option)
         const selector = SELECTORS[modelKey];
-        let targetOption = selector ? document.querySelector(selector) : null;
+        let targetOption = selector ? await waitForSelector(selector, 300) : null;
 
         // Fallback: find by label text
         if (!targetOption) {
+            await new Promise(r => setTimeout(r, 50));
             const labelMap = {
                 optionFlashLite: 'Flash-Lite',
                 optionFlash: 'Flash',
@@ -226,7 +273,6 @@
             };
             const label = labelMap[modelKey];
             if (label) {
-                console.log(`Gemini Enhancer: Primary selector failed, trying label fallback: "${label}"`);
                 targetOption = findMenuItemByLabel(label);
             }
         }
@@ -237,7 +283,7 @@
             return true;
         } else {
             console.warn(`Gemini Enhancer: Model option ${modelKey} not found. Closing menu.`);
-            document.body.click(); // Close menu
+            document.body.click();
             return false;
         }
     }
@@ -245,6 +291,7 @@
     /**
      * Selects a thinking level from the nested submenu.
      * Must be called after the model menu is closed (selectModel() closes it).
+     * Menu overlays are hidden during the operation.
      * @param {'standard'|'extended'} level
      * @returns {Promise<boolean>}
      */
@@ -256,15 +303,14 @@
         }
 
         // Re-open the model menu
-        console.log("Gemini Enhancer: Re-opening menu for thinking level...");
         trigger.click();
-        await new Promise(r => setTimeout(r, 150));
 
-        // Find and click the "Thinking level" submenu trigger
-        let thinkingTrigger = document.querySelector(SELECTORS.thinkingLevelTrigger);
+        // Wait for thinking level trigger to appear
+        let thinkingTrigger = await waitForSelector(SELECTORS.thinkingLevelTrigger, 300);
 
         // Fallback: find by label
         if (!thinkingTrigger) {
+            await new Promise(r => setTimeout(r, 50));
             thinkingTrigger = findMenuItemByLabel('Thinking level');
         }
 
@@ -275,16 +321,17 @@
         }
 
         // Hover to open submenu (Angular Material uses mouseenter for nested menus)
-        console.log("Gemini Enhancer: Opening thinking level submenu...");
         thinkingTrigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
         thinkingTrigger.click();
 
-        // Wait for submenu to render
-        await new Promise(r => setTimeout(r, 250));
-
-        // Find the level option by label text
+        // Wait for submenu to render, then find the level option by label
         const levelLabel = level === 'extended' ? 'Extended' : 'Standard';
-        const levelOption = findMenuItemByLabel(levelLabel);
+        let levelOption = null;
+        for (let i = 0; i < 30; i++) {
+            levelOption = findMenuItemByLabel(levelLabel);
+            if (levelOption) break;
+            await new Promise(r => setTimeout(r, 10));
+        }
 
         if (levelOption) {
             levelOption.click();
@@ -299,17 +346,24 @@
 
     /**
      * Combined: select a model AND a thinking level.
+     * Hides all menu overlays during the entire operation so the user
+     * never sees the menus flash open/close.
      * @param {string} modelKey - SELECTORS key (e.g., 'optionFlash')
      * @param {'standard'|'extended'} thinkingLevel
      */
     async function setModeAndThinking(modelKey, thinkingLevel) {
-        const modelSuccess = await selectModel(modelKey);
-        if (!modelSuccess) return;
+        hideMenuOverlays();
+        try {
+            const modelSuccess = await selectModel(modelKey);
+            if (!modelSuccess) return;
 
-        // Brief pause to let the menu close and UI settle
-        await new Promise(r => setTimeout(r, 300));
+            // Brief pause to let the menu close and UI settle
+            await new Promise(r => setTimeout(r, 80));
 
-        await selectThinkingLevel(thinkingLevel);
+            await selectThinkingLevel(thinkingLevel);
+        } finally {
+            showMenuOverlays();
+        }
 
         // Re-focus input after mode switch
         focusInputField();
@@ -583,29 +637,21 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v2.0: Initializing...");
+        console.log("Gemini Enhancer v2.01: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
 
-        // UI Injection Logic
-        const findContainer = () => {
-            // Primary: trailing actions wrapper (below input, contains model picker)
-            let c = document.querySelector('.trailing-actions-wrapper');
-            if (c) return c;
+        // UI Injection Logic — inject as a separate row inside .input-area,
+        // AFTER .text-input-field, so it never squeezes the single-line input.
+        const findInputArea = () => {
+            // Primary: the .input-area container
+            const inputArea = document.querySelector('.input-area');
+            if (inputArea) return inputArea;
 
-            // Fallback: find model picker's parent
-            const modePicker = document.querySelector(SELECTORS.triggerBtn);
-            if (modePicker) {
-                const wrapper = modePicker.closest('.trailing-actions-wrapper') ||
-                    modePicker.closest('.leading-actions-wrapper') ||
-                    modePicker.parentElement?.parentElement;
-                if (wrapper) return wrapper;
-            }
-
-            // Legacy fallback
-            c = document.querySelector('.leading-actions-wrapper');
-            if (c) return c;
+            // Fallback: find via text-input-field parent
+            const textField = document.querySelector('.text-input-field');
+            if (textField?.parentElement) return textField.parentElement;
 
             return null;
         };
@@ -613,36 +659,53 @@
         const injectButtons = () => {
             if (document.getElementById('tm-mode-group')) return;
 
-            const container = findContainer();
-            if (container) {
-                const style = window.getComputedStyle(container);
-                if (style.display === 'none' || style.visibility === 'hidden') return;
+            const inputArea = findInputArea();
+            if (!inputArea) return;
 
-                const btnGroup = createModeButtons();
+            const style = window.getComputedStyle(inputArea);
+            if (style.display === 'none' || style.visibility === 'hidden') return;
 
-                // Insert at the beginning of the container (before model picker)
-                const modelPickerContainer = container.querySelector('.model-picker-container');
-                if (modelPickerContainer) {
-                    container.insertBefore(btnGroup, modelPickerContainer);
-                } else {
-                    container.prepend(btnGroup);
-                }
+            const btnGroup = createModeButtons();
 
-                console.log("Gemini Enhancer: Mode buttons injected.");
+            // Insert after .text-input-field (before leading/trailing wrappers)
+            const textField = inputArea.querySelector('.text-input-field');
+            if (textField?.nextSibling) {
+                inputArea.insertBefore(btnGroup, textField.nextSibling);
+            } else {
+                inputArea.appendChild(btnGroup);
             }
+
+            console.log("Gemini Enhancer: Mode buttons injected.");
         };
 
         // Create styles
         const styleEl = document.createElement('style');
         styleEl.textContent = `
+            /* Hide menu overlays during programmatic model/thinking selection.
+               Uses visibility:hidden so elements still render for .click() to work,
+               plus off-screen positioning as a belt-and-suspenders approach.
+               Kills all transitions/animations so menus appear/disappear instantly. */
+            .gemini-enhancer-hiding-menus .cdk-overlay-container {
+                visibility: hidden !important;
+                position: fixed !important;
+                left: -9999px !important;
+                top: -9999px !important;
+            }
+            .gemini-enhancer-hiding-menus .cdk-overlay-container *,
+            .gemini-enhancer-hiding-menus .cdk-overlay-container {
+                transition: none !important;
+                animation: none !important;
+            }
+
             .gemini-mode-group {
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 gap: 4px;
-                margin-right: 8px;
-                padding-right: 8px;
+                padding: 4px 0 2px;
                 height: 32px;
                 flex-shrink: 0;
+                order: -1;
             }
 
             .gemini-mode-splitter {
