@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.36
-// @description  Enhancements for Google Gemini: Fast/Thinking/Pro Toggles & Custom Keybindings.
+// @version      2.0
+// @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -16,28 +16,21 @@
 // │                        AI AGENT NOTES                              │
 // │  DO NOT REMOVE OR REFACTOR THE FOLLOWING FEATURES:                 │
 // │                                                                    │
-// │  1. SIDEBAR AUTO-OPEN FOR TEMP CHAT (?temp=true)                   │
-// │     - When the sidebar is closed and ?temp=true is in the URL,     │
-// │       the script MUST click the sidebar menu button to open it     │
-// │       BEFORE attempting to click the temp chat button.             │
-// │     - The temp chat button exists in the DOM even when the sidebar │
-// │       is closed, but it is HIDDEN. Always check visibility via     │
-// │       isElementVisible() before assuming the button is clickable.  │
-// │     - CRITICAL: Do NOT use aria-expanded on the sidebar menu       │
-// │       button to detect sidebar state — Gemini does not set it.     │
-// │       Instead, check if the temp chat button is in the DOM but     │
-// │       hidden (= sidebar closed) vs visible (= sidebar open).      │
-// │     - CRITICAL: Always wait for the button to appear naturally     │
-// │       FIRST (sidebar may already be open but still rendering).     │
-// │       Only toggle the sidebar as a LAST RESORT after the wait.     │
-// │     - Functions: activateTempChatFromUrl(), toggleTempChat()        │
-// │     - Helper: isElementVisible(), isSidebarClosed()                │
+// │  1. TEMP CHAT (button[aria-label="Temporary chat"])                │
+// │     - The temp chat button is in the sidebar nav area.             │
+// │     - Always check visibility via isElementVisible() before        │
+// │       assuming the button is clickable.                            │
+// │     - Functions: activateTempChatFromUrl(), toggleTempChat()       │
+// │     - Helper: isElementVisible()                                   │
 // │                                                                    │
-// │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)        │
+// │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)       │
 // │     - Must remain on all contenteditable fields.                   │
 // │                                                                    │
-// │  3. MODE BUTTONS (F, T, P) + TEMP CHAT BUTTON                     │
-// │     - Injected into the toolbar. Must survive SPA navigation.      │
+// │  3. MODE+THINKING BUTTONS (FL, F, FX, P, PX) + TEMP CHAT BUTTON  │
+// │     - Injected below the input area in .trailing-actions-wrapper.  │
+// │     - Must survive SPA navigation.                                 │
+// │     - Each button selects a model AND a thinking level via         │
+// │       two-step menu navigation.                                    │
 // │                                                                    │
 // │  4. AUTO-FOCUS INPUT FIELD                                         │
 // │     - Focuses input and places cursor at end of existing text.     │
@@ -55,35 +48,41 @@
 
     // Configuration
     const SELECTORS = {
-        container: '.leading-actions-wrapper',
+        // Injection point: below the input area, trailing side
+        container: '.trailing-actions-wrapper',
+
+        // Model picker trigger (unchanged)
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
-        // Updated Selectors based on user request (12/2025)
-        optionFast: '[data-test-id="bard-mode-option-fast"]',
-        optionThinking: '[data-test-id="bard-mode-option-thinking"]',
-        optionPro: '[data-test-id="bard-mode-option-pro"]',
 
-        // Temp Chat Feature
-        tempChatTrigger: 'button[data-test-id="temp-chat-button"]',
-        tempChatIndicator: '.temporary-chat-card',
+        // Model options (hash-based IDs — may change when Google updates models)
+        optionFlashLite: '[data-test-id="bard-mode-option-8c46e95b1a07cecc"]',
+        optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"]',
+        optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"]',
 
-        // Sidebar Handling
-        sidebarMenuButton: 'button[data-test-id="side-nav-menu-button"]',
+        // Thinking level submenu
+        thinkingLevelTrigger: 'gem-menu-item[value="thinking_level"]',
 
-        toolsDrawer: 'toolbox-drawer',
+        // Temp Chat
+        tempChatTrigger: 'button[aria-label="Temporary chat"]',
+
+        // Input & Send
         sendButton: 'button[aria-label="Send message"]',
         inputField: 'rich-textarea .ql-editor[contenteditable="true"]'
     };
 
+    // Fallback label map — used when hash-based selectors fail
+    const MODEL_LABELS = {
+        flashlite: 'Flash-Lite',
+        flash: 'Flash',
+        pro: 'Pro'
+    };
+
     /**
      * Checks if a DOM element is visible and interactable.
-     * IMPORTANT: The temp chat button exists in the DOM even when the sidebar
-     * is collapsed, but is hidden. We must check visibility, not just existence.
      */
     function isElementVisible(el) {
         if (!el) return false;
-        // offsetParent is null for hidden elements (display:none or not in layout)
         if (el.offsetParent === null) {
-            // Exception: fixed/sticky positioned elements can have null offsetParent
             const style = window.getComputedStyle(el);
             if (style.position === 'fixed' || style.position === 'sticky') {
                 return style.display !== 'none' && style.visibility !== 'hidden';
@@ -95,20 +94,51 @@
     }
 
     /**
-     * Reliably detects if the sidebar is CLOSED.
-     * DO NOT use aria-expanded — Gemini's sidebar button does not set it.
-     * Instead: if the temp chat button is in the DOM but hidden → sidebar is closed.
+     * Waits for an element matching the selector to appear in the DOM.
+     * @param {string} selector - CSS selector
+     * @param {number} timeoutMs - Max wait time
+     * @param {Element} [root=document] - Root element to search within
+     * @returns {Promise<Element|null>}
      */
-    function isSidebarClosed() {
-        const tempBtn = document.querySelector(SELECTORS.tempChatTrigger);
-        if (!tempBtn) return true; // button not in DOM at all → treat as closed
-        return !isElementVisible(tempBtn); // in DOM but hidden → closed
+    function waitForElement(selector, timeoutMs = 3000, root = document) {
+        return new Promise((resolve) => {
+            const existing = root.querySelector(selector);
+            if (existing) return resolve(existing);
+
+            const observer = new MutationObserver(() => {
+                const el = root.querySelector(selector);
+                if (el) {
+                    observer.disconnect();
+                    resolve(el);
+                }
+            });
+
+            observer.observe(root === document ? document.body : root, {
+                childList: true,
+                subtree: true
+            });
+
+            setTimeout(() => {
+                observer.disconnect();
+                resolve(root.querySelector(selector));
+            }, timeoutMs);
+        });
     }
 
-    /** Helper to find the temp chat button only if it's VISIBLE */
-    function findVisibleTempBtn() {
-        const el = document.querySelector(SELECTORS.tempChatTrigger);
-        return (el && isElementVisible(el)) ? el : null;
+    /**
+     * Finds a menu item by its label text content (fallback for hash-based selectors).
+     * Searches within currently visible overlay/menu panels.
+     * @param {string} labelText - The text to match (trimmed)
+     * @returns {Element|null}
+     */
+    function findMenuItemByLabel(labelText) {
+        const items = document.querySelectorAll('gem-menu-item .label');
+        for (const label of items) {
+            if (label.textContent.trim().toLowerCase().includes(labelText.toLowerCase())) {
+                return label.closest('gem-menu-item');
+            }
+        }
+        return null;
     }
 
     // --- Feature 0: Auto-Focus Input Field ---
@@ -163,64 +193,141 @@
         }
     }
 
-    // --- Feature 2: Mode Selection Buttons (F, T, P) + Temp Chat ---
+    // --- Feature 2: Mode + Thinking Selection ---
+
+    /**
+     * Selects a model from the mode picker menu.
+     * @param {string} modelKey - Key into SELECTORS (e.g., 'optionFlash') or a full selector string.
+     * @returns {Promise<boolean>} true if model was selected successfully.
+     */
+    async function selectModel(modelKey) {
+        const trigger = document.querySelector(SELECTORS.triggerBtn);
+        if (!trigger) {
+            console.error("Gemini Enhancer: Mode dropdown trigger not found.");
+            return false;
+        }
+
+        console.log("Gemini Enhancer: Opening model menu...");
+        trigger.click();
+
+        // Wait for menu overlay to render
+        await new Promise(r => setTimeout(r, 150));
+
+        // Try primary selector
+        const selector = SELECTORS[modelKey];
+        let targetOption = selector ? document.querySelector(selector) : null;
+
+        // Fallback: find by label text
+        if (!targetOption) {
+            const labelMap = {
+                optionFlashLite: 'Flash-Lite',
+                optionFlash: 'Flash',
+                optionPro: 'Pro'
+            };
+            const label = labelMap[modelKey];
+            if (label) {
+                console.log(`Gemini Enhancer: Primary selector failed, trying label fallback: "${label}"`);
+                targetOption = findMenuItemByLabel(label);
+            }
+        }
+
+        if (targetOption) {
+            targetOption.click();
+            console.log(`Gemini Enhancer: Selected model ${modelKey}`);
+            return true;
+        } else {
+            console.warn(`Gemini Enhancer: Model option ${modelKey} not found. Closing menu.`);
+            document.body.click(); // Close menu
+            return false;
+        }
+    }
+
+    /**
+     * Selects a thinking level from the nested submenu.
+     * Must be called after the model menu is closed (selectModel() closes it).
+     * @param {'standard'|'extended'} level
+     * @returns {Promise<boolean>}
+     */
+    async function selectThinkingLevel(level) {
+        const trigger = document.querySelector(SELECTORS.triggerBtn);
+        if (!trigger) {
+            console.error("Gemini Enhancer: Mode dropdown trigger not found for thinking level.");
+            return false;
+        }
+
+        // Re-open the model menu
+        console.log("Gemini Enhancer: Re-opening menu for thinking level...");
+        trigger.click();
+        await new Promise(r => setTimeout(r, 150));
+
+        // Find and click the "Thinking level" submenu trigger
+        let thinkingTrigger = document.querySelector(SELECTORS.thinkingLevelTrigger);
+
+        // Fallback: find by label
+        if (!thinkingTrigger) {
+            thinkingTrigger = findMenuItemByLabel('Thinking level');
+        }
+
+        if (!thinkingTrigger) {
+            console.warn("Gemini Enhancer: Thinking level trigger not found.");
+            document.body.click();
+            return false;
+        }
+
+        // Hover to open submenu (Angular Material uses mouseenter for nested menus)
+        console.log("Gemini Enhancer: Opening thinking level submenu...");
+        thinkingTrigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+        thinkingTrigger.click();
+
+        // Wait for submenu to render
+        await new Promise(r => setTimeout(r, 250));
+
+        // Find the level option by label text
+        const levelLabel = level === 'extended' ? 'Extended' : 'Standard';
+        const levelOption = findMenuItemByLabel(levelLabel);
+
+        if (levelOption) {
+            levelOption.click();
+            console.log(`Gemini Enhancer: Selected thinking level: ${levelLabel}`);
+            return true;
+        } else {
+            console.warn(`Gemini Enhancer: Thinking level "${levelLabel}" not found.`);
+            document.body.click();
+            return false;
+        }
+    }
+
+    /**
+     * Combined: select a model AND a thinking level.
+     * @param {string} modelKey - SELECTORS key (e.g., 'optionFlash')
+     * @param {'standard'|'extended'} thinkingLevel
+     */
+    async function setModeAndThinking(modelKey, thinkingLevel) {
+        const modelSuccess = await selectModel(modelKey);
+        if (!modelSuccess) return;
+
+        // Brief pause to let the menu close and UI settle
+        await new Promise(r => setTimeout(r, 300));
+
+        await selectThinkingLevel(thinkingLevel);
+
+        // Re-focus input after mode switch
+        focusInputField();
+    }
+
+    // --- Feature 3: Temp Chat ---
 
     // Global lock to prevent concurrent temp chat activation attempts
     let isTempChatActivating = false;
 
-    /**
-     * Ensures the temp chat button is visible, opening the sidebar if needed.
-     * CRITICAL SEQUENCE (do NOT reorder):
-     *   Phase 1: Wait for button to appear naturally (sidebar may be open but still rendering).
-     *   Phase 2: Only if button never appeared, open sidebar and wait again.
-     * This prevents accidentally CLOSING an already-open sidebar.
-     * @returns {HTMLElement|null} The visible temp chat button, or null.
-     */
-    async function ensureTempBtnVisible() {
-        // Phase 1: Quick check — is the button already visible?
-        const immediateBtn = findVisibleTempBtn();
-        if (immediateBtn) return immediateBtn;
-
-        // If the button is in the DOM but hidden → sidebar is definitely closed.
-        // Skip straight to Phase 2 (no point waiting).
-        if (!isSidebarClosed()) {
-            // Sidebar appears open but button not visible yet → brief wait for render
-            for (let i = 0; i < 6; i++) { // 300ms max
-                await new Promise(r => setTimeout(r, 50));
-                const btn = findVisibleTempBtn();
-                if (btn) return btn;
-            }
-        }
-
-        // Phase 2: Button didn't appear. Sidebar is likely closed → open it.
-        const menuBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-        if (!menuBtn) {
-            console.warn("Gemini Enhancer: Sidebar menu button not found.");
-            return null;
-        }
-
-        // Confirm sidebar is truly closed before clicking (avoid toggling an open sidebar)
-        if (isSidebarClosed()) {
-            console.log("Gemini Enhancer: Sidebar is closed. Opening...");
-            menuBtn.click();
-        } else {
-            console.log("Gemini Enhancer: Sidebar appears open, waiting longer for button...");
-        }
-
-        // Wait for the VISIBLE button (up to 3s after sidebar click)
-        for (let i = 0; i < 60; i++) {
-            const btn = findVisibleTempBtn();
-            if (btn) return btn;
-            await new Promise(r => setTimeout(r, 50));
-        }
-
-        console.error("Gemini Enhancer: Temp Chat button never became visible.");
-        return null;
+    /** Helper to find the temp chat button only if it's VISIBLE */
+    function findVisibleTempBtn() {
+        const el = document.querySelector(SELECTORS.tempChatTrigger);
+        return (el && isElementVisible(el)) ? el : null;
     }
 
     /**
      * Toggles the Temporary Chat feature (for toolbar button click).
-     * Returns true if successful (indicator visible), false otherwise.
      */
     async function toggleTempChat() {
         if (isTempChatActivating) {
@@ -231,7 +338,15 @@
         isTempChatActivating = true;
         console.log("Gemini Enhancer: Attempting to toggle Temp Chat...");
 
-        const btn = await ensureTempBtnVisible();
+        // Wait for the button to appear (up to 3s)
+        let btn = findVisibleTempBtn();
+        if (!btn) {
+            for (let i = 0; i < 60; i++) {
+                btn = findVisibleTempBtn();
+                if (btn) break;
+                await new Promise(r => setTimeout(r, 50));
+            }
+        }
 
         if (!btn) {
             console.error("Gemini Enhancer: Cannot find Temp Chat button. Aborting.");
@@ -239,35 +354,18 @@
             return false;
         }
 
-        const isTempChatActive = () => !!document.querySelector(SELECTORS.tempChatIndicator);
-
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
         btn.click();
 
-        // Wait up to 1.5s for indicator to appear (30 * 50ms)
-        for (let i = 0; i < 30; i++) {
-            if (isTempChatActive()) {
-                isTempChatActivating = false;
-                return true;
-            }
-            await new Promise(r => setTimeout(r, 50));
-        }
-
         isTempChatActivating = false;
-        return isTempChatActive();
+        return true;
     }
 
     /**
      * Activates Temporary Chat (one-way, for URL parameter use).
-     * Unlike toggleTempChat, this will NOT click if already active.
-     * Returns true if temp chat is active after the call.
+     * Will NOT click if already on a temp chat (checks icon state).
      */
     async function activateTempChatFromUrl() {
-        if (document.querySelector(SELECTORS.tempChatIndicator)) {
-            console.log("Gemini Enhancer: Temp Chat already active.");
-            return true;
-        }
-
         if (isTempChatActivating) {
             console.log("Gemini Enhancer: Temp Chat activation already in progress.");
             return false;
@@ -276,7 +374,13 @@
         isTempChatActivating = true;
         console.log("Gemini Enhancer: Activating Temp Chat from URL...");
 
-        const btn = await ensureTempBtnVisible();
+        // Wait for button to appear
+        let btn = null;
+        for (let i = 0; i < 60; i++) {
+            btn = findVisibleTempBtn();
+            if (btn) break;
+            await new Promise(r => setTimeout(r, 50));
+        }
 
         if (!btn) {
             console.error("Gemini Enhancer: Cannot find Temp Chat button.");
@@ -284,30 +388,15 @@
             return false;
         }
 
-        // Double-check we're not already active (might have changed while waiting)
-        if (document.querySelector(SELECTORS.tempChatIndicator)) {
-            console.log("Gemini Enhancer: Temp Chat became active while waiting.");
-            isTempChatActivating = false;
-            return true;
-        }
-
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
         btn.click();
 
-        // Wait up to 2s for indicator (40 * 50ms)
-        for (let i = 0; i < 40; i++) {
-            if (document.querySelector(SELECTORS.tempChatIndicator)) {
-                console.log("Gemini Enhancer: Temp Chat activated successfully.");
-                isTempChatActivating = false;
-                return true;
-            }
-            await new Promise(r => setTimeout(r, 50));
-        }
-
-        console.warn("Gemini Enhancer: Temp Chat indicator not found after click.");
+        console.log("Gemini Enhancer: Temp Chat activated via URL.");
         isTempChatActivating = false;
-        return false;
+        return true;
     }
+
+    // --- Feature 4: Mode Buttons UI ---
 
     function createModeButtons() {
         const container = document.createElement('div');
@@ -316,22 +405,39 @@
 
         const modes = [
             {
-                label: 'F',
-                selector: SELECTORS.optionFast,
-                title: 'Fast',
+                label: 'FL',
+                modelKey: 'optionFlashLite',
+                thinking: 'extended',
+                title: 'Flash-Lite · Extended Thinking',
                 path: 'M7 2v11h3v9l7-12h-4l4-8z' // Lightning Bolt
             },
             {
-                label: 'T',
-                selector: SELECTORS.optionThinking,
-                title: 'Thinking',
-                path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb Outline
+                label: 'F',
+                modelKey: 'optionFlash',
+                thinking: 'standard',
+                title: 'Flash · Standard Thinking',
+                path: 'M7 2v11h3v9l7-12h-4l4-8z' // Lightning Bolt
+            },
+            {
+                label: 'FX',
+                modelKey: 'optionFlash',
+                thinking: 'extended',
+                title: 'Flash · Extended Thinking',
+                path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
             },
             {
                 label: 'P',
-                selector: SELECTORS.optionPro,
-                title: 'Pro',
-                path: 'M12 2L9.09 9.09 2 12l7.09 2.91L12 22l2.91-7.09L22 12l-7.09-2.91z' // Star/Sparkle
+                modelKey: 'optionPro',
+                thinking: 'standard',
+                title: 'Pro · Standard Thinking',
+                path: 'M12 2L9.09 9.09 2 12l7.09 2.91L12 22l2.91-7.09L22 12l-7.09-2.91z' // Star
+            },
+            {
+                label: 'PX',
+                modelKey: 'optionPro',
+                thinking: 'extended',
+                title: 'Pro · Extended Thinking',
+                path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
             }
         ];
 
@@ -358,7 +464,7 @@
             btn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setMode(mode.selector);
+                setModeAndThinking(mode.modelKey, mode.thinking);
             };
 
             container.appendChild(btn);
@@ -366,10 +472,7 @@
 
         // Splitter
         const splitter = document.createElement('div');
-        splitter.style.width = '1px';
-        splitter.style.height = '16px';
-        splitter.style.backgroundColor = 'rgba(128, 128, 128, 0.3)';
-        splitter.style.margin = '0 4px';
+        splitter.className = 'gemini-mode-splitter';
         container.appendChild(splitter);
 
         // Temp Chat Button
@@ -401,33 +504,7 @@
         return container;
     }
 
-    function setMode(targetSelector) {
-        const trigger = document.querySelector(SELECTORS.triggerBtn);
-        if (!trigger) {
-            console.error("Gemini Enhancer: Mode dropdown trigger not found.");
-            return;
-        }
-
-        console.log("Gemini Enhancer: Opening menu...");
-        trigger.click();
-
-        // Wait for Angular Material menu overlay
-        setTimeout(() => {
-            const targetOption = document.querySelector(targetSelector);
-            if (targetOption) {
-                targetOption.click();
-                console.log(`Gemini Enhancer: Selected mode ${targetSelector}`);
-                // Re-focus input after mode switch
-                focusInputField();
-            } else {
-                console.warn(`Gemini Enhancer: Target option ${targetSelector} not found. Closing menu.`);
-                // Close menu by clicking body (standard behavior)
-                document.body.click();
-            }
-        }, 50); // Short delay for DOM render
-    }
-
-    // --- Feature 3: URL Parameters ---
+    // --- Feature 5: URL Parameters ---
     let urlParamsHandled = false;
 
     function checkUrlParams() {
@@ -439,41 +516,47 @@
 
         const params = new URLSearchParams(window.location.search);
 
-        // ?model=fast|thinking|pro
+        // ?model=flashlite|flash|pro
         const modelParam = params.get('model');
+        // ?thinking=standard|extended
+        const thinkingParam = params.get('thinking');
+
         if (modelParam) {
-            // Delay slightly to ensure UI is ready
+            const modelMap = {
+                'flashlite': 'optionFlashLite',
+                'flash-lite': 'optionFlashLite',
+                'flash': 'optionFlash',
+                'pro': 'optionPro',
+                // Legacy aliases
+                'fast': 'optionFlash',
+                'thinking': 'optionFlash'
+            };
+            const modelKey = modelMap[modelParam.toLowerCase()];
+            if (modelKey) {
+                const thinking = thinkingParam ? thinkingParam.toLowerCase() : 'standard';
+                setTimeout(() => {
+                    console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' with thinking '${thinking}' from URL`);
+                    setModeAndThinking(modelKey, thinking);
+                }, 1500);
+            }
+        } else if (thinkingParam) {
+            // Only thinking level specified — just set thinking on current model
             setTimeout(() => {
-                const map = {
-                    'fast': SELECTORS.optionFast,
-                    'thinking': SELECTORS.optionThinking,
-                    'pro': SELECTORS.optionPro
-                };
-                if (map[modelParam.toLowerCase()]) {
-                    console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' from URL`);
-                    setMode(map[modelParam.toLowerCase()]);
-                }
-            }, 1000); // 1s wait for initial load
+                console.log(`Gemini Enhancer: Auto-selecting thinking level '${thinkingParam}' from URL`);
+                selectThinkingLevel(thinkingParam.toLowerCase());
+            }, 1500);
         }
 
         // ?temp=1|true
         const tempChatParam = params.get('temp');
         if (tempChatParam === '1' || tempChatParam === 'true') {
-            // Use sequential async loop instead of setInterval to prevent overlapping calls
             (async function attemptTempChatActivation() {
-                const maxAttempts = 10; // 10 attempts with increasing delays
-                const baseDelay = 500; // Start with 500ms
+                const maxAttempts = 10;
+                const baseDelay = 500;
 
                 for (let attempt = 0; attempt < maxAttempts; attempt++) {
-                    // Check if already active
-                    if (document.querySelector(SELECTORS.tempChatIndicator)) {
-                        console.log("Gemini Enhancer: Temp Chat already active.");
-                        return;
-                    }
-
-                    // Wait for sidebar button to exist (app ready)
-                    const sidebarBtn = document.querySelector(SELECTORS.sidebarMenuButton);
-                    if (!sidebarBtn) {
+                    const tempBtn = document.querySelector(SELECTORS.tempChatTrigger);
+                    if (!tempBtn) {
                         console.log(`Gemini Enhancer: Waiting for app to load (attempt ${attempt + 1})...`);
                         await new Promise(r => setTimeout(r, baseDelay));
                         continue;
@@ -487,7 +570,6 @@
                         return;
                     }
 
-                    // Wait before next attempt (increasing delay)
                     const delay = baseDelay + (attempt * 200);
                     console.log(`Gemini Enhancer: Activation attempt failed. Waiting ${delay}ms before retry...`);
                     await new Promise(r => setTimeout(r, delay));
@@ -498,24 +580,33 @@
         }
     }
 
+    // --- Initialization ---
+
     function init() {
-        console.log("Gemini Enhancer: Initializing...");
+        console.log("Gemini Enhancer v2.0: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
 
         // UI Injection Logic
         const findContainer = () => {
-            // Attempt 1: The specific wrapper
-            let c = document.querySelector('.leading-actions-wrapper');
+            // Primary: trailing actions wrapper (below input, contains model picker)
+            let c = document.querySelector('.trailing-actions-wrapper');
             if (c) return c;
 
-            // Attempt 2: "Tools" button parent or similar
-            const toolsBtn = document.querySelector('button[aria-label="Extensions"]') ||
-                document.querySelector('button[aria-label="Upload image"]') ||
-                document.querySelector('[data-test-id="bard-mode-menu-button"]')?.parentElement;
+            // Fallback: find model picker's parent
+            const modePicker = document.querySelector(SELECTORS.triggerBtn);
+            if (modePicker) {
+                const wrapper = modePicker.closest('.trailing-actions-wrapper') ||
+                    modePicker.closest('.leading-actions-wrapper') ||
+                    modePicker.parentElement?.parentElement;
+                if (wrapper) return wrapper;
+            }
 
-            if (toolsBtn) return toolsBtn.parentElement;
+            // Legacy fallback
+            c = document.querySelector('.leading-actions-wrapper');
+            if (c) return c;
+
             return null;
         };
 
@@ -524,52 +615,69 @@
 
             const container = findContainer();
             if (container) {
-                // Check visibility
                 const style = window.getComputedStyle(container);
                 if (style.display === 'none' || style.visibility === 'hidden') return;
 
                 const btnGroup = createModeButtons();
-                container.appendChild(btnGroup);
+
+                // Insert at the beginning of the container (before model picker)
+                const modelPickerContainer = container.querySelector('.model-picker-container');
+                if (modelPickerContainer) {
+                    container.insertBefore(btnGroup, modelPickerContainer);
+                } else {
+                    container.prepend(btnGroup);
+                }
+
                 console.log("Gemini Enhancer: Mode buttons injected.");
             }
         };
 
         // Create styles
-        const style = document.createElement('style');
-        style.textContent = `
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `
             .gemini-mode-group {
                 display: flex;
                 align-items: center;
-                gap: 6px;
-                margin-left: 12px;
-                padding-left: 12px;
-                border-left: 1px solid rgba(128, 128, 128, 0.3);
+                gap: 4px;
+                margin-right: 8px;
+                padding-right: 8px;
                 height: 32px;
+                flex-shrink: 0;
+            }
+
+            .gemini-mode-splitter {
+                width: 1px;
+                height: 16px;
+                background-color: rgba(128, 128, 128, 0.3);
+                margin: 0 4px;
+                flex-shrink: 0;
             }
 
             .gemini-mode-btn {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 4px; /* Space between icon and text */
-                height: 30px;
-                padding: 0 10px;
-                border-radius: 15px; /* Pill shape */
+                gap: 3px;
+                height: 28px;
+                padding: 0 8px;
+                border-radius: 14px;
                 border: 1px solid rgba(128, 128, 128, 0.2);
                 background-color: transparent;
 
                 font-family: 'Google Sans', Roboto, sans-serif;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 500;
                 color: inherit;
                 opacity: 0.7;
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
 
             .gemini-mode-btn svg {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 flex-shrink: 0;
             }
 
@@ -582,10 +690,8 @@
             .gemini-mode-btn:active {
                 transform: scale(0.96);
             }
-
-
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(styleEl);
         injectButtons();
 
         // Watch for SPA changes

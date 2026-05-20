@@ -20,19 +20,29 @@ This repository contains a collection of userscripts designed to enhance Google'
 - **Watchdog:** valid SPA navigation handling using `MutationObserver`.
 - **URL Configuration:** Supports `?model=...`, `?budget=...`, `?yt_url=...` for deep-linking configurations.
 
-### 2. Gemini Enhancer (`gemini-enhancer.user.js`)
+### 2. Gemini Enhancer (`gemini-enhancer.user.js`) — v2.0
 **Scope:** `https://gemini.google.com/*`
 **Purpose:** Adds "pro" features and better input control to the standard Gemini chat interface.
 **Key Features:**
-- **Mode Selection:** Adds a button group (F, T, P) with icons to the toolbar for direct selection of "Fast", "Thinking", and "Pro" models.
-- **Native Look & Feel:** Uses standard Material 3 tokens (CSS variables) and icons to match Gemini's UI perfectly.
+- **Mode + Thinking Buttons:** 5 preset buttons below the input area:
+    - `FL` — Flash-Lite + Extended Thinking
+    - `F` — Flash + Standard Thinking
+    - `FX` — Flash + Extended Thinking
+    - `P` — Pro + Standard Thinking
+    - `PX` — Pro + Extended Thinking
+- **Two-Step Menu Navigation:** Each button performs: (1) open model menu → select model → close, (2) re-open menu → navigate to "Thinking level" submenu → select level.
+- **Model Selector Fallback:** Primary selectors use hash-based `data-test-id` attributes (e.g., `bard-mode-option-56fdd199312815e2`). If those fail, falls back to matching menu item label text.
 - **Input Keybindings:**
     - `Cmd+Enter` (or `Ctrl+Enter`): Submits the message (clicks the Send button).
     - `Enter` (without modifiers): Inserts a newline instead of submitting (prevents default behavior).
 - **Temp Chat Support:**
     - Adds a dedicated "Temp" button to the toolbar.
-    - Handles sidebar state automatically (opens/closes as needed to access the feature).
+    - Uses `button[aria-label="Temporary chat"]` selector.
     - Supports `?temp=true` URL parameter for instant temporary chat activation.
+- **URL Parameters:**
+    - `?model=flashlite|flash|pro` — auto-select model
+    - `?thinking=standard|extended` — auto-set thinking level
+    - `?temp=true` — activate temporary chat
 
 ### 3. Autoplay Bypass (`autoplay-bypass-ads.user.js`)
 **Scope:** General / YouTube (presumed based on name)
@@ -41,13 +51,14 @@ This repository contains a collection of userscripts designed to enhance Google'
 ## Architecture & patterns
 - **Technology:** Vanilla JavaScript intended for execution in a Userscript Manager (Tampermonkey).
 - **DOM Interaction:** extensively uses `querySelector` and `MutationObserver` to handle the dynamic, single-page application (SPA) nature of Google's apps.
-- **Event Simulation:** Simulates `click`, `input`, and `keydown` events to interact with Angular/Material components that rely on specific event sequences.
-- **Robustness:** Includes finding elements by ID, text content fallback, and waiting mechanisms (`waitForElement`) to handle network latency.
+- **Event Simulation:** Simulates `click`, `input`, `mouseenter`, and `keydown` events to interact with Angular/Material components that rely on specific event sequences.
+- **Robustness:** Includes finding elements by ID, text content fallback (`findMenuItemByLabel`), and waiting mechanisms (`waitForElement`) to handle network latency.
 
 ## ⚠️ Critical Gotchas
-- **Temp Chat Button Visibility:** The temp chat button (`button[data-test-id="temp-chat-button"]`) exists in the DOM **even when the sidebar is closed**, but it is **hidden**. Always use the `isElementVisible()` helper to check if it's interactable. Checking `querySelector()` alone is NOT sufficient — it will find the hidden button and skip the sidebar-opening logic. This has caused regressions before (v1.35 fix).
-- **Sidebar State Detection:** Do NOT use `aria-expanded` on the sidebar menu button — Gemini does not set this attribute. Use `isSidebarClosed()` which checks if the temp chat button is in the DOM but hidden. (v1.36 fix)
-- **Two-Phase Sidebar Approach:** When activating temp chat, ALWAYS wait for the button to appear naturally first (Phase 1) before attempting to open the sidebar (Phase 2). If the sidebar is already open but still rendering, immediately clicking the menu button will CLOSE it. This caused a regression in v1.35 and was fixed in v1.36 via `ensureTempBtnVisible()`.
+- **Hash-Based Model IDs:** Model options use hash-based `data-test-id` values (e.g., `bard-mode-option-56fdd199312815e2`) that may change when Google updates models. Always maintain `findMenuItemByLabel()` as a fallback.
+- **Thinking Level is a Nested Submenu:** The thinking level selector is inside a nested `gem-menu-item[value="thinking_level"]` submenu within the model picker. It requires `mouseenter` + `click` to open, and a wait for the submenu overlay to render.
+- **Temp Chat Button:** Now uses `button[aria-label="Temporary chat"]` (v2.0). The old `data-test-id="temp-chat-button"` selector no longer exists. Always use `isElementVisible()` before clicking.
+- **Injection Point:** Buttons are injected into `.trailing-actions-wrapper` (below the input area), NOT `.leading-actions-wrapper` (which is now for the upload/tools menu).
 
 ## Configuration
 - **Hardcoded Defaults:** Configuration objects (e.g., `DEFAULT_SETTINGS` in `ai-studio.user.js`) are defined at the top of the scripts for easy user modification.
