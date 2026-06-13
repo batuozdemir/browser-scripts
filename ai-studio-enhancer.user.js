@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      9.0
+// @version      9.1
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -23,22 +23,33 @@
 // │       update (gemini-3.5-pro > gemini-3.1-pro > gemini-3.1-pro-preview)│
 // │     - Live highlight (tm-active) reflects the current model+thinking.  │
 // │                                                                        │
-// │  2. TEMP (temporary chat) BUTTON                                       │
-// │     - Opens the "View more actions" (more_vert) menu and clicks        │
-// │       button[data-test-incognito-toggle].                             │
+// │  2. RIGHT-SIDE BUTTONS (near the Run button): Grd / Temp / Save        │
+// │     - Grd toggles button[aria-label="Grounding with Google Search"]    │
+// │       (highlighted when on).                                          │
+// │     - Temp / Save open the "View more actions" (more_vert) menu and    │
+// │       click button[data-test-incognito-toggle] / [data-test-manual-    │
+// │       save] respectively.                                             │
 // │                                                                        │
-// │  3. SILENT URL-PARAM AUTOMATION (on /new_chat or when ?model= present) │
+// │  3. CODE EXECUTION IS ALWAYS-ON                                        │
+// │     - enforceCodeExecution() re-enables button[aria-label="Code        │
+// │       execution"] whenever it's found off (on init + every preset).    │
+// │                                                                        │
+// │  4. SYSTEM PROMPT IS ONLY SET WHEN EMPTY                               │
+// │     - Detected via the card subtitle (placeholder text == empty).      │
+// │     - The panel is a cdk-overlay dialog; we wait for it to fully       │
+// │       unmount before un-hiding overlays so it never flashes.           │
+// │                                                                        │
+// │  5. SILENT URL-PARAM AUTOMATION (on /new_chat or when ?model= present) │
 // │     - ?model=<exact-id>  ?thinking=minimal|low|medium|high             │
 // │       ?search=1|0        ?sp=<encoded system prompt>                   │
 // │     - Overlays are hidden during automation (zero-flash).             │
+// │     - Every action returns the cursor to the prompt box (focusPrompt). │
 // │                                                                        │
 // │  GOTCHAS:                                                              │
 // │   - Model rows: button[id="model-carousel-row-models/<modelId>"].      │
 // │     Pick by family + version, NOT by a hardcoded id.                   │
 // │   - Thinking is a mat-select[aria-label="Thinking Level"] with options │
 // │     Minimal / Low / Medium / High (no token budget any more).          │
-// │   - Grounding is a single switch button[aria-label="Grounding with     │
-// │     Google Search"] (URL param only; no in-panel button).             │
 // │   - Menus/panels render in .cdk-overlay-container / ms-sliding-right-  │
 // │     panel; hidden via the body.aistudio-automating class so .click()   │
 // │     still works without visual flicker.                               │
@@ -74,21 +85,29 @@
         THINKING_PANEL_OPTION: 'div[role="listbox"][aria-label="Thinking Level"] mat-option',
         THINKING_OPTION_TEXT: '.mdc-list-item__primary-text',
 
-        // Grounding (URL param only)
+        // Grounding switch
         GROUNDING_SWITCH: 'button[role="switch"][aria-label="Grounding with Google Search"]',
+
+        // Code execution switch (enforced ON)
+        CODE_EXEC_SWITCH: 'button[role="switch"][aria-label="Code execution"]',
 
         // System instructions
         SYS_CARD: 'button[data-test-system-instructions-card]',
+        SYS_CARD_SUBTITLE: 'button[data-test-system-instructions-card] .subtitle',
         SYS_TEXTAREA: 'textarea[aria-label="System instructions"]',
+        SYS_CLOSE: 'button[data-test-close-button], button[aria-label="Close panel"]',
+        SYS_PANEL: '.ms-sliding-right-panel-dialog',
 
-        // Prompt input + injection anchor
+        // Prompt input + injection anchors
         PROMPT_AREA: 'textarea[aria-label="Enter a prompt"]',
         TOOLS_CONTAINER: 'ms-prompt-box-tools',
         TOOLS_BUTTON: 'ms-prompt-box-tools button[aria-label="Open tools menu"]',
+        RUN_BUTTON: 'ms-run-button',
 
-        // Temporary chat (incognito)
+        // Temporary chat (incognito) + Save — both live in the "More actions" menu
         MORE_ACTIONS_BTN: 'button[aria-label="View more actions"]',
         INCOGNITO_TOGGLE: 'button[data-test-incognito-toggle]',
+        SAVE_BTN: 'button[data-test-manual-save]',
 
         // Overlays
         OVERLAY_BACKDROP: '.cdk-overlay-backdrop',
@@ -107,6 +126,9 @@
     ];
 
     const THINKING_LEVELS = ['minimal', 'low', 'medium', 'high'];
+
+    // The system-instructions card shows this subtitle ONLY when no instructions are set.
+    const SYS_EMPTY_SUBTITLE = 'Optional tone and style instructions for the model';
 
     const DEFAULT_SETTINGS = {
         family: 'pro', // fresh /new_chat defaults to the best Pro model
@@ -333,33 +355,63 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
         return false;
     }
 
+    function getGroundingState() {
+        const sw = document.querySelector(SELECTORS.GROUNDING_SWITCH);
+        return sw ? sw.getAttribute('aria-checked') === 'true' : null;
+    }
+
+    /** Toggles or sets the Google Search grounding switch. Pass a boolean to force a state. */
     async function setGrounding(desired) {
         const sw = document.querySelector(SELECTORS.GROUNDING_SWITCH);
         if (!sw) { console.warn("[AIStudio] Grounding switch not found."); return false; }
         const cur = sw.getAttribute('aria-checked') === 'true';
-        if (cur !== desired) {
+        const target = (typeof desired === 'boolean') ? desired : !cur;
+        if (cur !== target) {
             sw.click();
-            console.log(`[AIStudio] Grounding -> ${desired ? 'on' : 'off'}`);
+            console.log(`[AIStudio] Grounding -> ${target ? 'on' : 'off'}`);
         }
         return true;
     }
 
+    /** Code execution is always-on: turn it back on whenever it's found off. */
+    function enforceCodeExecution() {
+        const sw = document.querySelector(SELECTORS.CODE_EXEC_SWITCH);
+        if (sw && sw.getAttribute('aria-checked') === 'false') {
+            sw.click();
+            console.log("[AIStudio] Code execution -> on (enforced).");
+        }
+    }
+
+    /** Closes the system-instructions dialog and waits for it to fully unmount (no slide-out flash). */
+    async function closeSysPanel() {
+        const closeBtn = document.querySelector(SELECTORS.SYS_CLOSE);
+        if (closeBtn) closeBtn.click(); else closeOverlays();
+        for (let i = 0; i < 80; i++) {
+            if (!document.querySelector(SELECTORS.SYS_PANEL)) return;
+            await sleep(20);
+        }
+    }
+
+    /** Sets the system prompt ONLY when it's currently empty; never disturbs existing instructions. */
     async function setSystemPrompt(text) {
         const card = document.querySelector(SELECTORS.SYS_CARD);
         if (!card) { console.warn("[AIStudio] System instructions card not found."); return false; }
 
+        // Empty <=> the card still shows the placeholder subtitle. Skip without opening the panel.
+        const subtitle = card.querySelector('.subtitle')?.textContent.trim();
+        if (subtitle !== SYS_EMPTY_SUBTITLE) return true;
+
         card.click();
         const textarea = await waitForSelector(SELECTORS.SYS_TEXTAREA, 3000);
-        if (!textarea) { closeOverlays(); return false; }
+        if (!textarea) { await closeSysPanel(); return false; }
 
-        if (textarea.value !== text) {
+        if (textarea.value.trim() === '') {
             textarea.value = text;
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             textarea.dispatchEvent(new Event('change', { bubbles: true }));
-            console.log("[AIStudio] System prompt set.");
+            console.log("[AIStudio] System prompt set (was empty).");
         }
-        await sleep(30);
-        closeOverlays();
+        await closeSysPanel();
         return true;
     }
 
@@ -371,6 +423,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             await selectModelFamily(family);
             await sleep(40);
             await setThinkingLevel(thinking);
+            enforceCodeExecution();
         } catch (e) {
             console.error("[AIStudio] applyPreset error:", e);
         } finally {
@@ -380,27 +433,37 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
         }
     }
 
-    // --- Temporary chat (incognito) ---
-    let isTogglingTemp = false;
-    async function toggleTemporaryChat() {
-        if (isTogglingTemp) return;
-        isTogglingTemp = true;
+    // --- Grounding quick-toggle (Grd button) ---
+    async function toggleGrounding() {
+        await setGrounding();
+        setTimeout(updateHighlights, 100);
+        focusPrompt();
+    }
+
+    /** Opens the "More actions" menu and clicks one of its items, then closes & refocuses. */
+    let isMenuActionBusy = false;
+    async function clickMoreActionsItem(itemSelector, describe) {
+        if (isMenuActionBusy) return;
+        isMenuActionBusy = true;
         try {
             const moreBtn = document.querySelector(SELECTORS.MORE_ACTIONS_BTN);
             if (!moreBtn) { console.warn("[AIStudio] 'More actions' button not found."); return; }
             moreBtn.click();
-            const toggle = await waitForSelector(SELECTORS.INCOGNITO_TOGGLE, 2000);
-            if (toggle) {
-                toggle.click();
-                console.log("[AIStudio] Toggled temporary chat.");
+            const item = await waitForSelector(itemSelector, 2000);
+            if (item) {
+                item.click();
+                console.log(`[AIStudio] ${describe}`);
             } else {
                 closeOverlays();
             }
         } finally {
-            isTogglingTemp = false;
+            isMenuActionBusy = false;
             focusPrompt();
         }
     }
+
+    const toggleTemporaryChat = () => clickMoreActionsItem(SELECTORS.INCOGNITO_TOGGLE, "Toggled temporary chat.");
+    const savePrompt = () => clickMoreActionsItem(SELECTORS.SAVE_BTN, "Saved prompt.");
 
     // ===================================================================
     // === URL-PARAM AUTOMATION
@@ -437,6 +500,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
             if (thinkingParam) await setThinkingLevel(thinkingParam);
             if (searchParam !== undefined) await setGrounding(searchParam);
+            enforceCodeExecution();
             await setSystemPrompt(sp);
         } catch (e) {
             console.error("[AIStudio] Automation error:", e);
@@ -451,58 +515,90 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // === UI INJECTION & HIGHLIGHTING
     // ===================================================================
 
-    function makeButton(preset) {
+    function makeButton({ id, label, title, onClick }) {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.id = 'tm-aistudio-' + preset.id;
+        btn.id = id;
         btn.className = 'tm-aistudio-btn';
-        btn.title = preset.title;
-        btn.textContent = preset.label;
-        btn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            applyPreset(preset.family, preset.thinking);
-        };
+        btn.title = title;
+        btn.textContent = label;
+        btn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); onClick(); };
         return btn;
     }
 
-    function buildGroup() {
+    // LEFT group: model+thinking presets, after the "Tools" button.
+    function buildLeftGroup() {
         const group = document.createElement('div');
-        group.id = 'tm-aistudio-group';
+        group.id = 'tm-aistudio-left';
         group.className = 'tm-aistudio-group';
-        PRESETS.forEach(p => group.appendChild(makeButton(p)));
-
-        const temp = document.createElement('button');
-        temp.type = 'button';
-        temp.id = 'tm-aistudio-temp';
-        temp.className = 'tm-aistudio-btn';
-        temp.title = 'Toggle temporary chat';
-        temp.textContent = 'Temp';
-        temp.onclick = (e) => { e.preventDefault(); e.stopPropagation(); toggleTemporaryChat(); };
-        group.appendChild(temp);
-
+        PRESETS.forEach(p => group.appendChild(makeButton({
+            id: 'tm-aistudio-' + p.id,
+            label: p.label,
+            title: p.title,
+            onClick: () => applyPreset(p.family, p.thinking)
+        })));
         return group;
     }
 
-    function injectButtons() {
-        if (document.getElementById('tm-aistudio-group')) {
-            updateHighlights();
-            return;
-        }
-        const container = document.querySelector(SELECTORS.TOOLS_CONTAINER);
-        if (!container) return;
+    // RIGHT group: Grd / Temp / Save, near the Run button.
+    function buildRightGroup() {
+        const group = document.createElement('div');
+        group.id = 'tm-aistudio-right';
+        group.className = 'tm-aistudio-group';
+        group.appendChild(makeButton({
+            id: 'tm-aistudio-grd', label: 'Grd', title: 'Toggle Grounding with Google Search',
+            onClick: () => toggleGrounding()
+        }));
+        group.appendChild(makeButton({
+            id: 'tm-aistudio-temp', label: 'Temp', title: 'Toggle temporary chat',
+            onClick: () => toggleTemporaryChat()
+        }));
+        group.appendChild(makeButton({
+            id: 'tm-aistudio-save', label: 'Save', title: 'Save prompt',
+            onClick: () => savePrompt()
+        }));
+        return group;
+    }
 
-        const group = buildGroup();
-        const toolsBtn = container.querySelector('button[aria-label="Open tools menu"]');
-        if (toolsBtn) {
-            toolsBtn.insertAdjacentElement('afterend', group);
-        } else {
-            container.appendChild(group);
+    let codeExecEnforcedOnce = false;
+
+    function injectButtons() {
+        // LEFT: presets inside ms-prompt-box-tools, after the Tools button.
+        if (!document.getElementById('tm-aistudio-left')) {
+            const container = document.querySelector(SELECTORS.TOOLS_CONTAINER);
+            if (container) {
+                const left = buildLeftGroup();
+                const toolsBtn = container.querySelector('button[aria-label="Open tools menu"]');
+                if (toolsBtn) toolsBtn.insertAdjacentElement('afterend', left);
+                else container.appendChild(left);
+            }
         }
+
+        // RIGHT: Grd/Temp/Save just before the Run button.
+        if (!document.getElementById('tm-aistudio-right')) {
+            const runBtn = document.querySelector(SELECTORS.RUN_BUTTON);
+            if (runBtn && runBtn.parentElement) {
+                runBtn.parentElement.insertBefore(buildRightGroup(), runBtn);
+            } else {
+                const container = document.querySelector(SELECTORS.TOOLS_CONTAINER);
+                if (container) {
+                    const right = buildRightGroup();
+                    right.style.marginLeft = 'auto';
+                    container.appendChild(right);
+                }
+            }
+        }
+
+        // Code execution stays on once the panel is available.
+        if (!codeExecEnforcedOnce && document.querySelector(SELECTORS.CODE_EXEC_SWITCH)) {
+            enforceCodeExecution();
+            codeExecEnforcedOnce = true;
+        }
+
         updateHighlights();
     }
 
-    /** Highlight the preset whose family + thinking match the live UI. */
+    /** Highlight the preset whose family + thinking match the live UI, plus Grd when grounding is on. */
     function updateHighlights() {
         const family = classifyModel(getCurrentModelId());
         const thinking = getCurrentThinking();
@@ -512,6 +608,8 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             const match = family === p.family && thinking === p.thinking.toLowerCase();
             btn.classList.toggle('tm-active', match);
         });
+        const grd = document.getElementById('tm-aistudio-grd');
+        if (grd) grd.classList.toggle('tm-active', getGroundingState() === true);
     }
 
     function injectStyles() {
@@ -602,7 +700,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // ===================================================================
 
     function init() {
-        console.log("[AIStudio] Enhancer v9.0: initializing...");
+        console.log("[AIStudio] Enhancer v9.1: initializing...");
         injectStyles();
         setupGlobalListeners();
         startWatchdog();
