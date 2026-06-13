@@ -127,6 +127,76 @@
         console.warn('Gemini Enhancer: Could not find input field to focus.');
     }
 
+    // --- Caret preservation (for actions that re-render the input) ---
+
+    /**
+     * Returns the caret's character offset within the input field, or -1 if the
+     * caret/selection isn't currently inside the editor.
+     */
+    function getCaretOffset() {
+        const editor = document.querySelector(SELECTORS.inputField);
+        const sel = window.getSelection();
+        if (!editor || !sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) {
+            return -1;
+        }
+        const range = sel.getRangeAt(0);
+        const pre = range.cloneRange();
+        pre.selectNodeContents(editor);
+        pre.setEnd(range.endContainer, range.endOffset);
+        return pre.toString().length;
+    }
+
+    /** Places the caret at `offset` characters into the input field. */
+    function setCaretOffset(offset) {
+        const editor = document.querySelector(SELECTORS.inputField);
+        if (!editor) return;
+        editor.focus();
+        const sel = window.getSelection();
+        if (!sel) return;
+
+        const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+        let remaining = offset, node = walker.nextNode(), target = null, targetOffset = 0;
+        while (node) {
+            const len = node.textContent.length;
+            if (remaining <= len) { target = node; targetOffset = remaining; break; }
+            remaining -= len;
+            node = walker.nextNode();
+        }
+
+        const range = document.createRange();
+        if (target) {
+            range.setStart(target, targetOffset);
+        } else {
+            range.selectNodeContents(editor);
+            range.collapse(false); // past end -> clamp to end
+        }
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    /**
+     * Keeps the caret pinned across an action that re-renders the input (e.g. the
+     * Temp Chat toggle, which otherwise snaps the caret to the start a few hundred
+     * ms later). Watches for ~700ms: tracks the furthest-forward caret position so
+     * continued typing isn't clobbered, and only corrects when the editor snaps the
+     * caret back to the start (or loses focus).
+     * @param {number} startOffset - caret offset captured before the action.
+     */
+    async function preserveCaretAcrossRerender(startOffset) {
+        if (startOffset < 0) return;
+        let best = startOffset;
+        for (let i = 0; i < 14; i++) {
+            await new Promise(r => setTimeout(r, 50));
+            const cur = getCaretOffset();
+            if (cur > best) {
+                best = cur; // user moved forward / typed more — respect it
+            } else if (cur <= 0 && best > 0) {
+                setCaretOffset(best); // snapped to start or lost focus — restore
+            }
+        }
+    }
+
     // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
     function handleInputKeydown(e) {
         const t = e.target;
@@ -388,7 +458,9 @@
         }
 
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
+        const caret = getCaretOffset();
         btn.click();
+        preserveCaretAcrossRerender(caret); // keep the user's cursor in place
 
         isTempChatActivating = false;
         return true;
@@ -422,7 +494,9 @@
         }
 
         console.log("Gemini Enhancer: Clicking Temp Chat button...");
+        const caret = getCaretOffset();
         btn.click();
+        preserveCaretAcrossRerender(caret); // keep the user's cursor in place
 
         console.log("Gemini Enhancer: Temp Chat activated via URL.");
         isTempChatActivating = false;
