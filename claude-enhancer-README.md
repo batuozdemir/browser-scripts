@@ -34,10 +34,6 @@ highlight is based on model + effort only.)
 
 | Shortcut | Action |
 |----------|--------|
-| `Cmd/Ctrl+Shift+1` | apply `S` |
-| `Cmd/Ctrl+Shift+2` | apply `SX` |
-| `Cmd/Ctrl+Shift+3` | apply `O` |
-| `Cmd/Ctrl+Shift+4` | apply `OX` |
 | `Cmd/Ctrl+Shift+0` | toggle Thinking |
 
 (Matched on physical key code, so they work on any keyboard layout.)

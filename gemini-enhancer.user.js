@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.02
+// @version      3.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -70,13 +70,6 @@
         inputField: 'rich-textarea .ql-editor[contenteditable="true"]'
     };
 
-    // Fallback label map — used when hash-based selectors fail
-    const MODEL_LABELS = {
-        flashlite: 'Flash-Lite',
-        flash: 'Flash',
-        pro: 'Pro'
-    };
-
     /**
      * Checks if a DOM element is visible and interactable.
      */
@@ -91,38 +84,6 @@
         }
         const style = window.getComputedStyle(el);
         return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-    }
-
-    /**
-     * Waits for an element matching the selector to appear in the DOM.
-     * @param {string} selector - CSS selector
-     * @param {number} timeoutMs - Max wait time
-     * @param {Element} [root=document] - Root element to search within
-     * @returns {Promise<Element|null>}
-     */
-    function waitForElement(selector, timeoutMs = 3000, root = document) {
-        return new Promise((resolve) => {
-            const existing = root.querySelector(selector);
-            if (existing) return resolve(existing);
-
-            const observer = new MutationObserver(() => {
-                const el = root.querySelector(selector);
-                if (el) {
-                    observer.disconnect();
-                    resolve(el);
-                }
-            });
-
-            observer.observe(root === document ? document.body : root, {
-                childList: true,
-                subtree: true
-            });
-
-            setTimeout(() => {
-                observer.disconnect();
-                resolve(root.querySelector(selector));
-            }, timeoutMs);
-        });
     }
 
     /**
@@ -168,10 +129,14 @@
 
     // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
     function handleInputKeydown(e) {
-        if (!e.target.isContentEditable) return;
+        const t = e.target;
+        if (!t || !t.isContentEditable) return;
+        // Ignore Enter while an IME/autocomplete composition is active, otherwise
+        // confirming a composition would be hijacked into a newline.
+        if (e.key !== 'Enter' || e.isComposing) return;
 
         // CMD+ENTER (or CTRL+ENTER) -> Submit
-        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        if (e.metaKey || e.ctrlKey) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -184,13 +149,13 @@
             return;
         }
 
-        // ENTER (No Modifiers) -> New Line
-        if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.execCommand('insertText', false, '\n');
-            return;
-        }
+        // SHIFT/ALT+ENTER -> let Gemini's default newline happen.
+        if (e.shiftKey || e.altKey) return;
+
+        // Plain ENTER -> New Line (instead of sending)
+        e.preventDefault();
+        e.stopPropagation();
+        document.execCommand('insertText', false, '\n');
     }
 
     // --- Feature 2: Mode + Thinking Selection ---
@@ -244,6 +209,26 @@
         });
     }
 
+    /** True when the mode picker menu is currently open. */
+    function isModeMenuOpen() {
+        const trigger = document.querySelector(SELECTORS.triggerBtn);
+        return !!(trigger && trigger.getAttribute('aria-expanded') === 'true');
+    }
+
+    /**
+     * Opens the mode picker menu if it isn't already open. Idempotent: avoids a
+     * blind trigger.click() that would *close* an already-open menu.
+     * @returns {boolean} false if the trigger doesn't exist.
+     */
+    function ensureModeMenuOpen() {
+        const trigger = document.querySelector(SELECTORS.triggerBtn);
+        if (!trigger) return false;
+        if (trigger.getAttribute('aria-expanded') !== 'true') {
+            trigger.click();
+        }
+        return true;
+    }
+
     /**
      * Selects a model from the mode picker menu.
      * Menu overlays are hidden during the operation.
@@ -251,13 +236,10 @@
      * @returns {Promise<boolean>} true if model was selected successfully.
      */
     async function selectModel(modelKey) {
-        const trigger = document.querySelector(SELECTORS.triggerBtn);
-        if (!trigger) {
+        if (!ensureModeMenuOpen()) {
             console.error("Gemini Enhancer: Mode dropdown trigger not found.");
             return false;
         }
-
-        trigger.click();
 
         // Wait for menu to render (poll for the option)
         const selector = SELECTORS[modelKey];
@@ -296,14 +278,11 @@
      * @returns {Promise<boolean>}
      */
     async function selectThinkingLevel(level) {
-        const trigger = document.querySelector(SELECTORS.triggerBtn);
-        if (!trigger) {
+        // Re-open the model menu (idempotent — won't close it if already open).
+        if (!ensureModeMenuOpen()) {
             console.error("Gemini Enhancer: Mode dropdown trigger not found for thinking level.");
             return false;
         }
-
-        // Re-open the model menu
-        trigger.click();
 
         // Wait for thinking level trigger to appear
         let thinkingTrigger = await waitForSelector(SELECTORS.thinkingLevelTrigger, 300);
@@ -594,10 +573,16 @@
                 }, 1500);
             }
         } else if (thinkingParam) {
-            // Only thinking level specified — just set thinking on current model
-            setTimeout(() => {
+            // Only thinking level specified — just set thinking on current model.
+            setTimeout(async () => {
                 console.log(`Gemini Enhancer: Auto-selecting thinking level '${thinkingParam}' from URL`);
-                selectThinkingLevel(thinkingParam.toLowerCase());
+                hideMenuOverlays();
+                try {
+                    await selectThinkingLevel(thinkingParam.toLowerCase());
+                } finally {
+                    showMenuOverlays();
+                }
+                focusInputField();
             }, 1500);
         }
 
@@ -637,7 +622,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v2.01: Initializing...");
+        console.log("Gemini Enhancer v3.0: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);

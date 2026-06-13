@@ -100,9 +100,6 @@
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-    const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform);
-    const MOD = IS_MAC ? '⌘⇧' : 'Ctrl+Shift+';
-
     // --- Helpers ---
 
     function isElementVisible(el) {
@@ -418,22 +415,12 @@
     }
 
     // --- Keyboard shortcuts ---
-    // Cmd/Ctrl+Shift+[1-4] -> apply preset ; Cmd/Ctrl+Shift+0 -> toggle thinking.
-    // Matched on e.code so they work regardless of keyboard layout.
-    const PRESET_HOTKEYS = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3 };
-
+    // Cmd/Ctrl+Shift+0 -> toggle thinking.
+    // Matched on e.code so it works regardless of keyboard layout.
     function handleShortcuts(e) {
         const mod = e.metaKey || e.ctrlKey;
         if (!mod || !e.shiftKey || e.altKey) return;
 
-        const idx = PRESET_HOTKEYS[e.code];
-        if (idx !== undefined && PRESETS[idx]) {
-            e.preventDefault();
-            e.stopPropagation();
-            const p = PRESETS[idx];
-            applyPreset(p.model, p.effort, p.thinking);
-            return;
-        }
         if (e.code === 'Digit0') {
             e.preventDefault();
             e.stopPropagation();
@@ -465,7 +452,7 @@
             group.appendChild(makeButton({
                 id: 'tm-claude-preset-' + i,
                 label: p.label,
-                title: `${p.title}  (${MOD}${i + 1})`,
+                title: p.title,
                 onClick: () => applyPreset(p.model, p.effort, p.thinking)
             }));
         });
