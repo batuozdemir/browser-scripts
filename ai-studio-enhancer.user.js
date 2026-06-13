@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      9.1
+// @version      9.2
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -384,12 +384,16 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     /** Closes the system-instructions dialog and waits for it to fully unmount (no slide-out flash). */
     async function closeSysPanel() {
-        const closeBtn = document.querySelector(SELECTORS.SYS_CLOSE);
-        if (closeBtn) closeBtn.click(); else closeOverlays();
-        for (let i = 0; i < 80; i++) {
+        for (let attempt = 0; attempt < 3; attempt++) {
             if (!document.querySelector(SELECTORS.SYS_PANEL)) return;
-            await sleep(20);
+            const closeBtn = document.querySelector(SELECTORS.SYS_CLOSE);
+            if (closeBtn) closeBtn.click(); else closeOverlays();
+            for (let i = 0; i < 30; i++) {
+                if (!document.querySelector(SELECTORS.SYS_PANEL)) return;
+                await sleep(20);
+            }
         }
+        closeOverlays(); // last resort
     }
 
     /** Sets the system prompt ONLY when it's currently empty; never disturbs existing instructions. */
@@ -475,39 +479,48 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
         return (s === '1' || s === 'true' || s === 'on' || s === 'yes');
     }
 
+    // Set synchronously (before any await) so overlapping triggers — init, the
+    // watchdog URL-change, and the new_chat click listener — can't run concurrently.
+    let mainLogicBusy = false;
+
     async function runMainLogic() {
-        if (isBusy) return;
+        if (isBusy || mainLogicBusy) return;
         if (!location.href.includes('/new_chat') && !location.search.includes('model=')) return;
+        mainLogicBusy = true;
 
-        const params = new URLSearchParams(window.location.search);
-        const modelParam = params.get('model');
-        const thinkingParam = params.get('thinking');
-        const searchParam = truthy(params.get('search') ?? params.get('grounding'));
-        const sp = params.has('sp') ? decodeURIComponent(params.get('sp')) : DEFAULT_SETTINGS.sp;
-
-        // Wait for the panel to exist before driving it.
-        const ready = await waitForSelector(SELECTORS.MODEL_CARD, 8000);
-        if (!ready) return;
-
-        setAutomating(true);
         try {
-            if (modelParam) {
-                await selectModelId(modelParam);
-            } else {
-                await selectModelFamily(DEFAULT_SETTINGS.family);
-            }
-            await sleep(40);
+            const params = new URLSearchParams(window.location.search);
+            const modelParam = params.get('model');
+            const thinkingParam = params.get('thinking');
+            const searchParam = truthy(params.get('search') ?? params.get('grounding'));
+            const sp = params.has('sp') ? decodeURIComponent(params.get('sp')) : DEFAULT_SETTINGS.sp;
 
-            if (thinkingParam) await setThinkingLevel(thinkingParam);
-            if (searchParam !== undefined) await setGrounding(searchParam);
-            enforceCodeExecution();
-            await setSystemPrompt(sp);
-        } catch (e) {
-            console.error("[AIStudio] Automation error:", e);
+            // Wait for the panel to exist before driving it.
+            const ready = await waitForSelector(SELECTORS.MODEL_CARD, 8000);
+            if (!ready) return;
+
+            setAutomating(true);
+            try {
+                if (modelParam) {
+                    await selectModelId(modelParam);
+                } else {
+                    await selectModelFamily(DEFAULT_SETTINGS.family);
+                }
+                await sleep(40);
+
+                if (thinkingParam) await setThinkingLevel(thinkingParam);
+                if (searchParam !== undefined) await setGrounding(searchParam);
+                enforceCodeExecution();
+                await setSystemPrompt(sp);
+            } catch (e) {
+                console.error("[AIStudio] Automation error:", e);
+            } finally {
+                setAutomating(false);
+                setTimeout(updateHighlights, 300);
+                focusPrompt();
+            }
         } finally {
-            setAutomating(false);
-            setTimeout(updateHighlights, 300);
-            focusPrompt();
+            mainLogicBusy = false;
         }
     }
 
@@ -700,7 +713,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // ===================================================================
 
     function init() {
-        console.log("[AIStudio] Enhancer v9.1: initializing...");
+        console.log("[AIStudio] Enhancer v9.2: initializing...");
         injectStyles();
         setupGlobalListeners();
         startWatchdog();
