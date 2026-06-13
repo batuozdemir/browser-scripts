@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      9.2
+// @version      9.3
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -15,7 +15,7 @@
 // │                        AI AGENT NOTES                                  │
 // │  DO NOT REMOVE OR REFACTOR THE FOLLOWING FEATURES:                     │
 // │                                                                        │
-// │  1. COMBINED MODEL+THINKING PRESET BUTTONS (Lite, F, FX, P, PX)        │
+// │  1. COMBINED MODEL+THINKING PRESET BUTTONS (F, FX, PX)                 │
 // │     - Injected inside <ms-prompt-box-tools>, after the "Tools" button. │
 // │     - Each opens the model picker, selects the BEST available model    │
 // │       of its family (Pro / Flash / Flash-Lite) by VERSION NUMBER, then │
@@ -118,10 +118,8 @@
 
     // Each preset = one model family + one thinking level, applied in a single click.
     const PRESETS = [
-        { id: 'lite', label: 'Lite', family: 'flash-lite', thinking: 'Minimal', title: 'Flash-Lite · Minimal thinking' },
-        { id: 'f',    label: 'F',    family: 'flash',      thinking: 'Low',     title: 'Flash · Low thinking' },
+        { id: 'f',    label: 'F',    family: 'flash',      thinking: 'Minimal', title: 'Flash · Minimal thinking' },
         { id: 'fx',   label: 'FX',   family: 'flash',      thinking: 'High',    title: 'Flash · High thinking' },
-        { id: 'p',    label: 'P',    family: 'pro',        thinking: 'Low',     title: 'Pro · Low thinking' },
         { id: 'px',   label: 'PX',   family: 'pro',        thinking: 'High',    title: 'Pro · High thinking' }
     ];
 
@@ -469,6 +467,30 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     const toggleTemporaryChat = () => clickMoreActionsItem(SELECTORS.INCOGNITO_TOGGLE, "Toggled temporary chat.");
     const savePrompt = () => clickMoreActionsItem(SELECTORS.SAVE_BTN, "Saved prompt.");
 
+    async function enforceTemporaryChat() {
+        if (isMenuActionBusy) return;
+        isMenuActionBusy = true;
+        try {
+            const moreBtn = document.querySelector(SELECTORS.MORE_ACTIONS_BTN);
+            if (!moreBtn) return;
+            moreBtn.click();
+            const item = await waitForSelector(SELECTORS.INCOGNITO_TOGGLE, 2000);
+            if (item) {
+                const isOn = item.getAttribute('aria-checked') === 'true' || item.textContent.toLowerCase().includes('turn off');
+                if (!isOn) {
+                    item.click();
+                    console.log("[AIStudio] Enforced temporary chat.");
+                } else {
+                    closeOverlays();
+                }
+            } else {
+                closeOverlays();
+            }
+        } finally {
+            isMenuActionBusy = false;
+        }
+    }
+
     // ===================================================================
     // === URL-PARAM AUTOMATION
     // ===================================================================
@@ -511,6 +533,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                 if (thinkingParam) await setThinkingLevel(thinkingParam);
                 if (searchParam !== undefined) await setGrounding(searchParam);
                 enforceCodeExecution();
+                await enforceTemporaryChat();
                 await setSystemPrompt(sp);
             } catch (e) {
                 console.error("[AIStudio] Automation error:", e);
