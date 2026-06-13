@@ -25,10 +25,28 @@ nested **Effort** submenu to set effort and the **Thinking** switch:
 Models are matched by **family name** (Sonnet/Opus/Haiku/Fable), so version bumps
 (e.g. "Sonnet 4.6" → "Sonnet 4.7") won't break the buttons.
 
+A preset button **highlights** when the live model + effort match it (read from the model
+trigger's `aria-label`, e.g. "Model: Sonnet 4.6 Low"). This also reflects changes you make
+through Claude's own model menu. (Thinking state isn't exposed in that label, so the
+highlight is based on model + effort only.)
+
+**Keyboard shortcuts:**
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd/Ctrl+Shift+1` | apply `S` |
+| `Cmd/Ctrl+Shift+2` | apply `SX` |
+| `Cmd/Ctrl+Shift+3` | apply `O` |
+| `Cmd/Ctrl+Shift+4` | apply `OX` |
+| `Cmd/Ctrl+Shift+0` | toggle Thinking |
+
+(Matched on physical key code, so they work on any keyboard layout.)
+
 ### 2. Thinking toggle (`T`) + Incognito (`Temp`) — right of the composer toolbar
 - **`T`** — toggles the Thinking switch on/off (independent of the presets). Highlights
   when last set to on.
-- **`Temp`** — toggles incognito chat (`button[aria-label="Use incognito"]`).
+- **`Temp`** — toggles incognito chat (the control's `aria-label` swaps between
+  "Use incognito" / "Exit incognito"); highlights while you're in an incognito chat.
 
 ### 3. Keybindings
 - **Enter** and **Shift+Enter** → newline.

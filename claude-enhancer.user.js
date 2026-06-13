@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.2
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -72,8 +72,8 @@
         // effort-option-{low,medium,high,max}
         thinkingSwitch: '[role="switch"][aria-label="Thinking"]',
 
-        // Incognito (temp chat)
-        incognitoBtn: 'button[aria-label="Use incognito"]',
+        // Incognito (temp chat) — aria-label swaps between enter/exit states
+        incognitoBtn: 'button[aria-label="Use incognito"], button[aria-label="Exit incognito"]',
 
         // Overlay portals (hidden during automation)
         popover: '.z-popover',
@@ -99,6 +99,9 @@
     ];
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform);
+    const MOD = IS_MAC ? '⌘⇧' : 'Ctrl+Shift+';
 
     // --- Helpers ---
 
@@ -267,6 +270,11 @@
             closeMenus();
             showMenuOverlays();
         }
+        if (typeof thinking === 'boolean') {
+            lastThinkingIntent = thinking;
+            updateThinkingButtonState();
+        }
+        setTimeout(updatePresetButtonStates, 400);
         focusInputField();
     }
 
@@ -300,6 +308,34 @@
         if (btn) btn.classList.toggle('tm-active', lastThinkingIntent === true);
     }
 
+    /** Reads the current model + effort from the model trigger's aria-label
+     *  (e.g. "Model: Sonnet 4.6 Low"). Thinking state is not exposed there. */
+    function getCurrentModelState() {
+        const t = document.querySelector(SELECTORS.modelTrigger);
+        if (!t) return null;
+        const label = (t.getAttribute('aria-label') || '').toLowerCase();
+        let family = null;
+        for (const f of ['opus', 'sonnet', 'haiku', 'fable']) {
+            if (label.includes(f)) { family = f; break; }
+        }
+        let effort = null;
+        for (const ef of ['max', 'high', 'medium', 'low']) {
+            if (label.includes(ef)) { effort = ef; break; }
+        }
+        return { family, effort };
+    }
+
+    /** Highlights a preset button when the live model + effort match it. */
+    function updatePresetButtonStates() {
+        const st = getCurrentModelState();
+        PRESETS.forEach((p, i) => {
+            const btn = document.getElementById('tm-claude-preset-' + i);
+            if (!btn) return;
+            const match = !!st && st.family === p.model.toLowerCase() && st.effort === p.effort;
+            btn.classList.toggle('tm-active', match);
+        });
+    }
+
     // --- Incognito (temp chat) ---
     let isIncognitoActivating = false;
 
@@ -315,6 +351,8 @@
             if (btn && isElementVisible(btn)) {
                 btn.click();
                 console.log("Claude Enhancer: Toggled incognito.");
+                // Reflect new state after the UI updates
+                setTimeout(updateIncognitoButtonState, 300);
                 return true;
             }
             console.error("Claude Enhancer: Incognito button not found.");
@@ -322,6 +360,16 @@
         } finally {
             isIncognitoActivating = false;
         }
+    }
+
+    /** True when currently in an incognito chat (the toggle reads "Exit incognito"). */
+    function isIncognitoActive() {
+        return !!document.querySelector('button[aria-label="Exit incognito"]');
+    }
+
+    function updateIncognitoButtonState() {
+        const btn = document.getElementById('tm-claude-temp-btn');
+        if (btn) btn.classList.toggle('tm-active', isIncognitoActive());
     }
 
     // --- Auto-focus input ---
@@ -369,6 +417,30 @@
         }));
     }
 
+    // --- Keyboard shortcuts ---
+    // Cmd/Ctrl+Shift+[1-4] -> apply preset ; Cmd/Ctrl+Shift+0 -> toggle thinking.
+    // Matched on e.code so they work regardless of keyboard layout.
+    const PRESET_HOTKEYS = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3 };
+
+    function handleShortcuts(e) {
+        const mod = e.metaKey || e.ctrlKey;
+        if (!mod || !e.shiftKey || e.altKey) return;
+
+        const idx = PRESET_HOTKEYS[e.code];
+        if (idx !== undefined && PRESETS[idx]) {
+            e.preventDefault();
+            e.stopPropagation();
+            const p = PRESETS[idx];
+            applyPreset(p.model, p.effort, p.thinking);
+            return;
+        }
+        if (e.code === 'Digit0') {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleThinking();
+        }
+    }
+
     // --- UI: button builders ---
     function makeButton({ id, label, title, onClick }) {
         const btn = document.createElement('button');
@@ -389,10 +461,11 @@
         const group = document.createElement('div');
         group.id = 'tm-claude-left';
         group.className = 'tm-claude-group';
-        PRESETS.forEach(p => {
+        PRESETS.forEach((p, i) => {
             group.appendChild(makeButton({
+                id: 'tm-claude-preset-' + i,
                 label: p.label,
-                title: p.title,
+                title: `${p.title}  (${MOD}${i + 1})`,
                 onClick: () => applyPreset(p.model, p.effort, p.thinking)
             }));
         });
@@ -410,6 +483,7 @@
             onClick: () => toggleThinking()
         }));
         group.appendChild(makeButton({
+            id: 'tm-claude-temp-btn',
             label: 'Temp',
             title: 'Toggle Incognito chat',
             onClick: () => toggleIncognito()
@@ -451,6 +525,11 @@
             }
             updateThinkingButtonState();
         }
+
+        // Keep highlights in sync with whatever the live UI shows (also catches
+        // changes the user makes through Claude's own model menu).
+        updatePresetButtonStates();
+        updateIncognitoButtonState();
     }
 
     // --- URL parameters ---
@@ -573,6 +652,7 @@
         console.log("Claude Enhancer v1.0: Initializing...");
 
         document.addEventListener('keydown', handleInputKeydown, true);
+        document.addEventListener('keydown', handleShortcuts, true);
 
         injectStyles();
         injectButtons();

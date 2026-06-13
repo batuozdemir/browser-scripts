@@ -75,3 +75,6 @@ build/
 # macOS extended attributes
 *.DS_Store
 
+claude-enhancer-inspect-results.md
+claude-enhancer-plan.md
+claude-enhancer-questions.md
