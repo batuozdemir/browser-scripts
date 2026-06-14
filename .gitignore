@@ -1,4 +1,5 @@
 test/
+.claude/
 
 # macOS
 .DS_Store
