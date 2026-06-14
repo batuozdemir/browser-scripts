@@ -1,94 +1,140 @@
-# AI Studio Advanced Settings Setter (userscript)
+# AI Interface Userscripts
 
-This userscript automates the configuration of Google AI Studio's chat UI. It can set the model, temperature, thinking budget, grounding toggle, and system prompt automatically — either from a set of built-in defaults or from URL query parameters. It also supports auto-inserting a first message or attaching a YouTube URL to the chat input.
+A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, and Claude.ai.
+
+| Script | Target | Purpose |
+|--------|--------|---------|
+| `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
+| `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
+| `claude-enhancer.user.js` | `claude.ai` | Model+effort+thinking preset buttons (S/SX/O/OX), thinking toggle, incognito toggle, custom keybindings |
+| `autoplay-bypass-ads.user.js` | YouTube | Autoplay/ad bypass |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
 
-## Key features
+---
 
-- **AI Studio:** Automatically set model (e.g. `gemini-3-pro`).
-- **AI Studio:** Configure thinking budget (automatic/manual toggle + slider).
-- **AI Studio:** Set temperature slider value.
-- **AI Studio:** Toggle grounding (Search-as-a-tool) on/off.
-- **AI Studio:** Set the system prompt (system instructions) programmatically.
-- **Gemini:** Toggle between "Thinking" and "Fast" models with one click (seamlessly integrated with dark/light mode).
-- **Gemini:** Use `Cmd+Enter` to submit and `Enter` to create a new line in the chat.
-- Listens for UI interactions and keeps convenient defaults.
+## AI Studio (`ai-studio-enhancer.user.js`)
 
-## Installation
+Adds combined model+thinking preset buttons and a temporary-chat toggle next to the **Tools** button under the prompt box, plus silent URL-param automation. Rewritten for the Gemini 3 redesign (level-based thinking; no temperature/budget slider).
+
+### Preset buttons (left, next to "Tools")
+
+| Button | Model family | Thinking |
+|--------|--------------|----------|
+| `Lite` | Flash-Lite | Minimal |
+| `F` | Flash | Low |
+| `FX` | Flash | High |
+| `P` | Pro | Low |
+| `PX` | Pro | High |
+
+Each preset selects the **best available model of its family by version number** — `gemini-3.5-pro` outranks `gemini-3.1-pro`, which outranks `gemini-3.1-pro-preview` — so newer models are picked automatically without editing the script. The active preset is highlighted to match the current model + thinking level.
+
+### Action buttons (right, near "Run")
+
+- `Grd` — toggle Grounding with Google Search (highlighted when on).
+- `Temp` — toggle Temporary Chat.
+- `Save` — save the prompt.
+
+### Always-on / convenience behaviors
+
+- **Code execution** is kept enabled (re-enabled whenever found off).
+- The **system prompt** is only applied when it's currently empty — it never overwrites instructions you've set.
+- After any action the cursor returns to the prompt box.
+
+### Installation
 
 1. Install a userscript manager in your browser (Tampermonkey is recommended).
-2. Create a new script and paste the contents of `ai-studio.user.js` or `gemini-enhancer.user.js` (depending on which tool you use), or install directly from the script's `downloadURL` if hosted.
-3. Enable the script and navigate to https://aistudio.google.com/.
+2. Create a new script and paste the contents of `ai-studio-enhancer.user.js`, or install directly from the script's `downloadURL` if hosted.
+3. Enable the script and navigate to `https://aistudio.google.com/prompts/`.
 
-Note: The script runs at `document-idle` and targets pages under `https://aistudio.google.com/*`.
+Note: The script runs at `document-idle` and targets pages under `https://aistudio.google.com/prompts/*`.
 
-## Usage — URL parameters
+### URL parameters
 
-You can configure the script using URL query parameters. Examples below assume you opened AI Studio with appended query parameters.
+Applied silently on a fresh `/prompts/new_chat` (or whenever `?model=` is present):
 
-Supported parameters:
+- `model` — exact model id. Example: `model=gemini-3.1-pro-preview`. If omitted, defaults to the best Pro model.
+- `thinking` — `minimal | low | medium | high`. Example: `thinking=high`.
+- `search` — toggle Grounding with Google Search. Use `1`/`true`/`on` or `0`/`false`/`off`. (Legacy alias: `grounding`.)
+- `sp` — system prompt (system instructions). URL-encode long text. If omitted, the embedded default system prompt is applied.
 
-- `model` — Model identifier string. Example: `model=gemini-2.5-pro`.
-- `budget` — Thinking budget as an integer. Use `-1` to disable manual budget and let AI Studio decide. Example: `budget=128`.
-- `temp` — Temperature value (float). Example: `temp=0.5`.
-- `grounding` — Enable grounding/search-as-a-tool. Use `true`, `false`, `1`, or `0`. Example: `grounding=true`.
-- `sp` — System prompt (system instructions). URL-encode long text. Example: `sp=Your%20system%20prompt%20here`.
-- `yt_url` — A YouTube URL to paste into the chat input; the script will wait for the YouTube chunk to appear and then run a summarization prompt. Example: `yt_url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdQw4w9WgXcQ`.
-- `fm` — First message: insert and submit this text in the main input area. URL-encode if needed.
+Example:
 
-Examples:
+  https://aistudio.google.com/prompts/new_chat?model=gemini-3.1-pro-preview&thinking=high&search=1
 
-- Open AI Studio with model and temperature set:
+### Customization
 
-  https://aistudio.google.com/?model=gemini-2.5-pro&temp=0
+- Change the default model family or system prompt via the `DEFAULT_SETTINGS` object near the top of the script.
+- Adjust the preset buttons via the `PRESETS` array.
 
-- Open with a YouTube URL to auto-attach and ask for a summary:
+### Troubleshooting
 
-  https://aistudio.google.com/?yt_url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DEXAMPLE
+- Console logs are prefixed with `[AIStudio]`.
+- If selectors break after an AI Studio UI update, the relevant ones live in the `SELECTORS` const at the top of the script.
 
-- Set a custom system prompt and first message:
+---
 
-  https://aistudio.google.com/?sp=Custom%20system%20prompt%20here&fm=Hello%2C%20please%20summarize%20my%20note
+## Gemini (`gemini-enhancer.user.js`)
 
-## How it works (brief)
+Adds quick-access preset buttons, temp chat toggle, and saner keybindings to `gemini.google.com`.
 
-When the page contains AI Studio's controls, the script waits for the settings area and then:
+### Preset buttons
 
-1. Reads URL params (falls back to defaults if absent).
-2. Clicks the model selector and chooses the requested model (if different).
-3. Toggles thinking budget and sets the slider when requested.
-4. Sets the temperature slider.
-5. Toggles grounding (Search-as-a-tool) on/off.
-6. Opens the System Instructions panel, fills the textarea, and closes it.
-7. Optionally pastes a YouTube URL or sets the first message and runs the prompt.
+| Button | Model | Thinking |
+|--------|-------|----------|
+| `FL` | Flash-Lite | Extended |
+| `F` | Flash | Standard |
+| `FX` | Flash | Extended |
+| `P` | Pro | Standard |
+| `PX` | Pro | Extended |
 
-All interactions are performed by simulating clicks, input events, and keyboard events so they behave like manual UI changes.
+A `Temp` button toggles Temporary Chat.
 
-## Customization
+### Keybindings
 
-- Change defaults by editing the `defaultSettings` object at the top of `ai-studio.user.js`.
-- You can modify the script to add presets or listen for keyboard shortcuts to apply different configurations.
+- `Cmd/Ctrl+Enter` — send message
+- `Enter` — newline
 
-## Troubleshooting
+### URL parameters
 
-- If the script fails to find UI elements, AI Studio may have changed selectors or markup. Open the browser console to see error logs prefixed with `[Tampermonkey]`.
-- Ensure the userscript manager has permission to run on `https://aistudio.google.com/*`.
-- If the system prompt isn't applied, the script looks for a button with `data-test-system-instructions-card` and a textarea labeled `System instructions`. Selector changes on AI Studio will require updating those selectors.
-- If pasting YouTube URLs doesn't create a video chunk, the script retries up to 2 times, then inserts the URL as plain text.
+- `?model=flashlite|flash|pro` — auto-select model
+- `?thinking=standard|extended` — auto-set thinking level
+- `?temp=true` — activate temporary chat
 
-## Example flows
+---
 
-- Quick start (use defaults): open AI Studio and the script will set model to `gemini-2.5-pro`, temperature to `0`, and apply the embedded system prompt.
-- Auto summarize a video:
-  - Open the AI Studio URL with `yt_url` set.
-  - The script pastes the link, waits for the video chunk UI, replaces the input with a summarization prompt, and clicks Run.
+## Claude (`claude-enhancer.user.js`)
+
+Adds quick-access preset buttons, thinking/incognito toggles, and saner keybindings to `claude.ai`. See `claude-enhancer-README.md` for full details.
+
+### Preset buttons (left of composer toolbar)
+
+| Button | Model | Effort | Thinking |
+|--------|-------|--------|----------|
+| `S` | Sonnet 4.6 | Low | off |
+| `SX` | Sonnet 4.6 | High | on |
+| `O` | Opus 4.8 | Medium | off |
+| `OX` | Opus 4.8 | Max | on |
+
+### Toggle buttons (right of composer toolbar)
+
+- `T` — toggle Thinking on/off
+- `Temp` — toggle Incognito chat
+
+### Keybindings
+
+- `Cmd/Ctrl+Enter` — send message
+- `Enter` / `Shift+Enter` — newline
+
+### URL parameters
+
+- `?model=opus|sonnet|haiku|fable`
+- `?effort=low|medium|high|max`
+- `?thinking=on|off`
+- `?incognito=1`
+
+---
 
 ## License
 
-This repository contains the userscript and is distributed under the same LICENSE file included in the repository root. Check `LICENSE` for terms.
-
-## Notes and caveats
-
-- This script relies on specific element attributes and class names present in AI Studio's web UI. It may need updates if Google changes the UI.
-- Use responsibly and avoid automating actions that violate AI Studio's terms of service.
+Distributed under the LICENSE file in the repository root.
