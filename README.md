@@ -7,7 +7,6 @@ A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, 
 | `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
 | `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort+thinking preset buttons (S/SX/O/OX), thinking toggle, incognito toggle, custom keybindings |
-| `autoplay-bypass-ads.user.js` | YouTube | Autoplay/ad bypass |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
 
