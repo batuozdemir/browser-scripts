@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      9.3.1
+// @version      9.3.2
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -693,6 +693,11 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
                 color: var(--mat-sys-primary, #5e97f6);
                 border-color: var(--mat-sys-primary, #5e97f6);
             }
+
+            /* Hide the active tools container chips */
+            ms-horizontal-scroll.enabled-tool-container {
+                display: none !important;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -733,7 +738,7 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
     // ===================================================================
 
     function init() {
-        console.log("[AIStudio] Enhancer v9.3.1: initializing...");
+        console.log("[AIStudio] Enhancer v9.3.2: initializing...");
         injectStyles();
         setupGlobalListeners();
         startWatchdog();
