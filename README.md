@@ -111,6 +111,8 @@ Adds quick-access preset buttons, thinking/incognito toggles, and saner keybindi
 | Button | Model | Effort | Thinking |
 |--------|-------|--------|----------|
 | `S` | Sonnet 4.6 | Low | off |
+| `SM` | Sonnet 4.6 | Medium | off |
+| `SMX` | Sonnet 4.6 | Medium | on |
 | `SX` | Sonnet 4.6 | High | on |
 | `O` | Opus 4.8 | Medium | off |
 | `OX` | Opus 4.8 | Max | on |

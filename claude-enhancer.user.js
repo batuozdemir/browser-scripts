@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -16,7 +16,7 @@
 // │                        AI AGENT NOTES                                  │
 // │  DO NOT REMOVE OR REFACTOR THE FOLLOWING FEATURES:                     │
 // │                                                                        │
-// │  1. MODEL + EFFORT + THINKING PRESET BUTTONS (S, SX, O, OX)            │
+// │  1. MODEL + EFFORT + THINKING PRESET BUTTONS (S, SM, SMX, SX, O, OX)    │
 // │     - Injected on the LEFT of the composer toolbar (after "Add files").│
 // │     - Each opens the model menu, picks a model by VISIBLE TEXT         │
 // │       (no stable testids exist), then opens the nested Effort submenu  │
@@ -92,10 +92,12 @@
 
     // Preset buttons (left side). Models matched by family word (version-proof).
     const PRESETS = [
-        { label: 'S',  model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
-        { label: 'SX', model: 'Sonnet', effort: 'high',   thinking: true,  title: 'Sonnet · High · Thinking on' },
-        { label: 'O',  model: 'Opus',   effort: 'medium', thinking: false, title: 'Opus · Medium · Thinking off' },
-        { label: 'OX', model: 'Opus',   effort: 'max',    thinking: true,  title: 'Opus · Max · Thinking on' }
+        { label: 'S',   model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
+        { label: 'SM',  model: 'Sonnet', effort: 'medium', thinking: false, title: 'Sonnet · Medium · Thinking off' },
+        { label: 'SMX', model: 'Sonnet', effort: 'medium', thinking: true,  title: 'Sonnet · Medium · Thinking on' },
+        { label: 'SX',  model: 'Sonnet', effort: 'high',   thinking: true,  title: 'Sonnet · High · Thinking on' },
+        { label: 'O',   model: 'Opus',   effort: 'medium', thinking: false, title: 'Opus · Medium · Thinking off' },
+        { label: 'OX',  model: 'Opus',   effort: 'max',    thinking: true,  title: 'Opus · Max · Thinking on' }
     ];
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));

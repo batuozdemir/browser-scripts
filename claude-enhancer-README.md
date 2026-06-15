@@ -5,7 +5,7 @@ toggle, an incognito toggle, and saner keybindings to **claude.ai** — the Clau
 counterpart of `gemini-enhancer.user.js`.
 
 **Scope:** `https://claude.ai/*`
-**Version:** 1.0
+**Version:** 1.3
 
 ---
 
@@ -18,6 +18,8 @@ nested **Effort** submenu to set effort and the **Thinking** switch:
 | Button | Model | Effort | Thinking |
 |--------|-------------|--------|----------|
 | `S`    | Sonnet 4.6  | Low    | off |
+| `SM`   | Sonnet 4.6  | Medium | off |
+| `SMX`  | Sonnet 4.6  | Medium | on  |
 | `SX`   | Sonnet 4.6  | High   | on  |
 | `O`    | Opus 4.8    | Medium | off |
 | `OX`   | Opus 4.8    | Max    | on  |
