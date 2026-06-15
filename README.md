@@ -136,6 +136,21 @@ Adds quick-access preset buttons, thinking/incognito toggles, and saner keybindi
 
 ---
 
+## Video (`video-enhancer.user.js`)
+
+A universal video speed controller that bypasses iframes, shadow DOMs, and custom players.
+
+### Controls
+- `.` — Increase video speed by 0.25x
+- `ç` — Decrease video speed by 0.25x
+
+### Features
+- Bypasses cross-origin iframe restrictions (works in embedded players).
+- Deep searches Shadow DOMs to find hidden `<video>` tags (e.g., Twitter, Reddit).
+- Shows a brief, centered speed indicator overlay when speed changes.
+
+---
+
 ## License
 
 Distributed under the LICENSE file in the repository root.
