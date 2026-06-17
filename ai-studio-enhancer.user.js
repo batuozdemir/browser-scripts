@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Studio Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      9.3.2
+// @version      9.3.3
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
 // @match        https://aistudio.google.com/prompts/*
@@ -107,6 +107,8 @@
         // Temporary chat (incognito) + Save — both live in the "More actions" menu
         MORE_ACTIONS_BTN: 'button[aria-label="View more actions"]',
         INCOGNITO_TOGGLE: 'button[data-test-incognito-toggle]',
+        // Present in the DOM only while temporary chat is active — the source of truth for state.
+        INCOGNITO_INDICATOR: 'ms-incognito-mode-indicator',
         SAVE_BTN: 'button[data-test-manual-save]',
 
         // Overlays
@@ -468,6 +470,11 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
 
     async function enforceTemporaryChat() {
         if (isMenuActionBusy) return;
+        // Source of truth: the indicator only exists in the DOM when temp chat is on.
+        if (document.querySelector(SELECTORS.INCOGNITO_INDICATOR)) {
+            console.log("[AIStudio] Temporary chat already on.");
+            return;
+        }
         isMenuActionBusy = true;
         try {
             const moreBtn = document.querySelector(SELECTORS.MORE_ACTIONS_BTN);
@@ -475,13 +482,8 @@ Be fast, factual, and structured. Focus on delivering maximum value with minimal
             moreBtn.click();
             const item = await waitForSelector(SELECTORS.INCOGNITO_TOGGLE, 2000);
             if (item) {
-                const isOn = item.getAttribute('aria-checked') === 'true' || item.textContent.toLowerCase().includes('turn off');
-                if (!isOn) {
-                    item.click();
-                    console.log("[AIStudio] Enforced temporary chat.");
-                } else {
-                    closeOverlays();
-                }
+                item.click();
+                console.log("[AIStudio] Enforced temporary chat.");
             } else {
                 closeOverlays();
             }
