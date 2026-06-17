@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.01
+// @version      3.1.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -235,7 +235,13 @@
      * during programmatic model/thinking selection. Uses both inline styles (immediate)
      * and a CSS class (catches overlays created mid-operation).
      */
+    // Nest-safe hide depth: hides while > 0. Lets an outer scope (e.g. the
+    // initial URL automation) hold the overlay hidden across several inner
+    // hide/show pairs so the menu never flashes in the gaps between steps.
+    let menuHideDepth = 0;
+
     function hideMenuOverlays() {
+        menuHideDepth++;
         document.body.classList.add('gemini-enhancer-hiding-menus');
         const overlay = document.querySelector('.cdk-overlay-container');
         if (overlay) {
@@ -247,6 +253,8 @@
     }
 
     function showMenuOverlays() {
+        menuHideDepth = Math.max(0, menuHideDepth - 1);
+        if (menuHideDepth > 0) return; // still held by an outer scope
         document.body.classList.remove('gemini-enhancer-hiding-menus');
         const overlay = document.querySelector('.cdk-overlay-container');
         if (overlay) {
@@ -254,6 +262,14 @@
             overlay.style.removeProperty('position');
             overlay.style.removeProperty('left');
             overlay.style.removeProperty('top');
+        }
+    }
+
+    /** Polls until the mode picker menu is closed (or timeout). */
+    async function waitForModeMenuClosed(timeoutMs = 400) {
+        const start = Date.now();
+        while (isModeMenuOpen() && Date.now() - start < timeoutMs) {
+            await new Promise(r => setTimeout(r, 10));
         }
     }
 
@@ -571,6 +587,9 @@
             btn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                // User made an explicit choice — cancel any pending URL automation
+                // so ?model= can't clobber this selection a moment later.
+                urlModelActionCancelled = true;
                 setModeAndThinking(mode.modelKey, mode.thinking);
             };
 
@@ -613,6 +632,9 @@
 
     // --- Feature 5: URL Parameters ---
     let urlParamsHandled = false;
+    // Set true when the user clicks a preset button — cancels any pending
+    // ?model= URL automation so it can't override the user's explicit choice.
+    let urlModelActionCancelled = false;
 
     function checkUrlParams() {
         if (urlParamsHandled) {
@@ -641,23 +663,51 @@
             const modelKey = modelMap[modelParam.toLowerCase()];
             if (modelKey) {
                 const thinking = thinkingParam ? thinkingParam.toLowerCase() : 'standard';
-                setTimeout(() => {
-                    console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' with thinking '${thinking}' from URL`);
-                    setModeAndThinking(modelKey, thinking);
-                }, 1500);
+                // Fire as soon as the mode trigger exists (near-instant) rather than
+                // a fixed delay, and bail out if the user already clicked a preset.
+                // Hold the overlay hidden for the whole operation so no menu flashes.
+                (async () => {
+                    hideMenuOverlays();
+                    try {
+                        const trigger = await waitForSelector(SELECTORS.triggerBtn, 8000);
+                        if (urlModelActionCancelled) {
+                            console.log("Gemini Enhancer: URL model selection cancelled by user preset click.");
+                            return;
+                        }
+                        if (!trigger) {
+                            console.warn("Gemini Enhancer: Mode trigger never appeared; skipping URL model selection.");
+                            return;
+                        }
+                        console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' with thinking '${thinking}' from URL`);
+                        await setModeAndThinking(modelKey, thinking);
+                        await waitForModeMenuClosed();
+                    } finally {
+                        showMenuOverlays();
+                    }
+                })();
             }
         } else if (thinkingParam) {
             // Only thinking level specified — just set thinking on current model.
-            setTimeout(async () => {
-                console.log(`Gemini Enhancer: Auto-selecting thinking level '${thinkingParam}' from URL`);
+            (async () => {
                 hideMenuOverlays();
                 try {
+                    const trigger = await waitForSelector(SELECTORS.triggerBtn, 8000);
+                    if (urlModelActionCancelled) {
+                        console.log("Gemini Enhancer: URL thinking selection cancelled by user preset click.");
+                        return;
+                    }
+                    if (!trigger) {
+                        console.warn("Gemini Enhancer: Mode trigger never appeared; skipping URL thinking selection.");
+                        return;
+                    }
+                    console.log(`Gemini Enhancer: Auto-selecting thinking level '${thinkingParam}' from URL`);
                     await selectThinkingLevel(thinkingParam.toLowerCase());
+                    await waitForModeMenuClosed();
                 } finally {
                     showMenuOverlays();
                 }
                 focusInputField();
-            }, 1500);
+            })();
         }
 
         // ?temp=1|true
@@ -696,7 +746,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.0: Initializing...");
+        console.log("Gemini Enhancer v3.1.0: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
