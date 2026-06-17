@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.1.0
+// @version      3.1.1
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -240,29 +240,31 @@
     // hide/show pairs so the menu never flashes in the gaps between steps.
     let menuHideDepth = 0;
 
+    // Overlay elements hidden inline as a backup to the CSS class (catches any
+    // element already present when hiding starts). Top-layer [popover] submenus
+    // are included so they can't leak a paint frame.
+    const OVERLAY_HIDE_SELECTOR = '.cdk-overlay-container, .cdk-overlay-pane, ' +
+        '.cdk-overlay-connected-position-bounding-box, .cdk-overlay-popover, [popover]';
+
     function hideMenuOverlays() {
         menuHideDepth++;
         document.body.classList.add('gemini-enhancer-hiding-menus');
-        const overlay = document.querySelector('.cdk-overlay-container');
-        if (overlay) {
-            overlay.style.setProperty('visibility', 'hidden', 'important');
-            overlay.style.setProperty('position', 'fixed', 'important');
-            overlay.style.setProperty('left', '-9999px', 'important');
-            overlay.style.setProperty('top', '-9999px', 'important');
-        }
+        document.querySelectorAll(OVERLAY_HIDE_SELECTOR).forEach(el => {
+            el.style.setProperty('visibility', 'hidden', 'important');
+            el.style.setProperty('opacity', '0', 'important');
+            el.style.setProperty('pointer-events', 'none', 'important');
+        });
     }
 
     function showMenuOverlays() {
         menuHideDepth = Math.max(0, menuHideDepth - 1);
         if (menuHideDepth > 0) return; // still held by an outer scope
         document.body.classList.remove('gemini-enhancer-hiding-menus');
-        const overlay = document.querySelector('.cdk-overlay-container');
-        if (overlay) {
-            overlay.style.removeProperty('visibility');
-            overlay.style.removeProperty('position');
-            overlay.style.removeProperty('left');
-            overlay.style.removeProperty('top');
-        }
+        document.querySelectorAll(OVERLAY_HIDE_SELECTOR).forEach(el => {
+            el.style.removeProperty('visibility');
+            el.style.removeProperty('opacity');
+            el.style.removeProperty('pointer-events');
+        });
     }
 
     /** Polls until the mode picker menu is closed (or timeout). */
@@ -746,7 +748,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.1.0: Initializing...");
+        console.log("Gemini Enhancer v3.1.1: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
@@ -791,14 +793,20 @@
         const styleEl = document.createElement('style');
         styleEl.textContent = `
             /* Hide menu overlays during programmatic model/thinking selection.
-               Uses visibility:hidden so elements still render for .click() to work,
-               plus off-screen positioning as a belt-and-suspenders approach.
+               Uses visibility:hidden + opacity:0 (NOT off-screen repositioning,
+               which causes a reflow that paints a frame before hiding). Layout
+               boxes are preserved so .click() and getBoundingClientRect still work.
+               The thinking submenu renders as a top-layer [popover] element, so it
+               is targeted explicitly alongside the container/panes/bounding-box.
                Kills all transitions/animations so menus appear/disappear instantly. */
-            .gemini-enhancer-hiding-menus .cdk-overlay-container {
+            .gemini-enhancer-hiding-menus .cdk-overlay-container,
+            .gemini-enhancer-hiding-menus .cdk-overlay-pane,
+            .gemini-enhancer-hiding-menus .cdk-overlay-connected-position-bounding-box,
+            .gemini-enhancer-hiding-menus .cdk-overlay-popover,
+            .gemini-enhancer-hiding-menus [popover] {
                 visibility: hidden !important;
-                position: fixed !important;
-                left: -9999px !important;
-                top: -9999px !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
             }
             .gemini-enhancer-hiding-menus .cdk-overlay-container *,
             .gemini-enhancer-hiding-menus .cdk-overlay-container {
