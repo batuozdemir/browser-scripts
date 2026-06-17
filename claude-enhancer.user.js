@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -307,6 +307,17 @@
         if (btn) btn.classList.toggle('tm-active', lastThinkingIntent === true);
     }
 
+    /** Reads the live Thinking switch (only present while the Effort submenu is
+     *  open) and syncs our optimistic state + button highlights to it. This is
+     *  what catches the user flipping Thinking through Claude's own menu. */
+    function syncThinkingFromDOM() {
+        const state = readThinkingState();
+        if (state === null || state === lastThinkingIntent) return;
+        lastThinkingIntent = state;
+        updateThinkingButtonState();
+        updatePresetButtonStates();
+    }
+
     /** Reads the current model + effort from the model trigger's aria-label
      *  (e.g. "Model: Sonnet 4.6 Low"). Thinking state is not exposed there. */
     function getCurrentModelState() {
@@ -324,13 +335,27 @@
         return { family, effort };
     }
 
-    /** Highlights a preset button when the live model + effort match it. */
+    /** Highlights a preset button when the live model + effort (+ thinking) match it.
+     *  When several presets share the same model + effort (e.g. SM vs SMX), the
+     *  Thinking state disambiguates them using lastThinkingIntent. */
     function updatePresetButtonStates() {
         const st = getCurrentModelState();
+        // Presets matching on model + effort alone.
+        const baseMatch = (p) => !!st && st.family === p.model.toLowerCase() && st.effort === p.effort;
+        const candidates = PRESETS.filter(baseMatch);
+        const ambiguous = candidates.length > 1;
+
         PRESETS.forEach((p, i) => {
             const btn = document.getElementById('tm-claude-preset-' + i);
             if (!btn) return;
-            const match = !!st && st.family === p.model.toLowerCase() && st.effort === p.effort;
+            let match = baseMatch(p);
+            // Disambiguate by Thinking only when multiple presets collide and we
+            // actually know the current Thinking state.
+            if (match && ambiguous && lastThinkingIntent !== null) {
+                match = p.thinking === lastThinkingIntent;
+            } else if (match && ambiguous) {
+                match = false; // unknown thinking state -> don't guess
+            }
             btn.classList.toggle('tm-active', match);
         });
     }
@@ -646,7 +671,10 @@
         injectStyles();
         injectButtons();
 
-        const observer = new MutationObserver(() => injectButtons());
+        const observer = new MutationObserver(() => {
+            injectButtons();
+            syncThinkingFromDOM();
+        });
         observer.observe(document.body, { childList: true, subtree: true });
 
         const interval = setInterval(injectButtons, 2000);
