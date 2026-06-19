@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.1.1
+// @version      3.2.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -26,7 +26,7 @@
 // │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)       │
 // │     - Must remain on all contenteditable fields.                   │
 // │                                                                    │
-// │  3. MODE+THINKING BUTTONS (FL, F, FX, P, PX) + TEMP CHAT BUTTON  │
+// │  3. MODE+THINKING BUTTONS (F, FX, PX) + THINKING + TEMP CHAT     │
 // │     - Injected below the input area in .trailing-actions-wrapper.  │
 // │     - Must survive SPA navigation.                                 │
 // │     - Each button selects a model AND a thinking level via         │
@@ -55,7 +55,6 @@
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
 
         // Model options (hash-based IDs — may change when Google updates models)
-        optionFlashLite: '[data-test-id="bard-mode-option-8c46e95b1a07cecc"]',
         optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"]',
         optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"]',
 
@@ -337,7 +336,6 @@
         if (!targetOption) {
             await new Promise(r => setTimeout(r, 50));
             const labelMap = {
-                optionFlashLite: 'Flash-Lite',
                 optionFlash: 'Flash',
                 optionPro: 'Pro'
             };
@@ -436,6 +434,69 @@
         focusInputField();
     }
 
+    /**
+     * Toggles thinking between standard and extended on the current model.
+     * Opens the mode menu, inspects the current thinking level, and selects
+     * the opposite one — all with overlays hidden to prevent visual flicker.
+     */
+    async function toggleThinking() {
+        hideMenuOverlays();
+        try {
+            // Open menu to inspect current thinking state
+            if (!ensureModeMenuOpen()) {
+                console.error("Gemini Enhancer: Mode dropdown trigger not found for thinking toggle.");
+                return;
+            }
+
+            // Wait for thinking level trigger
+            let thinkingTrigger = await waitForSelector(SELECTORS.thinkingLevelTrigger, 300);
+            if (!thinkingTrigger) {
+                await new Promise(r => setTimeout(r, 50));
+                thinkingTrigger = findMenuItemByLabel('Thinking level');
+            }
+
+            if (!thinkingTrigger) {
+                console.warn("Gemini Enhancer: Thinking level trigger not found.");
+                document.body.click();
+                return;
+            }
+
+            // Open the thinking submenu
+            thinkingTrigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+            thinkingTrigger.click();
+
+            // Wait for submenu items to render, then detect current state
+            let standardItem = null, extendedItem = null;
+            for (let i = 0; i < 30; i++) {
+                standardItem = findMenuItemByLabel('Standard');
+                extendedItem = findMenuItemByLabel('Extended');
+                if (standardItem && extendedItem) break;
+                await new Promise(r => setTimeout(r, 10));
+            }
+
+            if (!standardItem || !extendedItem) {
+                console.warn("Gemini Enhancer: Could not find Standard/Extended options.");
+                document.body.click();
+                return;
+            }
+
+            // Detect which is currently active (aria-checked or similar attribute)
+            const isExtended = extendedItem.getAttribute('aria-checked') === 'true' ||
+                extendedItem.classList.contains('selected');
+
+            // Toggle: if extended → standard, if standard → extended
+            const target = isExtended ? standardItem : extendedItem;
+            const targetLabel = isExtended ? 'Standard' : 'Extended';
+            target.click();
+            console.log(`Gemini Enhancer: Toggled thinking to ${targetLabel}`);
+        } finally {
+            showMenuOverlays();
+        }
+
+        // Re-focus input after toggle
+        focusInputField();
+    }
+
     // --- Feature 3: Temp Chat ---
 
     // Global lock to prevent concurrent temp chat activation attempts
@@ -530,13 +591,6 @@
 
         const modes = [
             {
-                label: 'FL',
-                modelKey: 'optionFlashLite',
-                thinking: 'extended',
-                title: 'Flash-Lite · Extended Thinking',
-                path: 'M7 2v11h3v9l7-12h-4l4-8z' // Lightning Bolt
-            },
-            {
                 label: 'F',
                 modelKey: 'optionFlash',
                 thinking: 'standard',
@@ -549,13 +603,6 @@
                 thinking: 'extended',
                 title: 'Flash · Extended Thinking',
                 path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
-            },
-            {
-                label: 'P',
-                modelKey: 'optionPro',
-                thinking: 'standard',
-                title: 'Pro · Standard Thinking',
-                path: 'M12 2L9.09 9.09 2 12l7.09 2.91L12 22l2.91-7.09L22 12l-7.09-2.91z' // Star
             },
             {
                 label: 'PX',
@@ -602,6 +649,32 @@
         const splitter = document.createElement('div');
         splitter.className = 'gemini-mode-splitter';
         container.appendChild(splitter);
+
+        // Thinking Toggle Button
+        const thinkBtn = document.createElement('button');
+        thinkBtn.className = "gemini-mode-btn";
+        thinkBtn.title = "Toggle Thinking (Standard ↔ Extended)";
+        thinkBtn.type = "button";
+
+        // Brain/Thinking Icon (lightbulb outline)
+        const thinkSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        thinkSvg.setAttribute("viewBox", "0 0 24 24");
+        thinkSvg.setAttribute("fill", "currentColor");
+        const thinkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        thinkPath.setAttribute("d", "M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z");
+        thinkSvg.appendChild(thinkPath);
+        thinkBtn.appendChild(thinkSvg);
+
+        const thinkSpan = document.createElement('span');
+        thinkSpan.textContent = "Thinking";
+        thinkBtn.appendChild(thinkSpan);
+
+        thinkBtn.onclick = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            await toggleThinking();
+        };
+        container.appendChild(thinkBtn);
 
         // Temp Chat Button
         const tempBtn = document.createElement('button');
@@ -654,8 +727,6 @@
 
         if (modelParam) {
             const modelMap = {
-                'flashlite': 'optionFlashLite',
-                'flash-lite': 'optionFlashLite',
                 'flash': 'optionFlash',
                 'pro': 'optionPro',
                 // Legacy aliases
@@ -748,7 +819,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.1.1: Initializing...");
+        console.log("Gemini Enhancer v3.2.0: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
