@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0
+// @version      1.5.0
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -16,7 +16,10 @@
 // │                        AI AGENT NOTES                                  │
 // │  DO NOT REMOVE OR REFACTOR THE FOLLOWING FEATURES:                     │
 // │                                                                        │
-// │  1. MODEL + EFFORT + THINKING PRESET BUTTONS (S, SM, OM, OH)             │
+// │  1. MODEL + EFFORT + THINKING PRESET BUTTONS                              │
+// │     - Pro/Max plan: S, SM, OM, OH                                         │
+// │     - Free plan:    S, SM, SH, SX  (Opus unavailable)                     │
+// │     - Plan detected via "Free plan" banner in DOM.                        │
 // │     - Injected on the LEFT of the composer toolbar (after "Add files").│
 // │     - Each opens the model menu, picks a model by VISIBLE TEXT         │
 // │       (no stable testids exist), then opens the nested Effort submenu  │
@@ -75,6 +78,9 @@
         // Incognito (temp chat) — aria-label swaps between enter/exit states
         incognitoBtn: 'button[aria-label="Use incognito"], button[aria-label="Exit incognito"]',
 
+        // Free-plan banner (contains "Free plan" text + upgrade link)
+        freePlanBanner: 'div.inline-flex a[href="/upgrade"]',
+
         // Overlay portals (hidden during automation)
         popover: '.z-popover',
 
@@ -91,12 +97,32 @@
     };
 
     // Preset buttons (left side). Models matched by family word (version-proof).
-    const PRESETS = [
+    // Pro/Max plan users get Opus presets; Free plan users get Sonnet-only alternatives.
+    const PRESETS_PRO = [
         { label: 'S',   model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
         { label: 'SM',  model: 'Sonnet', effort: 'medium', thinking: true,  title: 'Sonnet · Medium · Thinking on' },
         { label: 'OM',  model: 'Opus',   effort: 'medium', thinking: true,  title: 'Opus · Medium · Thinking on' },
         { label: 'OH',  model: 'Opus',   effort: 'high',   thinking: true,  title: 'Opus · High · Thinking on' }
     ];
+    const PRESETS_FREE = [
+        { label: 'S',   model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
+        { label: 'SM',  model: 'Sonnet', effort: 'medium', thinking: true,  title: 'Sonnet · Medium · Thinking on' },
+        { label: 'SH',  model: 'Sonnet', effort: 'high',   thinking: true,  title: 'Sonnet · High · Thinking on' },
+        { label: 'SX',  model: 'Sonnet', effort: 'max',    thinking: true,  title: 'Sonnet · Max · Thinking on' }
+    ];
+
+    /** Detects whether the user is on the free plan via the upgrade banner. */
+    function isFreePlan() {
+        return !!document.querySelector(SELECTORS.freePlanBanner);
+    }
+
+    /** Returns the active preset list based on the current plan. */
+    function getPresets() {
+        return isFreePlan() ? PRESETS_FREE : PRESETS_PRO;
+    }
+
+    // Track last-known plan type so we can rebuild buttons on change.
+    let _lastPlanType = null;
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -338,12 +364,13 @@
      *  Thinking state disambiguates them using lastThinkingIntent. */
     function updatePresetButtonStates() {
         const st = getCurrentModelState();
+        const presets = getPresets();
         // Presets matching on model + effort alone.
         const baseMatch = (p) => !!st && st.family === p.model.toLowerCase() && st.effort === p.effort;
-        const candidates = PRESETS.filter(baseMatch);
+        const candidates = presets.filter(baseMatch);
         const ambiguous = candidates.length > 1;
 
-        PRESETS.forEach((p, i) => {
+        presets.forEach((p, i) => {
             const btn = document.getElementById('tm-claude-preset-' + i);
             if (!btn) return;
             let match = baseMatch(p);
@@ -473,7 +500,8 @@
         const group = document.createElement('div');
         group.id = 'tm-claude-left';
         group.className = 'tm-claude-group';
-        PRESETS.forEach((p, i) => {
+        const presets = getPresets();
+        presets.forEach((p, i) => {
             group.appendChild(makeButton({
                 id: 'tm-claude-preset-' + i,
                 label: p.label,
@@ -507,6 +535,14 @@
     function injectButtons() {
         const toolbar = document.querySelector(SELECTORS.toolbar);
         if (!toolbar) return;
+
+        // Detect plan-type changes (free ↔ paid) and rebuild preset buttons.
+        const currentPlanType = isFreePlan() ? 'free' : 'pro';
+        if (_lastPlanType !== null && _lastPlanType !== currentPlanType) {
+            const old = document.getElementById('tm-claude-left');
+            if (old) old.remove();
+        }
+        _lastPlanType = currentPlanType;
 
         // LEFT group: into the empty slot right after the "Add files" group
         if (!document.getElementById('tm-claude-left')) {
