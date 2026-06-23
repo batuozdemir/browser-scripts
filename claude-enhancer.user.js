@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.5.0
+// @version      1.5.1
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -19,7 +19,7 @@
 // │  1. MODEL + EFFORT + THINKING PRESET BUTTONS                              │
 // │     - Pro/Max plan: S, SM, OM, OH                                         │
 // │     - Free plan:    S, SM, SH, SX  (Opus unavailable)                     │
-// │     - Plan detected via "Free plan" banner in DOM.                        │
+// │     - Plan detected via "Upgrade" button next to Opus in model menu.      │
 // │     - Injected on the LEFT of the composer toolbar (after "Add files").│
 // │     - Each opens the model menu, picks a model by VISIBLE TEXT         │
 // │       (no stable testids exist), then opens the nested Effort submenu  │
@@ -78,8 +78,8 @@
         // Incognito (temp chat) — aria-label swaps between enter/exit states
         incognitoBtn: 'button[aria-label="Use incognito"], button[aria-label="Exit incognito"]',
 
-        // Free-plan banner (contains "Free plan" text + upgrade link)
-        freePlanBanner: 'div.inline-flex a[href="/upgrade"]',
+        // "Upgrade" button rendered next to Opus in the model-selector dropdown
+        upgradeButton: 'button.border-0\\.5.text-accent-000.rounded-3xl',
 
         // Overlay portals (hidden during automation)
         popover: '.z-popover',
@@ -111,9 +111,27 @@
         { label: 'SX',  model: 'Sonnet', effort: 'max',    thinking: true,  title: 'Sonnet · Max · Thinking on' }
     ];
 
-    /** Detects whether the user is on the free plan via the upgrade banner. */
+    /**
+     * Cached free-plan flag. Detected by the presence of an "Upgrade" button
+     * next to Opus inside the model-selector dropdown. Once detected it
+     * persists for the lifetime of the page — the button can't be dismissed
+     * like the old banner could.
+     */
+    let _detectedFreePlan = null; // null = not yet probed
+
+    /** Synchronously checks the DOM for the Upgrade button (only meaningful
+     *  while the model menu is open). Caches the result. */
+    function probeFreePlan() {
+        const btn = document.querySelector(SELECTORS.upgradeButton);
+        if (btn && btn.textContent.trim().toLowerCase() === 'upgrade') {
+            _detectedFreePlan = true;
+        }
+        // Don't set false here — absence while menu is closed is meaningless.
+    }
+
+    /** Returns true when the user is known to be on the free plan. */
     function isFreePlan() {
-        return !!document.querySelector(SELECTORS.freePlanBanner);
+        return _detectedFreePlan === true;
     }
 
     /** Returns the active preset list based on the current plan. */
@@ -123,6 +141,7 @@
 
     // Track last-known plan type so we can rebuild buttons on change.
     let _lastPlanType = null;
+    let _planProbed = false; // true after we've done the initial background probe
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -535,6 +554,37 @@
     function injectButtons() {
         const toolbar = document.querySelector(SELECTORS.toolbar);
         if (!toolbar) return;
+
+        // On first injection, silently open the model menu to probe for the
+        // Upgrade button, then close it — caches the free-plan flag.
+        if (!_planProbed) {
+            _planProbed = true;
+            (async () => {
+                const trigger = document.querySelector(SELECTORS.modelTrigger);
+                if (!trigger) return;
+                hideMenuOverlays();
+                try {
+                    trigger.click();
+                    await waitForSelector(SELECTORS.menu, 600);
+                    await sleep(80); // let menu items render
+                    probeFreePlan();
+                } finally {
+                    closeMenus();
+                    showMenuOverlays();
+                }
+                // If free-plan was detected, rebuild the left group now.
+                if (isFreePlan() && _lastPlanType !== 'free') {
+                    const old = document.getElementById('tm-claude-left');
+                    if (old) old.remove();
+                    _lastPlanType = 'free';
+                    injectButtons();
+                }
+            })();
+        }
+
+        // Also probe opportunistically whenever the model menu is open
+        // (catches upgrades / downgrades mid-session).
+        if (isModelMenuOpen()) probeFreePlan();
 
         // Detect plan-type changes (free ↔ paid) and rebuild preset buttons.
         const currentPlanType = isFreePlan() ? 'free' : 'pro';
