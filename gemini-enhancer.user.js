@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.2.1
+// @version      3.2.2
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -227,22 +227,39 @@
         document.execCommand('insertText', false, '\n');
     }
 
-    const LEFT_CMD_DOUBLE_PRESS_MS = 450;
+    const MODIFIER_DOUBLE_PRESS_MS = 450;
     let lastLeftCmdPressAt = 0;
+    let lastOptionPressAt = 0;
 
     function handleGlobalKeydown(e) {
-        if (e.code !== 'MetaLeft' || e.repeat) return;
+        if (e.repeat) return;
 
         const now = Date.now();
-        if (now - lastLeftCmdPressAt <= LEFT_CMD_DOUBLE_PRESS_MS) {
-            lastLeftCmdPressAt = 0;
-            e.preventDefault();
-            e.stopPropagation();
-            toggleThinking();
+
+        if (e.code === 'MetaLeft') {
+            if (now - lastLeftCmdPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
+                lastLeftCmdPressAt = 0;
+                e.preventDefault();
+                e.stopPropagation();
+                toggleThinking();
+                return;
+            }
+
+            lastLeftCmdPressAt = now;
             return;
         }
 
-        lastLeftCmdPressAt = now;
+        if (e.code !== 'AltLeft' && e.code !== 'AltRight') return;
+
+        if (now - lastOptionPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
+            lastOptionPressAt = 0;
+            e.preventDefault();
+            e.stopPropagation();
+            toggleModel();
+            return;
+        }
+
+        lastOptionPressAt = now;
     }
 
     // --- Feature 2: Mode + Thinking Selection ---
@@ -449,6 +466,54 @@
         }
 
         // Re-focus input after mode switch
+        focusInputField();
+    }
+
+    function isMenuItemSelected(item) {
+        return item.getAttribute('aria-checked') === 'true' ||
+            item.getAttribute('aria-selected') === 'true' ||
+            item.classList.contains('selected');
+    }
+
+    /**
+     * Toggles the current model between Flash and Pro while keeping the
+     * existing thinking level unchanged.
+     */
+    async function toggleModel() {
+        const triggerText = document.querySelector(SELECTORS.triggerBtn)?.textContent || '';
+
+        hideMenuOverlays();
+        try {
+            if (!ensureModeMenuOpen()) {
+                console.error("Gemini Enhancer: Mode dropdown trigger not found for model toggle.");
+                return;
+            }
+
+            let flashItem = null, proItem = null;
+            for (let i = 0; i < 30; i++) {
+                flashItem = document.querySelector(SELECTORS.optionFlash) || findMenuItemByLabel('Flash');
+                proItem = document.querySelector(SELECTORS.optionPro) || findMenuItemByLabel('Pro');
+                if (flashItem && proItem) break;
+                await new Promise(r => setTimeout(r, 10));
+            }
+
+            if (!flashItem || !proItem) {
+                console.warn("Gemini Enhancer: Could not find Flash/Pro options.");
+                document.body.click();
+                return;
+            }
+
+            const isPro = isMenuItemSelected(proItem) ||
+                (!isMenuItemSelected(flashItem) && /\bpro\b/i.test(triggerText));
+            const target = isPro ? flashItem : proItem;
+            const targetLabel = isPro ? 'Flash' : 'Pro';
+
+            target.click();
+            console.log(`Gemini Enhancer: Toggled model to ${targetLabel}`);
+        } finally {
+            showMenuOverlays();
+        }
+
         focusInputField();
     }
 
@@ -837,7 +902,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.2.1: Initializing...");
+        console.log("Gemini Enhancer v3.2.2: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
