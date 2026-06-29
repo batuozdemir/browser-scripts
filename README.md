@@ -1,12 +1,13 @@
 # AI Interface Userscripts
 
-A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, and Claude.ai.
+A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, Claude.ai, and ChatGPT.
 
 | Script | Target | Purpose |
 |--------|--------|---------|
 | `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
 | `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort+thinking preset buttons (S/SX/O/OX), thinking toggle, incognito toggle, custom keybindings |
+| `chatgpt-enhancer.user.js` | `chatgpt.com` | Intelligence preset buttons (I/M/H), left-Cmd reasoning cycle, temporary chat, URL params, custom keybindings |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
 
@@ -133,6 +134,44 @@ Adds quick-access preset buttons, thinking/incognito toggles, and saner keybindi
 - `?effort=low|medium|high|max`
 - `?thinking=on|off`
 - `?incognito=1`
+
+---
+
+## ChatGPT (`chatgpt-enhancer.user.js`)
+
+Adds quick-access intelligence preset buttons, left-Cmd reasoning cycling, a Temporary Chat toggle, URL-param automation, auto-focus, and saner keybindings to `chatgpt.com`.
+
+### Preset buttons
+
+| Button | Target |
+|--------|--------|
+| `I` | Instant |
+| `M` | Medium |
+| `H` | High |
+
+The active preset is highlighted when ChatGPT's visible picker label can be read.
+
+### Controls
+
+- `Temp` — toggle Temporary Chat.
+- Double-press left `Cmd` — cycle one step through Instant / Medium / High.
+- Triple-press left `Cmd` — skip two steps through Instant / Medium / High.
+
+### Keybindings
+
+- `Cmd/Ctrl+Enter` — send message
+- `Enter` — newline
+
+### URL parameters
+
+- `?model=instant|medium|high`
+- `?thinking=medium|high`
+- `?temp=1`
+
+### Troubleshooting
+
+- Console logs are prefixed with `[ChatGPT]`.
+- ChatGPT's menu ids are generated per render. If the script stops finding the picker or menu rows after a UI update, re-inspect the composer intelligence picker and update the centralized `SELECTORS` const.
 
 ---
 

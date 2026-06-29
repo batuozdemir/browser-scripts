@@ -11,6 +11,7 @@ A collection of Tampermonkey userscripts that enhance AI web interfaces. No buil
 | `claude-enhancer.user.js` | `claude.ai/*` | Model/effort/thinking preset buttons, incognito toggle, keybindings |
 | `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat, keybindings |
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
+| `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Intelligence preset buttons, left-Cmd reasoning cycle, temp chat, URL-param automation, keybindings |
 
 ## Code Conventions
 
