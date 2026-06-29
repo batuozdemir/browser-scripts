@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.2.0
+// @version      3.2.1
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -225,6 +225,24 @@
         e.preventDefault();
         e.stopPropagation();
         document.execCommand('insertText', false, '\n');
+    }
+
+    const LEFT_CMD_DOUBLE_PRESS_MS = 450;
+    let lastLeftCmdPressAt = 0;
+
+    function handleGlobalKeydown(e) {
+        if (e.code !== 'MetaLeft' || e.repeat) return;
+
+        const now = Date.now();
+        if (now - lastLeftCmdPressAt <= LEFT_CMD_DOUBLE_PRESS_MS) {
+            lastLeftCmdPressAt = 0;
+            e.preventDefault();
+            e.stopPropagation();
+            toggleThinking();
+            return;
+        }
+
+        lastLeftCmdPressAt = now;
     }
 
     // --- Feature 2: Mode + Thinking Selection ---
@@ -819,10 +837,11 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.2.0: Initializing...");
+        console.log("Gemini Enhancer v3.2.1: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
+        document.addEventListener('keydown', handleGlobalKeydown, true);
 
         // UI Injection Logic — inject as a separate row inside .input-area,
         // AFTER .text-input-field, so it never squeezes the single-line input.
