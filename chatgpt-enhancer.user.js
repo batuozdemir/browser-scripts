@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.1.0
 // @description  Enhancements for ChatGPT: intelligence preset buttons, temporary chat, URL params, auto-focus, and custom keybindings.
 // @author       You
 // @match        https://chatgpt.com/*
@@ -31,6 +31,7 @@
 // │  3. KEYBINDINGS                                                        │
 // │     - Cmd/Ctrl+Enter sends via button[data-testid="send-button"].       │
 // │     - Plain Enter inserts a newline; IME composition is preserved.       │
+// │     - Right Option tap -> toggle Temporary Chat.                        │
 // │                                                                        │
 // │  4. URL PARAMS                                                         │
 // │     - ?model=instant|medium|high                                        │
@@ -148,6 +149,30 @@
                 }
             }, WAIT.pollMs);
         });
+    }
+
+    // --- Right Option tap -> toggle Temporary Chat ---
+    // A "tap" = keydown + keyup of right Alt with no other key pressed in between.
+    let rightAltClean = false;
+
+    function handleRightOptionKeydown(e) {
+        if (e.repeat) return;
+        if (e.code === 'AltRight') {
+            rightAltClean = true;
+            return;
+        }
+        // Any other key while Alt held -> not a clean tap
+        if (rightAltClean) rightAltClean = false;
+    }
+
+    function handleRightOptionKeyup(e) {
+        if (e.code === 'AltRight' && rightAltClean) {
+            rightAltClean = false;
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[ChatGPT] Right Option tap -> toggling Temporary Chat.');
+            toggleTempChat();
+        }
     }
 
     function normalizeText(text) {
@@ -779,6 +804,8 @@
 
         document.addEventListener('keydown', handleGlobalKeydown, true);
         document.addEventListener('keydown', handleInputKeydown, true);
+        document.addEventListener('keydown', handleRightOptionKeydown, true);
+        document.addEventListener('keyup', handleRightOptionKeyup, true);
 
         injectStyles();
         injectButtons();

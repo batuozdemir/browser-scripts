@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.6.0
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
 // @match        https://claude.ai/*
@@ -34,6 +34,7 @@
 // │  3. KEYBINDINGS                                                        │
 // │     - Enter AND Shift+Enter -> newline.                                │
 // │     - Cmd/Ctrl+Enter -> send (button[aria-label="Send message"]).      │
+// │     - Right Option tap -> toggle Incognito (temp chat).                │
 // │     - Editor is TipTap/ProseMirror (data-testid="chat-input").         │
 // │                                                                        │
 // │  4. AUTO-FOCUS INPUT FIELD (cursor at end).                            │
@@ -499,6 +500,30 @@
         }
     }
 
+    // --- Right Option tap -> toggle Incognito ---
+    // A "tap" = keydown + keyup of right Alt with no other key pressed in between.
+    let rightAltClean = false;
+
+    function handleRightOptionKeydown(e) {
+        if (e.repeat) return;
+        if (e.code === 'AltRight') {
+            rightAltClean = true;
+            return;
+        }
+        // Any other key while Alt held -> not a clean tap
+        if (rightAltClean) rightAltClean = false;
+    }
+
+    function handleRightOptionKeyup(e) {
+        if (e.code === 'AltRight' && rightAltClean) {
+            rightAltClean = false;
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Claude Enhancer: Right Option tap -> toggling Incognito.');
+            toggleIncognito();
+        }
+    }
+
     // --- UI: button builders ---
     function makeButton({ id, label, title, onClick }) {
         const btn = document.createElement('button');
@@ -751,6 +776,8 @@
 
         document.addEventListener('keydown', handleInputKeydown, true);
         document.addEventListener('keydown', handleShortcuts, true);
+        document.addEventListener('keydown', handleRightOptionKeydown, true);
+        document.addEventListener('keyup', handleRightOptionKeyup, true);
 
         injectStyles();
         injectButtons();
