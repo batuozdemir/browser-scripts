@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.1.1
 // @description  Enhancements for ChatGPT: intelligence preset buttons, temporary chat, URL params, auto-focus, and custom keybindings.
 // @author       You
 // @match        https://chatgpt.com/*
@@ -119,6 +119,7 @@
     let urlParamsHandled = false;
     let urlAutomationCancelled = false;
     let lastAppliedPresetId = null;
+    let leftCmdClean = false;
     let leftCmdPressCount = 0;
     let leftCmdPressTimer = null;
 
@@ -451,11 +452,31 @@
     }
 
     function handleGlobalKeydown(e) {
-        if (e.code !== 'MetaLeft' || e.repeat) return;
+        if (e.repeat) return;
+        if (e.code === 'MetaLeft') {
+            leftCmdClean = true;
+            return;
+        }
+        // Any other key while left Cmd held or pressed -> invalidate
+        if (leftCmdClean) {
+            leftCmdClean = false;
+        }
+        if (leftCmdPressCount > 0) {
+            leftCmdPressCount = 0;
+            if (leftCmdPressTimer) {
+                clearTimeout(leftCmdPressTimer);
+                leftCmdPressTimer = null;
+            }
+        }
+    }
 
-        leftCmdPressCount++;
-        if (leftCmdPressTimer) clearTimeout(leftCmdPressTimer);
-        leftCmdPressTimer = setTimeout(flushLeftCmdPresses, WAIT.cmdMultiPressMs);
+    function handleGlobalKeyup(e) {
+        if (e.code === 'MetaLeft' && leftCmdClean) {
+            leftCmdClean = false;
+            leftCmdPressCount++;
+            if (leftCmdPressTimer) clearTimeout(leftCmdPressTimer);
+            leftCmdPressTimer = setTimeout(flushLeftCmdPresses, WAIT.cmdMultiPressMs);
+        }
     }
 
     async function focusInputField(maxAttempts = WAIT.focusAttempts, delay = WAIT.focusDelayMs) {
@@ -800,9 +821,10 @@
     }
 
     function init() {
-        console.log("[ChatGPT] v1.0.3 initializing.");
+        console.log("[ChatGPT] v1.1.1 initializing.");
 
         document.addEventListener('keydown', handleGlobalKeydown, true);
+        document.addEventListener('keyup', handleGlobalKeyup, true);
         document.addEventListener('keydown', handleInputKeydown, true);
         document.addEventListener('keydown', handleRightOptionKeydown, true);
         document.addEventListener('keyup', handleRightOptionKeyup, true);

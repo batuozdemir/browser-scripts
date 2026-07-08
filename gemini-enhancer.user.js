@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.4.0
+// @version      3.4.1
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -234,34 +234,31 @@
     let lastOptionPressAt = 0;
     let rightAltSingleTapTimer = null;
     let rightAltClean = false; // tracks whether right Alt keydown->keyup was a "clean" tap (no other key pressed)
+    let leftCmdClean = false;  // tracks whether left Cmd keydown->keyup was a "clean" tap (no other key pressed)
 
     function handleGlobalKeydown(e) {
         if (e.repeat) return;
 
-        const now = Date.now();
-
+        // Track left Cmd clean state
         if (e.code === 'MetaLeft') {
-            if (now - lastLeftCmdPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
-                lastLeftCmdPressAt = 0;
-                e.preventDefault();
-                e.stopPropagation();
-                toggleThinking();
-                return;
-            }
-
-            lastLeftCmdPressAt = now;
-            return;
+            leftCmdClean = true;
+        } else {
+            if (leftCmdClean) leftCmdClean = false;
+            lastLeftCmdPressAt = 0;
         }
 
+        // Track right Alt clean state
         if (e.code === 'AltRight') {
             rightAltClean = true;
         } else if (e.code !== 'AltLeft') {
             // Any non-Alt key pressed while Alt held -> not a clean tap
             if (rightAltClean) rightAltClean = false;
+            lastOptionPressAt = 0;
             return;
         }
 
         // Option (left or right) pressed
+        const now = Date.now();
         if (now - lastOptionPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
             lastOptionPressAt = 0;
             // Cancel any pending single-tap timer
@@ -275,19 +272,38 @@
         lastOptionPressAt = now;
     }
 
-    /** Right Option single-tap -> toggle Temp Chat (fires on keyup after double-press window elapses). */
     function handleGlobalKeyup(e) {
-        if (e.code !== 'AltRight') return;
-        if (!rightAltClean) return;
-        rightAltClean = false;
+        const now = Date.now();
 
-        // Wait out the double-press window; if no second press arrives, it's a single tap.
-        if (rightAltSingleTapTimer) clearTimeout(rightAltSingleTapTimer);
-        rightAltSingleTapTimer = setTimeout(() => {
-            rightAltSingleTapTimer = null;
-            console.log('Gemini Enhancer: Right Option tap -> toggling Temp Chat.');
-            toggleTempChat();
-        }, MODIFIER_DOUBLE_PRESS_MS);
+        // Left Cmd clean release -> double tap check
+        if (e.code === 'MetaLeft') {
+            if (leftCmdClean) {
+                leftCmdClean = false;
+                if (now - lastLeftCmdPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
+                    lastLeftCmdPressAt = 0;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleThinking();
+                    return;
+                }
+                lastLeftCmdPressAt = now;
+            }
+            return;
+        }
+
+        // Right Option single-tap -> toggle Temp Chat (fires on keyup after double-press window elapses).
+        if (e.code === 'AltRight') {
+            if (!rightAltClean) return;
+            rightAltClean = false;
+
+            // Wait out the double-press window; if no second press arrives, it's a single tap.
+            if (rightAltSingleTapTimer) clearTimeout(rightAltSingleTapTimer);
+            rightAltSingleTapTimer = setTimeout(() => {
+                rightAltSingleTapTimer = null;
+                console.log('Gemini Enhancer: Right Option tap -> toggling Temp Chat.');
+                toggleTempChat();
+            }, MODIFIER_DOUBLE_PRESS_MS);
+        }
     }
 
     // --- Feature 2: Mode + Thinking Selection ---
@@ -918,7 +934,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.3.0: Initializing...");
+        console.log("Gemini Enhancer v3.4.1: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
