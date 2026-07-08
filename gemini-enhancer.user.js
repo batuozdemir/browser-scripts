@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.2.2
+// @version      3.3.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @match        https://gemini.google.com/*
@@ -58,8 +58,8 @@
         optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"]',
         optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"]',
 
-        // Thinking level submenu
-        thinkingLevelTrigger: 'gem-menu-item[value="thinking_level"]',
+        // Extended thinking toggle (flat item in model menu, no submenu)
+        // No stable test-id — found by label text via findMenuItemByLabel()
 
         // Temp Chat
         tempChatTrigger: 'button[aria-label="Temporary chat"]',
@@ -392,62 +392,73 @@
     }
 
     /**
-     * Selects a thinking level from the nested submenu.
-     * Must be called after the model menu is closed (selectModel() closes it).
-     * Menu overlays are hidden during the operation.
+     * Returns the "Extended thinking" toggle item from the currently-open model
+     * menu, or null if it cannot be found.
+     * @returns {Element|null}
+     */
+    function findExtendedThinkingToggle() {
+        return findMenuItemByLabel('Extended thinking');
+    }
+
+    /**
+     * Returns true when the Extended thinking toggle is currently ON
+     * (the item carries the .selected class when active).
+     * @param {Element} toggleItem
+     * @returns {boolean}
+     */
+    function isExtendedThinkingOn(toggleItem) {
+        return toggleItem.classList.contains('selected');
+    }
+
+    /**
+     * Sets the Extended thinking toggle to the desired state.
+     * The model menu must already be open (or will be opened here).
      * @param {'standard'|'extended'} level
      * @returns {Promise<boolean>}
      */
     async function selectThinkingLevel(level) {
-        // Re-open the model menu (idempotent — won't close it if already open).
+        // Re-open the model menu (idempotent).
         if (!ensureModeMenuOpen()) {
             console.error("Gemini Enhancer: Mode dropdown trigger not found for thinking level.");
             return false;
         }
 
-        // Wait for thinking level trigger to appear
-        let thinkingTrigger = await waitForSelector(SELECTORS.thinkingLevelTrigger, 300);
-
-        // Fallback: find by label
-        if (!thinkingTrigger) {
-            await new Promise(r => setTimeout(r, 50));
-            thinkingTrigger = findMenuItemByLabel('Thinking level');
-        }
-
-        if (!thinkingTrigger) {
-            console.warn("Gemini Enhancer: Thinking level trigger not found.");
-            document.body.click();
-            return false;
-        }
-
-        // Hover to open submenu (Angular Material uses mouseenter for nested menus)
-        thinkingTrigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-        thinkingTrigger.click();
-
-        // Wait for submenu to render, then find the level option by label
-        const levelLabel = level === 'extended' ? 'Extended' : 'Standard';
-        let levelOption = null;
+        // Wait for the toggle item to appear in the flat menu list
+        let toggleItem = null;
         for (let i = 0; i < 30; i++) {
-            levelOption = findMenuItemByLabel(levelLabel);
-            if (levelOption) break;
+            toggleItem = findExtendedThinkingToggle();
+            if (toggleItem) break;
             await new Promise(r => setTimeout(r, 10));
         }
 
-        if (levelOption) {
-            levelOption.click();
-            console.log(`Gemini Enhancer: Selected thinking level: ${levelLabel}`);
-            return true;
-        } else {
-            console.warn(`Gemini Enhancer: Thinking level "${levelLabel}" not found.`);
+        if (!toggleItem) {
+            console.warn("Gemini Enhancer: Extended thinking toggle not found.");
             document.body.click();
             return false;
         }
+
+        const wantExtended = level === 'extended';
+        const isOn = isExtendedThinkingOn(toggleItem);
+
+        if (wantExtended !== isOn) {
+            toggleItem.click();
+            console.log(`Gemini Enhancer: Extended thinking toggled ${wantExtended ? 'ON' : 'OFF'}.`);
+        } else {
+            console.log(`Gemini Enhancer: Extended thinking already ${isOn ? 'ON' : 'OFF'}, no change needed.`);
+            document.body.click(); // close menu
+        }
+        return true;
     }
 
     /**
      * Combined: select a model AND a thinking level.
      * Hides all menu overlays during the entire operation so the user
      * never sees the menus flash open/close.
+     *
+     * Flow:
+     *  1. Open menu → click model option (menu closes automatically).
+     *  2. Re-open menu → find the flat Extended thinking toggle → set state.
+     *
      * @param {string} modelKey - SELECTORS key (e.g., 'optionFlash')
      * @param {'standard'|'extended'} thinkingLevel
      */
@@ -457,9 +468,10 @@
             const modelSuccess = await selectModel(modelKey);
             if (!modelSuccess) return;
 
-            // Brief pause to let the menu close and UI settle
+            // Brief pause to let the menu close and UI settle after model selection
             await new Promise(r => setTimeout(r, 80));
 
+            // Step 2: open menu again to set the thinking toggle
             await selectThinkingLevel(thinkingLevel);
         } finally {
             showMenuOverlays();
@@ -518,60 +530,36 @@
     }
 
     /**
-     * Toggles thinking between standard and extended on the current model.
-     * Opens the mode menu, inspects the current thinking level, and selects
-     * the opposite one — all with overlays hidden to prevent visual flicker.
+     * Toggles the Extended thinking toggle on the current model.
+     * Opens the model menu once, reads the current state from the flat
+     * toggle item's .selected class, then clicks to flip it.
+     * All overlays are hidden to prevent visual flicker.
      */
     async function toggleThinking() {
         hideMenuOverlays();
         try {
-            // Open menu to inspect current thinking state
             if (!ensureModeMenuOpen()) {
                 console.error("Gemini Enhancer: Mode dropdown trigger not found for thinking toggle.");
                 return;
             }
 
-            // Wait for thinking level trigger
-            let thinkingTrigger = await waitForSelector(SELECTORS.thinkingLevelTrigger, 300);
-            if (!thinkingTrigger) {
-                await new Promise(r => setTimeout(r, 50));
-                thinkingTrigger = findMenuItemByLabel('Thinking level');
-            }
-
-            if (!thinkingTrigger) {
-                console.warn("Gemini Enhancer: Thinking level trigger not found.");
-                document.body.click();
-                return;
-            }
-
-            // Open the thinking submenu
-            thinkingTrigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-            thinkingTrigger.click();
-
-            // Wait for submenu items to render, then detect current state
-            let standardItem = null, extendedItem = null;
+            // Wait for the Extended thinking toggle item to appear
+            let toggleItem = null;
             for (let i = 0; i < 30; i++) {
-                standardItem = findMenuItemByLabel('Standard');
-                extendedItem = findMenuItemByLabel('Extended');
-                if (standardItem && extendedItem) break;
+                toggleItem = findExtendedThinkingToggle();
+                if (toggleItem) break;
                 await new Promise(r => setTimeout(r, 10));
             }
 
-            if (!standardItem || !extendedItem) {
-                console.warn("Gemini Enhancer: Could not find Standard/Extended options.");
+            if (!toggleItem) {
+                console.warn("Gemini Enhancer: Extended thinking toggle not found.");
                 document.body.click();
                 return;
             }
 
-            // Detect which is currently active (aria-checked or similar attribute)
-            const isExtended = extendedItem.getAttribute('aria-checked') === 'true' ||
-                extendedItem.classList.contains('selected');
-
-            // Toggle: if extended → standard, if standard → extended
-            const target = isExtended ? standardItem : extendedItem;
-            const targetLabel = isExtended ? 'Standard' : 'Extended';
-            target.click();
-            console.log(`Gemini Enhancer: Toggled thinking to ${targetLabel}`);
+            const wasOn = isExtendedThinkingOn(toggleItem);
+            toggleItem.click();
+            console.log(`Gemini Enhancer: Extended thinking toggled ${wasOn ? 'OFF' : 'ON'}.`);
         } finally {
             showMenuOverlays();
         }
@@ -902,7 +890,7 @@
     // --- Initialization ---
 
     function init() {
-        console.log("Gemini Enhancer v3.2.2: Initializing...");
+        console.log("Gemini Enhancer v3.3.0: Initializing...");
 
         // Hook Keybinds
         document.addEventListener('keydown', handleInputKeydown, true);
