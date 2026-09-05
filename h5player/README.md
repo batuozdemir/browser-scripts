@@ -18,18 +18,39 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.1`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.2`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
-   `GPL-3.0-or-later`.
+   `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
+   localized `@description:xx` variants are dropped, and `@description` is
+   replaced with a short English one.
 2. **Configuration override.** A block is injected just before
    `initUiConfigManager` that replaces the entire default hotkey table with the
    nine bindings below, disables the on-screen UI (`ui.enable: false`), and
    disables cross-origin control (`enhance.allowCrossOriginControl: false`).
-3. **UI removal** *(not yet applied — see "Step 2" below)*. The `h5playerUI`
+3. **Chinese i18n tables removed.** The `zhCN` and `zhTW` language tables and
+   their four `messages` entries are deleted. `I18n.t()` resolves
+   `_languages[locale]`, then falls back to `_languages['en']`, so a Chinese
+   browser locale degrades cleanly to English instead of breaking. `enUS` and
+   `ru` are untouched.
+4. **Chinese text removed.** All remaining CJK characters are stripped: 841
+   Chinese comment lines are dropped and the rest are removed in place. This is
+   safe because CJK never appears in executable code upstream (no CJK
+   identifiers, object keys or operators), so removing the characters cannot
+   change program structure.
+5. **UI removal** *(not yet applied — see "Step 2" below)*. The `h5playerUI`
    module and its init block are deleted from the built file.
 
 Nothing else is changed. The per-site compatibility table, the playback-rate
 enforcement, and all remaining upstream behavior are untouched.
+
+**One deliberate exception to the Chinese strip.** Thirteen CJK strings survive,
+all of them attribute-selector *values* in the per-site table, such as
+`button[aria-label="全屏"]` for zhihu and `div[title="网页全屏"]` for iqiyi. Those
+are functional: emptying them would produce a selector that matches nothing and
+would silently break fullscreen detection on those (Chinese) sites. Everything
+CJK that is prose has been removed; these thirteen are code. They are the only
+CJK left in the file, and `build.sh` asserts that count so a future strip cannot
+quietly widen. Say the word if you would rather have them gone too.
 
 ## Why
 
@@ -53,8 +74,8 @@ the dotless one on the top row.
 
 | Key | Action |
 |---|---|
-| `ç` | Slower (-0.1x) |
-| `.` | Faster (+0.1x) |
+| `ç` | Slower (-0.2x) |
+| `.` | Faster (+0.2x) |
 | `l` | 1x |
 | `ş` | 1.5x |
 | `i` | 2x |
@@ -109,7 +130,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.1`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.2`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 
@@ -125,8 +146,8 @@ Edits 3 and 4 delete the `h5playerUI` module (about 40% of the file) and the
 init block that would otherwise reference the deleted binding. They are written
 and gated behind `STRIP_UI=0` at the top of `build.sh`; flip it to `1` to apply.
 
-Verified by dry run against 4.3.5: the build succeeds, output drops from 563,409
-to 340,098 bytes, and `node --check` passes. The six remaining textual matches
+Verified by dry run against 4.3.5: the build succeeds, output drops from 474,351
+to 255,056 bytes, and `node --check` passes. The six remaining textual matches
 for `h5playerUI` are all benign: `h5playerUIProvider` is a separate identifier,
 two are comments, and `h5playerUI: t.UI` is a debug-info property that reads an
 attribute which simply stays `undefined` behind an existing guard.

@@ -38,8 +38,8 @@
    * Known and accepted: `l` and `i` override YouTube's seek-forward-10s and
    * miniplayer while a video is present. */
   configManager.setMemoryStorage('hotkeys', [
-    { desc: 'Slower',             key: 'ç',       command: 'setPlaybackRateDown', args: -0.1 },
-    { desc: 'Faster',             key: '.',       command: 'setPlaybackRateUp',   args: 0.1 },
+    { desc: 'Slower (-0.2x)',      key: 'ç',       command: 'setPlaybackRateDown', args: -0.2 },
+    { desc: 'Faster (+0.2x)',      key: '.',       command: 'setPlaybackRateUp',   args: 0.2 },
     { desc: '1x',                 key: 'l',       command: 'setPlaybackRatePlus', args: 1 },
     { desc: '1.5x',               key: 'ş',       command: 'setPlaybackRatePlus', args: 1.5 },
     { desc: '2x',                 key: 'i',       command: 'setPlaybackRatePlus', args: 2 },

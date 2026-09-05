@@ -19,7 +19,7 @@ STRIP_UI=0
 # ------------------------------------------------------------------------------
 
 UPSTREAM_VERSION="4.3.5"      # expected upstream @version; build aborts on mismatch
-PATCH="1"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
+PATCH="2"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
 UPSTREAM_URL="https://greasyfork.org/scripts/381682/code/script.user.js"
 RAW_URL="https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js"
 
@@ -103,9 +103,13 @@ for ln in meta.split('\n'):
     km = re.match(r'^// @(\S+)', ln)
     if km:
         key = km.group(1)
-    if key and key.startswith('name:'):
-        continue                                    # drop localized @name variants
-    if key == 'name':
+    if key and (key.startswith('name:') or key.startswith('description:')):
+        continue                    # drop localized @name / @description variants
+    if key == 'icon':
+        continue                    # drop the ~9 KB base64 data-URI icon
+    if key == 'description':
+        ln = '// @description  Video speed control. Pruned build of xxxily/h5player.'
+    elif key == 'name':
         ln = '// @name         h5player-lite'
     elif key == 'version':
         ln = '// @version      %s.%s' % (UPV, PATCH)
@@ -124,7 +128,9 @@ for k in ('name', 'version', 'downloadURL', 'updateURL', 'license', 'author', 'n
         die('metadata key @%s appeared %d times, expected exactly 1' % (k, seen.get(k, 0)))
 
 src = head + '\n'.join(lines) + body
-print('==> edit 1: metadata rewritten (@version %s.%s)' % (UPV, PATCH))
+if '@icon' in src[:src.index(mend)]:
+    die('@icon survived the metadata pass')
+print('==> edit 1: metadata rewritten (@version %s.%s, @icon dropped)' % (UPV, PATCH))
 
 # --- Edit 2: config override -------------------------------------------------
 # Inserted immediately before initUiConfigManager, which follows the close of the
@@ -164,6 +170,81 @@ if STRIP:
     print('==> edit 4: UI init block removed')
 else:
     print('==> edits 3 and 4 skipped (STRIP_UI=0, step 2 not yet applied)')
+
+# --- Edit 5: drop the Chinese i18n tables ------------------------------------
+# I18n.t() looks up _languages[_locale], then falls back to _languages['en']
+# (defaultLanguage) via `|| {}`, so removing the zh tables and their `messages`
+# entries degrades cleanly to English even on a zh-locale browser. enUS and ru
+# are left alone. Nothing else references zhCN/zhTW.
+def cut_object(text, decl, what):
+    """Delete a top-level `var X = {` ... `\n};\n` declaration."""
+    if text.count(decl) != 1:
+        die('%s: declaration %r matched %d times, expected 1'
+            % (what, decl, text.count(decl)))
+    i = text.index(decl)
+    end = text.index('\n};\n', i) + len('\n};\n')
+    return text[:i] + text[end:]
+
+src = cut_object(src, 'var zhCN = {', 'edit 5 (zhCN table)')
+src = cut_object(src, 'var zhTW = {', 'edit 5 (zhTW table)')
+src = cut(src, "  'zh-CN': zhCN,\n  zh: zhCN,\n  'zh-HK': zhTW,\n  'zh-TW': zhTW,\n",
+          'edit 5 (messages entries)')
+for dead in ('zhCN', 'zhTW'):
+    # comments may still mention them; edit 6 drops those. Only live code matters.
+    live = [l for l in src.split('\n')
+            if re.search(r'\b%s\b' % dead, l)
+            and not re.match(r'^\s*(//|\*|/\*)', l)]
+    if live:
+        die('edit 5: %s is still referenced in live code: %r' % (dead, live[:3]))
+print('==> edit 5: zhCN/zhTW i18n tables removed')
+
+# --- Edit 6: strip the remaining CJK -----------------------------------------
+# Verified against 4.3.5: CJK never appears in executable code (no CJK
+# identifiers, object keys or operators), so removing the characters cannot
+# change program structure. The one exception is CJK inside an attribute-selector
+# value, e.g. 'button[aria-label="全屏"]' in the per-site table, which IS
+# functional. Those are protected; everything else is prose.
+CJK = r'[　-〿㐀-䶿一-鿿豈-﫿︰-﹏＀-￯]'
+
+lines = src.split('\n')
+
+# 6a. drop comment-only lines carrying CJK. Verified safe on 4.3.5: no line both
+#     opens a block comment and carries code after it closes, and the only
+#     multi-line-template lines that start with // or * contain no CJK.
+kept = [l for l in lines
+        if not (re.match(r'^\s*(//|\*|/\*)', l) and re.search(CJK, l))]
+dropped = len(lines) - len(kept)
+
+# 6b. protect functional CJK (attribute-selector values) behind sentinels
+protected, out = [], []
+def stash(m):
+    protected.append(m.group(0))
+    return '\x00P%d\x00' % (len(protected) - 1)
+body_text = re.sub(r'=\s*"[^"\n]*%s[^"\n]*"' % CJK, stash, '\n'.join(kept))
+
+# 6c. strip CJK, touching ONLY lines that actually contain it, and tidy the
+#     husks that leaves. Lines without CJK are passed through byte-for-byte.
+out = []
+for l in body_text.split('\n'):
+    if not re.search(CJK, l):
+        out.append(l)
+        continue
+    l = re.sub(CJK, '', l)
+    if re.match(r'^\s*(//|\*)\s*$', l):
+        continue                       # comment line emptied by the strip
+    out.append(re.sub(r'\s*//\s*$', '', l))   # trailing comment left empty
+result = '\n'.join(out)
+
+# 6d. restore the protected selectors
+for i, orig in enumerate(protected):
+    result = result.replace('\x00P%d\x00' % i, orig)
+
+leftover = re.findall(CJK, result)
+if len(leftover) != sum(len(re.findall(CJK, p)) for p in protected):
+    die('edit 6: unexpected CJK remains after the strip')
+src = result
+print('==> edit 6: CJK stripped (%d comment lines dropped, %d functional '
+      'selectors preserved)' % (dropped, len(protected)))
 
 io.open(OUT, 'w', encoding='utf-8').write(src)
 print('==> wrote %s (%d bytes)' % (OUT, len(src.encode('utf-8'))))

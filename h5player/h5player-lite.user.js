@@ -2,17 +2,9 @@
 // @name         h5player-lite
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      4.3.5.1
-// @description  视频增强脚本，支持所有H5音视频网站，例如：B站、抖音、腾讯视频、优酷、爱奇艺、西瓜视频、油管（YouTube）、微博视频、知乎视频、搜狐视频、网易公开课、百度网盘、阿里云盘、ted、instagram、twitter等。全程快捷键控制，支持：倍速播放/加速播放、视频画面截图、画中画、网页全屏、调节亮度、饱和度、对比度、自定义配置功能增强等功能，为你提供愉悦的在线视频播放体验。还有视频广告快进、在线教程/教育视频倍速快学、视频文件下载等能力
-// @description:en  Audio and Video enhancement script, supports all H5 video websites, such as: Bilibili, Douyin, Tencent Video, Youku, iQiyi, Xigua Video, YouTube, Weibo Video, Zhihu Video, Sohu Video, NetEase Open Course, Baidu network disk, Alibaba cloud disk, ted, instagram, twitter, etc. Full shortcut key control, support: double-speed playback/accelerated playback, video screenshots, picture-in-picture, full-screen web pages, adjusting brightness, saturation, contrast
-// @description:zh  音视频增强脚本，支持所有H5视频网站，例如：B站、抖音、腾讯视频、优酷、爱奇艺、西瓜视频、油管（YouTube）、微博视频、知乎视频、搜狐视频、网易公开课、百度网盘、阿里云盘、ted、instagram、twitter等。全程快捷键控制，支持：倍速播放/加速播放、视频画面截图、画中画、网页全屏、调节亮度、饱和度、对比度、自定义配置功能增强等功能，为你提供愉悦的在线视频播放体验。还有视频广告快进、在线教程/教育视频倍速快学、视频文件下载等能力
-// @description:zh-TW  音影片增強腳本，支持所有H5視頻網站，例如：B站、抖音、騰訊視頻、優酷、愛奇藝、西瓜視頻、油管（YouTube）、微博視頻、知乎視頻、搜狐視頻、網易公開課、百度網盤、阿里雲盤、ted、instagram、twitter等。全程快捷鍵控制，支持：倍速播放/加速播放、視頻畫面截圖、畫中畫、網頁全屏、調節亮度、飽和度、對比度、自定義配置功能增強等功能，為你提供愉悅的在線視頻播放體驗。還有視頻廣告快進、在線教程/教育視頻倍速快學、視頻文件下載等能力
-// @description:ja  ビデオ拡張スクリプトは、Bilibili、Douyin、Tencent Video、Youku、iQiyi、Xigua Video、YouTube、Weibo Video、Zhihu Video、Sohu Video、NetEase Open Course、Baidu ネットワーク ディスク、Alibaba クラウド ディスクなど、すべての H5 ビデオ Web サイトをサポートします。テッド、インスタグラム、ツイッターなど 完全なショートカット キー コントロール、サポート: 倍速再生/加速再生、ビデオ スクリーンショット、ピクチャー イン ピクチャー、フルスクリーン Web ページ、明るさ、彩度、コントラストの調整、カスタム構成の強化、その他の機能により、快適なオンラインを提供します。ビデオ再生体験。 ビデオ広告、オンライン チュートリアル/教育ビデオなどを早送りする機能もあります。
-// @description:ko  비디오 향상 스크립트는 Bilibili, Douyin, Tencent Video, Youku, iQiyi, Xigua Video, YouTube, Weibo Video, Zhihu Video, Sohu Video, NetEase Open Course, Baidu 네트워크 디스크, Alibaba 클라우드 디스크와 같은 모든 H5 비디오 웹사이트를 지원합니다. 테드, 인스타그램, 트위터 등 전체 바로 1가기 키 제어, 지원: 배속 재생/가속 재생, 비디오 스크린샷, PIP(Picture-in-Picture), 전체 화면 웹 페이지, 밝기, 채도, 대비, 사용자 정의 구성 향상 및 기타 기능 조정, 쾌적한 온라인 환경 제공 비디오 재생 경험. 비디오 광고, 온라인 자습서/교육 비디오 등을 빨리 감기하는 기능도 있습니다.
-// @description:ru  Сценарий улучшения видео поддерживает все видео-сайты H5, такие как: Bilibili, Douyin, Tencent Video, Youku, iQiyi, Xigua Video, YouTube, Weibo Video, Zhihu Video, Sohu Video, NetEase Open Course, сетевой диск Baidu, облачный диск Alibaba, Тед, инстаграм, твиттер и т.д. Полное управление клавишами быстрого доступа, поддержка: воспроизведение с удвоенной скоростью/ускоренное воспроизведение, скриншоты видео, картинка в картинке, полноэкранные веб-страницы
-// @description:de  Videoverbesserungsskript, unterstützt alle H5-Videowebsites, wie z. ted, instagram, twitter usw. Vollständige Tastenkombinationssteuerung, Unterstützung: Wiedergabe mit doppelter Geschwindigkeit/beschleunigte Wiedergabe, Video-Screenshots, Bild-in-Bild, Vollbild-Webseiten, Anpassung von Helligkeit, Sättigung, Kontrast, benutzerdefinierte Konfigurationsverbesserungen und andere Funktionen
+// @version      4.3.5.2
+// @description  Video speed control. Pruned build of xxxily/h5player.
 // @author       ankvps
-// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAADAFBMVEUAAAAZo+IiqNkXlMx+xs+Kw947ueyq5fAomMlTude76OnJ5uo6o8BrvuB0u9SIzNdFo8sjpcIom7IurODa698PjcBW0uxAoMocp90xjsR+v9zS2c3j6+UznbP5//uYtK3/7dNHn9DL9PbM9vYDqe0Cq+sDqO0Ipu0Cqu8Eqe8CqeYGpvAMpuMArun/////+//7//////0Dp+v/+P8ArPUHqOr/+/P/+/cBrPDs////+PsCquj//voBqfP4/f/3//4Brvj1//cJqOX8/P4Bqvfw//8ArfsBrub//Pv+/vICp/cBrPMAr//5/vcDpf8KpekGqd0Bqv/y//oNp90BqfsFq+ALpOABp/L8//v//+jy//L0//8LptgCrez/9vYBsO4BoOL///YGpfYPoPYBm+YBofEAnuoBleEBruEAsuoHpfrl//8CrdsBousHquMNot0EjdoNnNn0+/8BnPUMpO7/++0Qo+cBm9wYoOA+tNAFltAAovf5/u/A7/8CrvL//+4Amu2c1OMCldcBn8gBnvwAlehxvcoBotoFqtICntL/9P3T9fAAtP8BlvFmvszd//sBs/QJpPIUnu0CseQAtPm+6fCj1uZLq9PR+/z+9u0BpuGx8/3s+vvS8vu89Pem5fcFjPRz0eoaoNgElMLa+Psfsu+y5OgEkcwQnv8Bl/zi+frG7/lHxu+J1OgAtuH//Nx1ytg6sNgDh8O68P7G+/uy6PKV2vA+t+kDsdf++OUjmd8AuOwtuOJkxdotodX6+P3p//eB3fde1+1ixe2k8Pem2fAVl+cZruRavdxwu9oGq8dMu+tc0uAiltXQ6vdMxtxAu9xSt9UboM6+/P4AvPn/7/Vxv+cQn76W5/p/ye2P5ecPlN4XrNen1dUnq8z/7/4Gi+gpqtw9n9Auqeuz0OdfteRHt8UDhbSj3+iLxuM7nuEiutFarLnt7/oTpfO+19mJucYelsEHnq0amPXp+udfoOd54OHN7N0Eus+u9+/N2PGexO8omu4fxL8ZpaEAzOwL7fbjAAAAJHRSTlMAzsj+hQSzWf6dcCf8fVE4n/36vRP149vMupcJBOnihEkHl8Lv/rxjAAAdpElEQVR42ryWW2jTUBiAq9bpNqfzfr8np0nXiRwSKJRAqCGDtjYpSdeXjo4uXTtZb3RMWaHU1aHiRMV5YWq9TlGmIAw3mIo3vItXRJz6oCiIIKgvgj54UvG2qe3ysO+hTR7Of76c85///LrBTFs0T6dbXFpSotcXFxVNHa0ya5QmZuUGTy0qKtbrS0pKF6vBp+nyMXfBknFl5TPHj2k51hJHRKNRqTqHaRhU55CiCBQDhRozfmZ52bilC+blFZg4o+vqgJJOOl0OWTBAiAGAWYyasKhjMQAFrt3hTKaVgatdMybmmX5S+flYuoJiGVnmPB7S42EoBIFrgkBD7YwHwXA852G5ivrY+fJJun8zds6ETG1dpFEURa8kea0EYU6ZEQRAYMQwwACCMOcg7BYJRUNBG611tZkJc8b+8/Nnx8IdPsldFXK7RTQmYkEYjVYjXaEJGg01WhARFEx0uyNVbqmmoz42e9I/dn++yLucdJ/PoS4dAo9YVUwmwaAJAWWjVQW32yk7RbEOXx/tdMni/Il/y/450zf2pzg/qKRkjkXwvJnGMIgCNRlwTaCBBgMEGG3meRbByVQl8Msd/Znpc+YO2f6FcbY5Lp5qoJxNJkGgaQzHGY5iGJvf7yerqiqHTVUViYbaGIbi7DiOQVoQTE1OquGUGG9m4wsHJ0LZIchAmsZxsgLQKIUg+njyB5hGyB+o0QBaClBB4jgNSQYeKhu0/9NZgsYIkgQAx1ASDwJoAhsEiosDQJIEAe389D/yoHRKRiCxEYQUMlNKf0uA2Rv7o4IZGzHM4Wj/xtm/0kAfkzvc9AguAUm7t9pi+p8FaHLAxZ3CR1IAP8W5ApN/FKTiTIfT34ADbMQAeIPf2ZEp1unU23HcmFofTVLEsE7WzydtBgRF0jW1Y8blTsCMYF11X6XTgxcy/5+HU6sA7nFW9kl1sRnqSSjpClhFH9VkKCR3JFEF3VVR9NTY2OiVoCYFQxPlc1vru0rUHdjMbAg5ZBNNFCCASuX3iiIIOCq2VREjpkWAoE2yI7TBs1ndg7Ig5XWznIDlF6Dtrl84EOhP0wKgD+BYt8gFy1ARKm+jRDfFCiBf5qL9Jm02G2f7fscwqM9BT9qSAAgsEmDbisfqps1MeJAAT4O8+QcBZs21m2qDI0mmalNzczPUtAeAZlnRyyVmTtON++C0eUUkAPOtGpoKWnDUInV2dkZC7k6jkYaoaU0BOHwBSPOU6LU5x5fqSsa4ZEmi+PzSkMBJl9qrhusVJRyuDwSSsos3E0hCAzwlSbILVQJ9i4Pzein+v6ce3dMoRcOKElwdXXPtbHd3d29376s1A8GgUh8mzIAgQK4sqD9EwQJeztGiRwLtOQH872UPRYQ4MrCTitJmPntj7ZVsz+5NOY7szp65cX9rfVvAbEaGqH8BOISAKcgA5ynvd4HiVpYyRlDbSA6Z3RKhDUQqRdneN9fWtmzovfhw98M9Zy5eur5L5fXlgxev9GzZvef6g9agUlOT9ISMqxyPGh5U2wsoaWrLa6TY1mJdUdzAoBfIkUPLFbRsD0WaZAff2Xr+ZM+W7M77N+Obk55wOsCvW5dIJJKdL94833HhxJne1tWWdjnqxbayNc9MTAECHIzgFEO3FiEBwJgtVmyoALDJqe2N3jXNSrD3Yja79n48EQgfOJ5QVsfSfFJZHQwkk+mgUnv6ZLbnya24mKozfZ58p66dFcgCBDCrxcwY4kW6qVHImI1WMEQAgIb+ijq/L3T45ZcT2bs3b24MJ9LpT1977z1+2226dfDx9d6ubWklEYDrvbf29+x/89HSHh//oMLF0FiBAiSMTtWNRgIpJGAbmgONGwiXKxC9fST75sPAgQNt6z/fPblj35G9K5Y9nLxz+fKVe/ftP3nuXWbgQCIRv3/0xNO+zetkX2hNIb0daQNIwAOrkUA1Zv/GiZ19NXHFcQDv8tIHX9qn/gGEJATvzBDIZCaTjTAkg1kkgiGJhAQhIAFKQcAlLLI0rAJFWhYREMsWIWxio1QsLijFrZXaVi1udSvWU1tta9dLkdba5YR+z0lOZuaemU9+d+7cmYEVYEPAMxG+efzgQPnd0+7J6W6rvfCr/f2VBAZsRo8XGfn6Bsj2em0Ak+65fWaquv14+fT2060fBIVH6qajxb4A2KEBnGD/tS8sAkID/wHAStEGPBgk7t+17ohKuPReCwEABhCb0WhBjq55C1XNWkgEwKCNg1+WJ5aUvnj58PuvVwenirg+AOLZgRDg9xTg77NKyHlDxmX54IPmkurVe/NijE24mUaB2UHzkaPpY7SZjygkKEpk4tlMY8dUWu/WW/P32i5Zs3gsXwAb/wQIgyFgYwr3qVmHZ4gV8bTTDx7PPSz/9eCVh11SCm9qwumdFEbUmGb5La9clmooIDXLNVIplW0BYNd2uza8e0Xl6KF22UqxgQuff4TC/wCkbAwM5cg4EPDqWhaHE6Jjw+vYk8OL2OL69Dfjz0+/8t3o3fbIlcUdForSKBQoqqBwldzkbMJ3vXIZMAIVKo1hJAoEMTscQPDJpS0RubtHdq4oSlkzELpeVrsph/MfUztbF8IRsgJffe55+Azvx2OzlH5LgHR21EDZN9q4X767tyY3P+lQFwbMZhQeBwGYBNGoJCZj3qZtIEagAihAHWakQkU7aAAqb3ZG9l5p+/bulemynJ6q87s3Cf8V4KdksXnw1U/g8889HxgQwPkDAAPHRz5bdDDtVMNHV4fXlI2fBojJyAhwBMGwmL8CUBRDaZQkcZsNt5Cg78yWQntZV+shV936Dcoccb6/jwDRAmDlHwBdvXJ95MCFx/euu17rPDsK5ixej7EAV6lUVAyq+CsAmlQkSdkYpml2DtAzxcm5rzfsyukNT/7wgHpH0L8DVi4AWP8EgEmOToksG5x42H6+7GwfguCzOAYWgtmYZwEAg6UBAP4ACG6ZI2aK38x6ubKtNE50IDQ82FcA668VqE1ftyPri8PbreqM8VFkVkADx9Gx/ttuGgj+DqC8AkCPtvWPtbXQZAVJz7i0xfOgo9yQYmgO4fwPAPzekfNa8trW+w9+tb7kBqSAkh7dn1ME3zSebMXkCuTZClgoR8fVixcvWn9+RGOzFTVnS4O779BDVnVKebT4fwBgxCm6zkd5p1LrixuQOQ0hHessSoyPirAOv9RCxzwDwDDgODFclLU1wtDduTeTbKL6hrKCbz1uLROtt7OWWQEe98ntojrjbeKMvbe9H0zM4uhnndVh0bEydRVveFMehmjwRQD6BJB58lZ0VWRY8rs9Wd0zhNFL7YuvKr3W1/FgoCSLtSwAiwXbw6uR//qwi4+7iqvaHwLgzFa0Xs1V56xTyuBTCC/jiJnSkAo5AwGYSgDHBIK2DZcfrM1nRae+2WOf/qzAI0A7ErRXOvpWfK/dujxAfb1SxPIziMXHrUd2/rylZOo7Fd/ocbx/JTG1LCC2VhYWz3alu21ShQUHeQe2YSSjl1QgxN6iOGVq6ur4lNc2VCWdkMLLsvftEu26yh+37JCFLAugVIoggCsOTig/OtZpTZikVPxso+NIaURzOttPyOHVsTnWYzazQhCzAAAkY5LwwZ4pa35+9Op0g3atsirh2h4MR7Hb1qju91o3ha1a3jAUwcBpgROc+8VHX2YkXGrE4J9liHO5VVxDHY+t023kqZPuULREoMHyTi0A9BBQOWUIC+cGpnPCQoPU4kNugCtQ+Qelrx/f1VHKWd5JGKILYUGA0N/V8ENxu30S0xASC5l5wlUVro3g5QQGsoLVhdtstASXUk8DEiO1KbpQVlxIsDrxeiuwMGawL7e6enDkeNAyARv9/eJgJ9jHHdu39NaOFggIumIOfVRcq42UcXXp0clxEYkNDJ1JSSn3h0sAx3huZImWF7pyg9AgyxiqAXiBkzSd7c0ab/wiicPhBvkOYNdxhbGigLSkjtELudV7MaNAYuZXgH0XXCmyWiG8Qx+oT7pOGPUSFazAEgCRdnTnbE3hBijjwsS5w59KAcYYLdhYb4Ku5VhGGnzR7zuAZ4Dzc1xAQkLLo6JEVxvGxCAoggDp4C123Ab/ulUbBoqH2zCvQqEyY3m7lwBo44phmZglUrIiVt1a0QcQlYbRYI2byhOPVB6ywztb3wFcsTAuNlZX+k7je1lZX+5E+AoEowkplnluOFlZ1xNZ5Rq+g2o8JILQ4HeAEwIUeqzhpaL8HbWrwtQZX7sxFR8lcLkZ3V5eOLXz48SgIA7XDw4tXwHwJio06UjlNW3aTAw6MaFR0YSEBHsm123JuFJaOvU+imi8JJ+fuTgMcamCj+gp0DJe7nLlJiXtbwGUAEFpXE5gl9elhbqP2eHjO9y5v4/nQOwG3vq6+gs3jpZHBbVhcr3JhihgJoC0oePEiZN3WgFOolKyYmKCGjl+A1OQcDOCqDDguD147szM/XtgoT2iEFAocK8Jb37U8GG+zJUq7qkL4PoMiEi+4O7PKPnmNIUrSI1JDmMyOSlUSkupAq/HY6KNRtrpaVm3TWoyOuV6ubOpqUkFZwSCphjYdKG9APYSsb+k9I2+IXH466mreuqUfr4DVn/eeKS69/pOBpYadzILcWbjfAw104cP650FNq8XdXpGdl/GCrxGW4ym4Ntv4WFRGMbJLEYjQUjwcW/7w75zaerA1GAtV7mMCrjOuvdHJX6gNwoy4X6epGKOr5DSBE1LSMRiUeDMyIEbGGXBMdgDkKWXTExMVJBL0ddosm39WSVfuU/aowJTZVrhMgBRq8+4x2WcSafHSejRzMXQExaLAKcolQLJJBQSx2HQohsz05kSgqAlC+cBwoeRZEoWm8v1GqPxs+bw/JZtCVvXQkBssj/X5wo0z7ivGnL7GY9NotLIl6KXyzUxKn4FKacZp8Pk2bV7m9nkNOn1epMAhnE6YT8sBfZYk3HfGkNASxcEJMu0omUA4l2TDacKM45hDAAILngSSorGUBSGISoBlp0Nsj2t1+5jBUavzSbILliM0ylYioXPr6BOXy1M2tdl3ZqjDF8WIMI12XUqy/6JmWhsJMzE06GJhTgIosZBjfx0DK6g4dJS4MJSHDU1DvSjdwqTjjU0J0JAjy6a6zMgyjXTtVstHp+fHxqCn81P8vZChmA2w1Xjm+fH1e+c3Xzz5uant/+xMH9z6O35zbFR9iVAjm+A3zg196cmriiO/8Av/aF/RkhCK/sgJCFhkyUkCyRkEUIohJiXBlEDkgZCFJBABIQUBEFUFAQMICJUREGtgijSQrH4FqUWbdXasWOl73b6mJ6NBnVQB3oGZpbZsHzYe+6953y/N48VyiQhvIGEwqn5ionJ+YrtgZjcvhAVFcMV85fUl4crKirgp9fEfMUkfJkSSoaWDwBJCACFGbcQsraWRPTk89A/C7iAHpAikWP140wvQuqx5wGfCVxhCDSK+j2dNSWtjebC5Q6BiknCVNcQoaRsMjEvEGgg4lCjWG7UHX78AIkzimH+iXmLgtA4xMTh5FxrK5OE65achGyTH+Di9EiGp4+pboVGYSCIZyG3KOVOp77oyJaRB3iR0wlbs0C4OHBek7sxJ3ft4LgVAJY8DVl+gL2XWu4XlrS7jzgRlA7MbU0gZDKRUmlLh72AWQeKKJGGZm6//J0uS0MB4DtzIedYqVWVzyxEywDQplxumVLlTsl0AgyVUvrnIV0IR5xclO7et2kXRtK0wyGVv7gTuMCgn8Xbczd0MkvxB0tfitksPwBsRhll9zssBDxoIXgvwuuFWnnLJw8QnljMe21gIKYgvYcKL9fuzlZ/kBXv34yWPAvWzTT2ZZbVb0Fw7AUAL0AhFkMSSot0xwBADOkoh1uB+wtBix1Y85lD1v6ekRAA8G/HSwdomCm9UFBWPg4AoEf4A9ZgsrlZA624hqY1SprJgWQmB2SUSE9rNCSOaeA+aIYafxQ5Ndj0nUOur6aDigFgyQUJC4x7MB+svVCSlVykUYdYKqLS3E1ChGwdO3Gi9/wg6FLGU6Mix1li34FdGA2VD0hkTULs2rleuD/UgwiNZ+WkKF3mQL+qZJmmx60gf/FDllqSQSdpCOZml3fW9ufWfD+KSlE5KSUEArxn8qAHjAnPj6UkYTxSK4Ja/RgA+EUqDBcig3MF1sxM18FvBhHICoRUyuS87ZVhnVCUsgJF6dIBONbyfd95wlytuCCOKUhwbM+VR9sMXEVMXsGjYZvw1CiFevGXAMjBHwdYqh2S+L2+mQsIwkNxpwA57C/LD2Rzl9We+9UBNqf8fM+72+71UqcEci9IX7Zhn2l9Q11MkmqHx3cO14moOPGLN4Aj10YGTArwjsLrTvvm9kBfQAi8lvbcT/OOzXpSl6cPwOmjiDAWx3rHVlHVxt/vTpeKBUJsMMhcbTrZIAHHkOs606OjSHEAQMgAnD8YawrXqtjBMer4gX4Mt9BitPb7spqjtZfMy5NoDFy/TMllF4wzzekYTlNpSgvVbk9KMp3Meg/k24ji6Ea3Xm6UBwBgQ3KcqFq33sDhrNi4IUGdubsZV8qk+Gzijra+/TmRIcsFYA6eBBe7dl+7Yn8/+Rihodxu28PMhKTIrKyN0eAbR7lKQaAQwm74iX8IAOCjrxNTQt9bmb8xsb47qeabFlypQZ6cyP7w/vExl+F/ARhMZs+tQZ85+zyRphe4mx+WKwzRYWGMeMDSZvYBgED2MsBnkbGhYRx+cOimvOqMkWnIXXy2POFg+/6r2RIu1y9Aw4MXPLjnANzXA3A40KGb8s1Ttm8PJiU/xdEmJzlWXlwZmqCKMJkiJAklswyABlqzwBA0d4Zx2eAjx9dVrrue+nUHcQP55euyQynH233c1fAf+f/wyyYkMPDfkITA5/+FGEXQ0z8rE9p2yxBjE3LOs7ahIX8FnxUCVtn93wnZM5EqMAuwh/a6neFr6vNXzSSrN/RqnELkZolh4NytmY/VeZWJsaB95W/KU0fFc8HzTQmNYYGOr5Dwo1+3EnKee1VadcG7tefLD93rR4gmrOOxqy4yJTpEkrojzz5mQdP9Mp0fgMBgFgwOZF2P2vBzfuKB4tx7rWk6YrwtwbcdfI6qmsiTscx5sujkaEU8N5g5mReh5kbzJVoFf0XsYoAFuf694p2em81zf0gGuhBnEdJa5VJUV6vVO/mP5q4hPFr8CgBODT/Kqk5KUFertQPzRBEx/UXo3qAO5EnjlSBX3c7C7jU7DKcbDuTAiTyJKiEmcm90WLxCsjL6LQDsk6s2qMunf//3uvXHP/Emi348qIodHqPKHHh3P0mAUPkqAKxUjw6WFGqjCu3zRTr3njM1WTPjiBdHsMHeersVDuYVR0WuSo4OSdUmJGUU5Kxkh8SHcPhvBmCHnL7ziVZ9NH3eXO2aa8FhUBsvXb364aaR/g6EYLTiVwFgrZz95p0vvtjUOaQ8orNNZWt9/fCenDfEmGj65tWtJ2Pju1ebisMVKtXqDPtEb3YqN5jPeZtcz44xXF1RvW0SvZlabd+8H29Kxxwfde0aPC5ChAJM/ioAgot5CNYz3dXV2Jymc9f21pS5rkjRs6O/OJ00JOn+i99v9XyaEROlkGS7fFfbO8bKFfGRG8O4bwYIZnXH/1H5Q53rL95UzWrP5sOIRShQ4vBKEVQsTFsMALUx4yXgOh1RO5VbZj/agXrTRmvTlRalzgKe3tDEHfNa2C0L3pm4YNNPZCZJNiaywwMAiywbAKj/4XTKpqgo+y7qqGe1/c4FqE4FQqZEjkOxxQAE7i/XGciWM9Yy+9we3ChHoSygUFomNHpBydt3q+92++2h4zYSIycz1cWJq9iK2MiAZbPYtKpc0R2+Ll9t+ump5WhN9dqgUhyRSuMETmcaqQ/I9fVQkDwDkNHwcvTQrCBdI2tjPJtbEMHoKO/uXUrkdYikZ5kGV2ghEAjmETgA1FVWhsQsACyy7dhcOHwbH7py9fWsf59iY9brewcePsERSkMTaBotRElNUZOFse3iGN8Uj6ObnErSJkKabnv2Zg9s7rAc0aWnG2/cAAmLpuWo2GixFJ1yKgkcqosmAT68LWlN/cbYiBB+wLZbbFxCmoa9zw3maLcN9Olv+06a2h7P2hCe1xinkYlRCoxL9M9/v2IkMgSTi420wGgk6O921ySZfcM88JYtuAU6egGINRb0LHxIDlYjbSHAd5IjyKVKbXc3tyE2YFy+zboN3lBSdVH04J1t1YXmM602oUBIUShPatN70QurSkUOFKpWHBGRMAyDE2ZVlOedXVRj37lzt8eP14owXOkkUBgbCkPvelFgZVpMDBmuVHSvMcQGB6zbt5nXfIU6xXel48mvn58uK6+6PNThN69RWnkD3XegFKR0p9vC2Gmirks5Jdoy3+4W0eTM1sy2e18euNx+zYYT3rswYKMy+VmvFzRditKTKDK8latKDQ19f8G8fot9z43OMaw3//2g57d/tnp+bqvpHO7qoXDQgp3IFsgBsNHdBNXze/+ZNW2ZHxZ8NtvR+tieGmHOySizerbOTQzaUK9XoAMxT+SAuUDKaItQDAAGiWE9P2/Bvn/zAQZWxH/N21uIElEYwHGIIgqCeo8eYpw82nXIMmxKwrS0Wg3NFy3LHE2cCtxy03KtVVRM1lt02+2+mV0Wo9tmFG3FGlZ0ZdOI6ELRFvRSD0EFfTNGVGZNWdanIANyHOGAB/z9e3ru3JkYSF/fEel7YHJmdm0ovDy7fv+OSNu07cOeT2lri+w/0nvK0ZK2ZqKJs5H23rRLrrFLHLgdpFzYfe3pzoNjJ2w9vWrt+fnjZi1ubl4Fm2X81bAXW7ZMlGABA0ms6FedcGC8JfNky0OFwt5cacft0tFQEPl9pkBP/uXmp4d1p65cefFkNeV0UpSFuJ+93f7ufUDdacjlyDvGBp5xkZGw7Gr5cK8V/tdbOHn69Lmzm5snwU7Y/iiIiGSnKAGEQwCGBAhHVcSCE6mNr68V3oYSmUDThUvHL+1+RNHBaMZCmFZSKdoXjTo9nsBDavnh4vFD3efS/jljQoY9TbKN4m0SnlilV2qShZajJ9vHwzaZOXfy1AlgDU7mXMZ4o61TZC4jFhwQS1XGgyPd/dUJvVcqW+SlN4Qvn2htPXHk2eMej9Li8xECyhe1LL+1uW/nltZNpdxKT6zT0bBEGothOVGMj9OjkERiPuC0uh5d3f9m8Vhm2p7f2OteJDcndPDvPsN4VHpQNACZZGQFZGKHNISSUv88eUxhEiPTBveD3p3rtkQOFbtLfb3ZbLbUXbwEqOpY32O3dSku13aFRtnlqZQoJ/JiQtABEkXitV2jN4XvrrnYXSyeLN1wu7cZvXCuEShEjSQDmUiATIwlk1ahXIhEQNwJAsFhXcynl1otM55lj5xo37ePlVz7Nq3P3hxG+6w0ZBAEHNuZ4xaBiTGcMZc4IHEjj+CLhTQF+0RvoSgaefkMDMNh2TLl2uju/2PMhtgzGgYvsKAKUUsJ2uVqynd05PMd+dUrXCYJj8ZVYv4Xb/7yDAxfCq5V8Kkg0gj4Ep+WhTfwPmM24HxKAwfOh/gEISDnaOb5/f6M3+NxZvx+LahOPsbJ88EtVOF8XEEjQgAqiYYEM+Z4Y/zVq0TiVSP8onDwjAjhwOy+Axr9ABqBdJIGtVT6U9KJE4iUhEDyqnXJpM2WtKmDDkdXF6uLf64h4fHVNdyATq1nSOeAQQEZF9QKA9tKkWRai2WfRqFIJjH0m6h1os4w0Td0AMt64QY4sV6e0Gz/dmpgvUGpdQgLm1UOjrAZQ/G4EOEiGMhQCCQUxuMI+23Y3KUKDGRpNzVDx5F28xQwNmZ0OpuNuahCBLjRbl/HYBa3rzSPLuP2ug2L2xewuP0XeT/6drCaef/wfxs4gC0fziYeynonHsovEg+IXJSx+kYuEl1Mu7L/15kPXc/Mp6GJyXz+n9CJSb3kKoJfv9SLD6lXZeyG6hS7ARjH9wz533I/JnhsOZPSxv968CjznglD8Pj95FP7V5JPOPLCfE4+5ZB8/pvo1QbR6yI2euWY/QpUYpgas1/mSsCsZqjIfquEz1aqHD4r9aQUNqGqxvBZT8JqeqVWS8qlQsoK4TP39FveAAwHry39hicCIqmpSL+5xu8r/kz8ni7H7yNHVOz++ub/wyvz/49yHLNaugaoEAAAAABJRU5ErkJggg==
 // @match        *://*/*
 // @exclude      *://yiyan.baidu.com/*
 // @exclude      *://*.bing.com/search*
@@ -38,7 +30,6 @@
 // ==/UserScript==
 (function (w) { if (w) { w.name = 'h5player'; } })();
 
-/* 保存重要的原始函数，防止被外部脚本污染 */
 const originalMethods = {
   Object: {
     defineProperty: Object.defineProperty,
@@ -56,11 +47,6 @@ const originalMethods = {
 };
 
 /**
- * 元素监听器
- * @param selector -必选
- * @param fn -必选，元素存在时的回调
- * @param shadowRoot -可选 指定监听某个shadowRoot下面的DOM元素
- * 参考：https://javascript.ruanyifeng.com/dom/mutationobserver.html
  */
 function ready (selector, fn, shadowRoot) {
   const win = window;
@@ -70,13 +56,11 @@ function ready (selector, fn, shadowRoot) {
   const listeners = docRoot._MutationListeners || [];
 
   function $ready (selector, fn) {
-    // 储存选择器和回调函数
     listeners.push({
       selector: selector,
       fn: fn
     });
 
-    /* 增加监听对象 */
     if (!docRoot._MutationListeners || !docRoot._MutationObserver) {
       docRoot._MutationListeners = listeners;
       docRoot._MutationObserver = new MutationObserver(() => {
@@ -92,7 +76,6 @@ function ready (selector, fn, shadowRoot) {
       });
     }
 
-    // 检查节点是否已经在DOM中
     check(selector, fn);
   }
 
@@ -113,8 +96,6 @@ function ready (selector, fn, shadowRoot) {
 }
 
 /**
- * 某些网页用了attachShadow closed mode，需要open才能获取video标签，例如百度云盘
- * 解决参考：
  * https://developers.google.com/web/fundamentals/web-components/shadowdom?hl=zh-cn#closed
  * https://stackoverflow.com/questions/54954383/override-element-prototype-attachshadow-using-chrome-extension
  */
@@ -128,17 +109,13 @@ function hackAttachShadow () {
       const isClosed = arg[0] && arg[0].mode === 'closed';
 
       if (arg[0] && arg[0].mode) {
-        // 强制使用 open mode
         arg[0].mode = 'open';
       }
       const shadowRoot = this._attachShadow.apply(this, arg);
-      // 存一份shadowDomList
       window._shadowDomList_.push(shadowRoot);
 
-      /* 让shadowRoot里面的元素有机会访问shadowHost */
       shadowRoot._shadowHost = this;
 
-      // 在document下面添加 addShadowRoot 自定义事件
       const shadowEvent = new window.CustomEvent('addShadowRoot', {
         shadowRoot,
         detail: {
@@ -153,8 +130,6 @@ function hackAttachShadow () {
 
       if (isClosed) {
         /**
-         * 通过defineProperty来设置shadowRoot，get的时候返回null
-         * 让外部感知到的还是closed的shadowRoot，防止误判或针对性检测
          */
         Object.defineProperty(this, 'shadowRoot', {
           get () {
@@ -175,7 +150,6 @@ function hackAttachShadow () {
 
 /*!
  * @name         original.js
- * @description  存储部分重要的原生函数，防止被外部污染，此逻辑应尽可能前置，否则存储的将是污染后的函数
  * @version      0.0.1
  * @author       xxxily
  * @date         2022/10/16 10:32
@@ -183,13 +157,11 @@ function hackAttachShadow () {
  */
 
 const original = {
-  // 防止defineProperty和defineProperties被AOP脚本重写
   Object: {
     defineProperty: Object.defineProperty,
     defineProperties: Object.defineProperties
   },
 
-  // 防止此类玩法：https://juejin.cn/post/6865910564817010702
   Proxy,
 
   Map,
@@ -225,8 +197,6 @@ const original = {
 };
 
 /**
- * 媒体标签检测，可以检测出viode、audio、以及其它标签名经过改造后的媒体Element
- * @param {Function} handler -必选 检出后要执行的回调函数
  * @returns mediaElementList
  */
 const mediaCore = (function () {
@@ -244,8 +214,6 @@ const mediaCore = (function () {
   }
 
   /**
-   * 根据HTMLMediaElement的实例对象创建增强控制的相关API函数，从而实现锁定播放倍速，锁定暂停和播放等增强功能
-   * @param {*} mediaElement - 必选，HTMLMediaElement的具体实例，例如网页上的video标签或new Audio()等
    * @returns mediaPlusApi
    */
   function createMediaPlusApi (mediaElement) {
@@ -256,20 +224,15 @@ const mediaCore = (function () {
       return mediaPlusApi
     }
 
-    /* 创建MediaPlusApi对象 */
     mediaPlusApi = {};
     const mediaPlusBaseApi = {
       /**
-       * 创建锁，阻止外部逻辑操作mediaElement相关的属性或函数
-       * 这里的锁逻辑只是数据状态标注和切换，具体的锁功能需在
-       * proxyPrototypeMethod和hijackPrototypeProperty里实现
        */
       lock (keyName, duration) {
         const infoKey = `__${keyName}_info__`;
         mediaPlusApi[infoKey] = mediaPlusApi[infoKey] || {};
         mediaPlusApi[infoKey].lock = true;
 
-        /* 解锁时间信息 */
         duration = Number(duration);
         if (!Number.isNaN(duration) && duration > 0) {
           mediaPlusApi[infoKey].unLockTime = Date.now() + duration;
@@ -289,14 +252,12 @@ const mediaCore = (function () {
         const info = mediaPlusApi[`__${keyName}_info__`] || {};
 
         if (info.unLockTime) {
-          /* 延时锁根据当前时间计算是否还处于锁状态 */
           return Date.now() < info.unLockTime
         } else {
           return info.lock || false
         }
       },
 
-      /* 注意：调用此处的get和set和apply不受锁的限制 */
       get (keyName) {
         if (originDescriptors[keyName] && originDescriptors[keyName].get && !originMethods[keyName]) {
           return originDescriptors[keyName].get.apply(mediaElement)
@@ -304,7 +265,6 @@ const mediaCore = (function () {
       },
       set (keyName, val) {
         if (originDescriptors[keyName] && originDescriptors[keyName].set && !originMethods[keyName] && typeof val !== 'undefined') {
-          // original.console.log(`[mediaPlusApi][${keyName}] 执行原生set操作`)
           return originDescriptors[keyName].set.apply(mediaElement, [val])
         }
       },
@@ -312,7 +272,6 @@ const mediaCore = (function () {
         if (originMethods[keyName] instanceof Function) {
           const args = Array.from(arguments);
           args.shift();
-          // original.console.log(`[mediaPlusApi][${keyName}] 执行原生apply操作`)
           return originMethods[keyName].apply(mediaElement, args)
         }
       }
@@ -321,7 +280,6 @@ const mediaCore = (function () {
     mediaPlusApi = { ...mediaPlusApi, ...mediaPlusBaseApi };
 
     /**
-     * 扩展api列表。实现'playbackRate', 'volume', 'currentTime', 'play', 'pause'的纯api调用效果，具体可用API如下：
      * mediaPlusApi.lockPlaybackRate()
      * mediaPlusApi.unLockPlaybackRate()
      * mediaPlusApi.isLockPlaybackRate()
@@ -354,7 +312,6 @@ const mediaCore = (function () {
     const baseApiKeys = Object.keys(mediaPlusBaseApi);
     extApiKeys.forEach(key => {
       baseApiKeys.forEach(baseKey => {
-        /* 当key对应的是函数时，不应该有get、set的api，而应该有apply的api */
         if (originMethods[key] instanceof Function) {
           if (baseKey === 'get' || baseKey === 'set') {
             return true
@@ -374,7 +331,6 @@ const mediaCore = (function () {
     return mediaPlusApi
   }
 
-  /* 检测到media对象的处理逻辑，依赖Proxy对media函数的代理 */
   function mediaDetectHandler (ctx) {
     if (isHTMLMediaElement(ctx) && !mediaElementList.includes(ctx)) {
       // console.log(`[mediaDetectHandler]`, ctx)
@@ -389,7 +345,6 @@ const mediaCore = (function () {
     }
   }
 
-  /* 代理方法play和pause方法，确保能正确暂停和播放 */
   function proxyPrototypeMethod (element, methodName) {
     const originFunc = element && element.prototype[methodName];
     if (!originFunc) return
@@ -397,33 +352,27 @@ const mediaCore = (function () {
     element.prototype[methodName] = new original.Proxy(originFunc, {
       apply (target, ctx, args) {
         mediaDetectHandler(ctx);
-        // original.console.log(`[mediaElementMethodProxy] 执行代理后的${methodName}函数`)
 
-        /* 对播放暂停逻辑进行增强处理，例如允许通过mediaPlusApi进行锁定 */
         if (['play', 'pause'].includes(methodName)) {
           const mediaPlusApi = createMediaPlusApi(ctx);
           if (mediaPlusApi && mediaPlusApi.isLock(methodName)) {
-            // original.console.log(`[mediaElementMethodProxy] ${methodName}已被锁定，无法执行相关操作`)
             return
           }
         }
 
         const result = target.apply(ctx, args);
 
-        // TODO 对函数执行结果进行观察判断
 
         return result
       }
     });
 
-    // 不建议对HTMLMediaElement的原型链进行扩展，这样容易让网页检测到mediaCore增强逻辑的存在
     // if (originMethods[methodName]) {
     //   element.prototype[`__${methodName}__`] = originMethods[methodName]
     // }
   }
 
   /**
-   * 劫持 playbackRate、volume、currentTime 属性，并增加锁定的逻辑，从而实现更强的抗干扰能力
    */
   function hijackPrototypeProperty (element, property) {
     if (!element || !element.prototype || !originDescriptors[property]) {
@@ -453,11 +402,9 @@ const mediaCore = (function () {
           mediaDetectHandler(this);
         }
 
-        /* 对调速、调音和进度控制逻辑进行增强处理，例如允许通过mediaPlusApi这些功能进行锁定 */
         if (['playbackRate', 'volume', 'currentTime'].includes(property)) {
           const mediaPlusApi = createMediaPlusApi(this);
           if (mediaPlusApi && mediaPlusApi.isLock(property)) {
-            // original.console.log(`[mediaElementPropertyHijack] ${property}已被锁定，无法执行相关操作`)
             return
           }
         }
@@ -486,8 +433,6 @@ const mediaCore = (function () {
   }
 
   /**
-   * 媒体标签检测，可以检测出viode、audio、以及其它标签名经过改造后的媒体Element
-   * @param {Function} handler -必选 检出后要执行的回调函数
    * @returns mediaElementList
    */
   function mediaChecker (handler) {
@@ -505,7 +450,6 @@ const mediaCore = (function () {
   }
 
   /**
-   * 初始化mediaCore相关功能
    */
   function init (mediaCheckerHandler) {
     if (hasMediaCoreInit) { return false }
@@ -539,7 +483,6 @@ const mediaCore = (function () {
 
 /*!
  * @name         utils.js
- * @description  数据类型相关的方法
  * @version      0.0.1
  * @author       Blaze
  * @date         22/03/2019 22:46
@@ -547,9 +490,6 @@ const mediaCore = (function () {
  */
 
 /**
- * 准确地获取对象的具体类型 参见：https://www.talkingcoder.com/article/6333557442705696719
- * @param obj { all } -必选 要判断的对象
- * @returns {*} 返回判断的具体类型
  */
 function getType (obj) {
   if (obj == null) {
@@ -566,7 +506,6 @@ const isObj$1 = obj => isType(obj, 'object');
 
 /*!
  * @name         object.js
- * @description  对象操作的相关方法
  * @version      0.0.1
  * @author       Blaze
  * @date         21/03/2019 23:10
@@ -574,8 +513,6 @@ const isObj$1 = obj => isType(obj, 'object');
  */
 
 /**
- * 对一个对象进行深度拷贝
- * @source -必选（Object|Array）需拷贝的对象或数组
  */
 function clone (source) {
   var result = {};
@@ -595,7 +532,6 @@ function clone (source) {
   return result
 }
 
-/* 遍历对象，但不包含其原型链上的属性 */
 function forIn (obj, fn) {
   fn = fn || function () {};
   for (var key in obj) {
@@ -606,10 +542,6 @@ function forIn (obj, fn) {
 }
 
 /**
- * 深度合并两个可枚举的对象
- * @param objA {object} -必选 对象A
- * @param objB {object} -必选 对象B
- * @param concatArr {boolean} -可选 合并数组，默认遇到数组的时候，直接以另外一个数组替换当前数组，将此设置true则，遇到数组的时候一律合并，而不是直接替换
  * @returns {*|void}
  */
 function mergeObj (objA, objB, concatArr) {
@@ -628,7 +560,6 @@ function mergeObj (objA, objB, concatArr) {
         objA[key] = subItemB;
       } else {
         if (isObj(subItemA) && isObj(subItemB)) {
-          /* 进行深层合并 */
           objA[key] = deepMerge(subItemA, subItemB);
         } else {
           if (concatArr && isArr(subItemA) && isArr(subItemB)) {
@@ -645,9 +576,6 @@ function mergeObj (objA, objB, concatArr) {
 }
 
 /**
- * 根据文本路径获取对象里面的值，如需支持数组请使用lodash的get方法
- * @param obj {Object} -必选 要操作的对象
- * @param path {String} -必选 路径信息
  * @returns {*}
  */
 function getValByPath$1 (obj, path) {
@@ -655,7 +583,6 @@ function getValByPath$1 (obj, path) {
   const pathArr = path.split('.');
   let result = obj;
 
-  /* 递归提取结果值 */
   for (let i = 0; i < pathArr.length; i++) {
     if (!result) break
     result = result[pathArr[i]];
@@ -665,11 +592,6 @@ function getValByPath$1 (obj, path) {
 }
 
 /**
- * 根据文本路径设置对象里面的值，如需支持数组请使用lodash的set方法
- * @param obj {Object} -必选 要操作的对象
- * @param path {String} -必选 路径信息
- * @param val {Any} -必选 如果不传该参，最终结果会被设置为undefined
- * @returns {Boolean} 返回true表示设置成功，否则设置失败
  */
 function setValByPath (obj, path, val) {
   if (!obj || !path || typeof path !== 'string') {
@@ -719,10 +641,6 @@ function hideDom (selector, delay) {
 }
 
 /**
- * 向上查找操作
- * @param dom {Element} -必选 初始dom元素
- * @param fn {function} -必选 每一级ParentNode的回调操作
- * 如果函数返回true则表示停止向上查找动作
  */
 function eachParentNode (dom, fn) {
   let parent = dom.parentNode;
@@ -736,10 +654,6 @@ function eachParentNode (dom, fn) {
 }
 
 /**
- * 动态加载css内容
- * @param cssText {String} -必选 样式的文本内容
- * @param id {String} -可选 指定样式文本的id号，如果已存在对应id号则不会再次插入
- * @param insetTo {Dom} -可选 指定插入到哪
  * @returns {HTMLStyleElement}
  */
 function loadCSSText (cssText, id, insetTo) {
@@ -760,7 +674,6 @@ function loadCSSText (cssText, id, insetTo) {
 }
 
 /**
- * 判断当前元素是否为可编辑元素
  * @param target
  * @returns Boolean
  */
@@ -771,8 +684,6 @@ function isEditableTarget (target) {
 }
 
 /**
- * 判断某个元素是否处于shadowDom里面
- * 参考：https://www.coder.work/article/299700
  * @param node
  * @returns {boolean}
  */
@@ -790,8 +701,6 @@ function isInShadow (node, returnShadowRoot) {
 }
 
 /**
- * 判断某个元素是否处于可视区域，适用于被动调用情况，需要高性能，请使用IntersectionObserver
- * 参考：https://github.com/febobo/web-interview/issues/84
  * @param element
  * @returns {boolean}
  */
@@ -814,7 +723,6 @@ function isInViewPort (element) {
 }
 
 /**
- * 基于IntersectionObserver的可视区域判断
  * @param { Function } callback
  * @param { Element } element
  * @returns { IntersectionObserver }
@@ -823,10 +731,8 @@ function observeVisibility (callback, element) {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        /* 元素在可视区域内 */
         callback(entry, observer);
       } else {
-        /* 元素不在可视区域内 */
         callback(null, observer);
       }
     });
@@ -836,11 +742,9 @@ function observeVisibility (callback, element) {
     observer.observe(element);
   }
 
-  /* 返回观察对象，以便外部可以取消观察：observer.disconnect()，或者增加新的观察对象：observer.observe(element) */
   return observer
 }
 
-// 使用示例：
 // const temp1 = document.querySelector('#temp1')
 // var observer = observeVisibility(function (entry, observer) {
 //   if (entry) {
@@ -851,7 +755,6 @@ function observeVisibility (callback, element) {
 // }, temp1)
 
 /**
- * 判断是否为不可见的元素，主要用以判断是否已经脱离文档流或被设置为display:none的元素
  * @param {*} element
  * @returns
  */
@@ -882,7 +785,6 @@ function isOutOfDocument (element) {
 }
 
 /**
- * 判断坐标是否在元素内
  */
 function isCoordinateInElement (x, y, element) {
   if (!element || !element.getBoundingClientRect) { return false }
@@ -897,14 +799,11 @@ function isCoordinateInElement (x, y, element) {
 }
 
 /**
- * 有些网站开启了CSP，会导致无法使用innerHTML，所以需要使用trustedTypes
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
- * @param { String } htmlString -必选 HTML字符串
  * @returns
  */
 function createTrustedHTML (htmlString) {
   if (window.trustedTypes && window.trustedTypes.createPolicy) {
-    /* 创建default策略前先检查是否已经存在 */
     let policy = window.trustedTypes.defaultPolicy || null;
     if (!policy) {
       policy = window.trustedTypes.createPolicy('default', {
@@ -921,10 +820,6 @@ function createTrustedHTML (htmlString) {
 }
 
 /**
- * 解析HTML字符串，返回DOM节点数组
- * @param { String } -必选 htmlString HTML字符串
- * @param { HTMLElement } -可选 targetElement 目标元素，如果传入，则会将解析后的节点添加到该元素中
- * @returns { Array } DOM节点数组
  */
 function parseHTML (htmlString, targetElement) {
   if (typeof htmlString !== 'string') {
@@ -942,7 +837,6 @@ function parseHTML (htmlString, targetElement) {
     nodes.forEach(node => {
       const targetNode = node.cloneNode(true);
       try {
-        /* 有些网站出于业务需要会对appendChild进行重写，可能会导致appendChild报错，所以这里需要try catch */
         targetElement.appendChild(targetNode);
       } catch (e) {
         console.error('[parseHTML] appendChild error', e, targetElement, targetNode);
@@ -955,8 +849,6 @@ function parseHTML (htmlString, targetElement) {
 }
 
 /**
- * 将行内样式转换成对象的形式
- * @param {string} inlineStyle -必选，例如： position: relative; opacity: 1; visibility: hidden; transform: scale(0.1) rotate(180deg);
  * @returns {Object}
  */
 
@@ -990,7 +882,6 @@ function objToInlineStyle (obj) {
   return styleArr.join('; ')
 }
 
-/* ua信息伪装 */
 function fakeUA (ua) {
   // Object.defineProperty(navigator, 'userAgent', {
   //   value: ua,
@@ -1003,7 +894,6 @@ function fakeUA (ua) {
   Object.defineProperty(Navigator.prototype, 'userAgent', { ...desc, get: function () { return ua } });
 }
 
-/* ua信息来源：https://developers.whatismybrowser.com */
 const userAgentMap = {
   android: {
     chrome: 'Mozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36',
@@ -1024,7 +914,6 @@ const userAgentMap = {
 };
 
 /**
- * 判断是否处于Iframe中
  * @returns {boolean}
  */
 function isInIframe () {
@@ -1032,7 +921,6 @@ function isInIframe () {
 }
 
 /**
- * 判断是否处于跨域限制的Iframe中
  * @returns {boolean}
  */
 function isInCrossOriginFrame () {
@@ -1048,7 +936,6 @@ function isInCrossOriginFrame () {
 }
 
 /**
- * 简单的节流函数
  * @param fn
  * @param interval
  * @returns {Function}
@@ -1066,7 +953,6 @@ function throttle (fn, interval = 80) {
 
 /*!
  * @name         url.js
- * @description  用于对url进行解析的相关方法
  * @version      0.0.1
  * @author       Blaze
  * @date         27/03/2019 15:52
@@ -1074,9 +960,7 @@ function throttle (fn, interval = 80) {
  */
 
 /**
- * 参考示例：
  * https://segmentfault.com/a/1190000006215495
- * 注意：该方法必须依赖浏览器的DOM对象
  */
 
 function parseURL (url) {
@@ -1123,8 +1007,6 @@ function parseURL (url) {
 }
 
 /**
- * 将params对象转换成字符串模式
- * @param params {Object} - 必选 params对象
  * @returns {string}
  */
 function stringifyParams (params) {
@@ -1155,9 +1037,6 @@ function stringifyParams (params) {
 }
 
 /**
- * 将通过parseURL解析出来url对象重新还原成url地址
- * 主要用于查询参数被动态修改后，再重组url链接
- * @param obj {Object} -必选 parseURL解析出来url对象
  */
 function stringifyToUrl (urlObj) {
   var query = stringifyParams(urlObj.params) || '';
@@ -1166,7 +1045,6 @@ function stringifyToUrl (urlObj) {
   return urlObj.origin + urlObj.path + query + hash
 }
 
-/* 当前用到的快捷键 */
 const hasUseKey = {
   keyCodeList: [13, 16, 17, 18, 27, 32, 37, 38, 39, 40, 49, 50, 51, 52, 67, 68, 69, 70, 73, 74, 75, 77, 78, 79, 80, 81, 82, 83, 84, 85, 87, 88, 89, 90, 97, 98, 99, 100, 220],
   keyList: ['enter', 'shift', 'control', 'alt', 'escape', ' ', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown', '1', '2', '3', '4', 'c', 'd', 'e', 'f', 'i', 'j', 'k', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z', '\\', '|'],
@@ -1214,8 +1092,6 @@ const hasUseKey = {
 };
 
 /**
- * 判断当前按键是否注册为需要用的按键
- * 用于减少对其它键位的干扰
  */
 function isRegisterKey (event) {
   const keyCode = event.keyCode;
@@ -1225,9 +1101,6 @@ function isRegisterKey (event) {
 }
 
 /**
- * 由于tampermonkey对window对象进行了封装，我们实际访问到的window并非页面真实的window
- * 这就导致了如果我们需要将某些对象挂载到页面的window进行调试的时候就无法挂载了
- * 所以必须使用特殊手段才能访问到页面真实的window对象，于是就有了下面这个函数
  * @returns {Promise<void>}
  */
 async function getPageWindow () {
@@ -1236,7 +1109,6 @@ async function getPageWindow () {
       return resolve(window._pageWindow)
     }
 
-    /* 尝试通过同步的方式获取pageWindow */
     try {
       const pageWin = getPageWindowSync();
       if (pageWin && pageWin.document && pageWin.XMLHttpRequest) {
@@ -1246,7 +1118,6 @@ async function getPageWindow () {
       }
     } catch (e) {}
 
-    /* 下面异步获取pagewindow的方法在最新的chrome浏览器里已失效 */
 
     const listenEventList = ['load', 'mousemove', 'scroll', 'get-page-window-event'];
 
@@ -1263,15 +1134,12 @@ async function getPageWindow () {
       window.addEventListener(eventType, getWin, true);
     });
 
-    /* 自行派发事件以便用最短的时间获得pageWindow对象 */
     window.dispatchEvent(new window.Event('get-page-window-event'));
   })
 }
 getPageWindow();
 
 /**
- * 通过同步的方式获取pageWindow
- * 注意同步获取的方式需要将脚本写入head，部分网站由于安全策略会导致写入失败，而无法正常获取
  * @returns {*}
  */
 function getPageWindowSync (rawFunction) {
@@ -1297,30 +1165,23 @@ function getPageWindowSync (rawFunction) {
 
 function openInTab (url, opts, referer) {
   // fix tampermonkey menu bug start
-  // 由于tampermonkey的菜单功注册和取消注册存在某些难以排查的bug，所以这处对openInTab的打开频率进行了限制，以解决点击tampermonkey 菜单打开链接时候重复打开一堆相同URL的问题
-  // 此方法治标不治本，还是会遗留很多菜单注册和取消注册留下的坑，建议替换chrome插件实现当前脚本功能
 
-  // 使用GM_getValue/GM_setValue或sessionStorage控制同一URL的调用频率
   const now = Date.now();
   const sessionKey = `h5player_openTab_${url}`;
   let lastOpenTime = 0;
 
-  // 优先使用GM_getValue/GM_setValue
   if (window.GM_getValue && window.GM_setValue) {
     lastOpenTime = window.GM_getValue(sessionKey, 0);
 
     if (lastOpenTime && (now - lastOpenTime) < 1000) {
-      // console.info('已阻止重复打开同一URL:', url)
       return
     }
 
     window.GM_setValue(sessionKey, now);
   } else {
-    // 回退到sessionStorage
     lastOpenTime = sessionStorage.getItem(sessionKey);
 
     if (lastOpenTime && (now - parseInt(lastOpenTime)) < 1000) {
-      // console.info('已阻止重复打开同一URL:', url)
       return
     }
 
@@ -1343,7 +1204,6 @@ function openInTab (url, opts, referer) {
       setParent: true
     });
   } else {
-    // 创建新的a标签并模拟点击
     const a = document.createElement('a');
     a.href = url;
     a.target = '_blank';
@@ -1358,7 +1218,6 @@ function openInTab (url, opts, referer) {
   }
 }
 
-/* 确保数字为正数 */
 function numUp (num) {
   if (typeof num === 'number' && num < 0) {
     num = Math.abs(num);
@@ -1366,7 +1225,6 @@ function numUp (num) {
   return num
 }
 
-/* 确保数字为负数 */
 function numDown (num) {
   if (typeof num === 'number' && num > 0) {
     num = -num;
@@ -1388,7 +1246,6 @@ function isAudioElement (element) {
 
 /*!
  * configManager parse localStorage error * @name         configManager.ts
- * @description  配置统一管理脚本
  * @version      0.0.1
  * @author       xxxily
  * @date         2023/03/06 14:29
@@ -1397,17 +1254,13 @@ function isAudioElement (element) {
 
 
 /**
- * 判断localStorage是否可用
- * localStorage并不能保证100%可用，所以使用前必须进行判断，否则会导致部分网站下脚本出现异常
  * https://stackoverflow.com/questions/30481516/iframe-in-chrome-error-failed-to-read-localstorage-from-window-access-deni
- * https://cloud.tencent.com/developer/article/1803097 (当localStorage不能用时，window.localStorage为null，而不是文中的undefined)
  */
 function isLocalStorageUsable () {
   return window.localStorage && window.localStorage.getItem instanceof Function && window.localStorage.setItem instanceof Function
 }
 
 /**
- * 判断GlobalStorage是否可用，目前使用的GlobalStorage是基于tampermonkey提供的相关api
  * https://www.tampermonkey.net/documentation.php?ext=dhdg#GM_setValue
  */
 function isGlobalStorageUsable () {
@@ -1415,8 +1268,6 @@ function isGlobalStorageUsable () {
 }
 
 /**
- * 存储干净的localStorage相关方法
- * 防止localStorage对象下的方法被改写而导致读取和写入规则不一样的问题
  */
 const rawLocalStorage = (function getRawLocalStorage () {
   const localStorageApis = ['getItem', 'setItem', 'removeItem', 'clear', 'key'];
@@ -1448,8 +1299,6 @@ class ConfigManager {
   isGlobalStorageUsable = isGlobalStorageUsable
 
   /**
-   * 将confPath转换称最终存储到localStorage或globalStorage里的键名
-   * @param {String} confPath -必选，配置路径信息：例如：'enhance.blockSetPlaybackRate'
    * @returns {keyName}
    */
   getConfKeyName (confPath = '') {
@@ -1457,8 +1306,6 @@ class ConfigManager {
   }
 
   /**
-   * 将存储到localStorage或globalStorage里的键名转换成实际调用时候的confPath
-   * @param {String} keyName -必选 存储到localStorage或globalStorage里的键名，例如：'_h5player_enhance_blockSetPlaybackRate'
    * @returns {confPath}
    */
   getConfPath (keyName = '') {
@@ -1468,7 +1315,6 @@ class ConfigManager {
   getConfPathList (config) {
     const confPathList = [];
 
-    /* 递归获取所有配置项的路径 */
     function getConfPathList (config, path = '') {
       Object.keys(config).forEach((key) => {
         const pathKey = path ? `${path}.${key}` : key;
@@ -1485,36 +1331,26 @@ class ConfigManager {
   }
 
   /**
-   * 根据给定的配置路径，获取相关配置信息
-   * 获取顺序：LocalStorage > GlobalStorage > defConfig > null
-   * @param {String} confPath -必选，配置路径信息：例如：'enhance.blockSetPlaybackRate'
-   * @returns {*} 如果返回null，则表示没获取到相关配置信息
    */
   get (confPath) {
     if (typeof confPath !== 'string') {
       return null
     }
 
-    /* 默认优先使用本地的localStorage配置 */
     const localConf = this.getLocalStorage(confPath);
     if (localConf !== null && localConf !== undefined) {
       return localConf
     }
 
-    /* 如果localStorage没相关配置，则尝试使用GlobalStorage的配置 */
     const globalConf = this.getGlobalStorage(confPath);
     if (globalConf !== null && globalConf !== undefined) {
       return globalConf
     }
 
-    /* 如果localStorage和GlobalStorage配置都没找到，则尝试在默认配置表里拿相关配置信息 */
     return this.getMemoryStorage(confPath)
   }
 
   /**
-   * 将配置结果写入到localStorage或GlobalStorage
-   * 写入顺序：LocalStorage > GlobalStorage
-   * 无论是否写入成功都会将结果更新到defConfig里对应的配置项上
    * @param {String} confPath
    * @param {*} val
    * @returns {Boolean}
@@ -1537,7 +1373,6 @@ class ConfigManager {
     return sucStatus
   }
 
-  /* 获取并列出当前所有已设定的配置项 */
   list () {
     const result = {
       localConf: this.listLocalStorage(),
@@ -1547,7 +1382,6 @@ class ConfigManager {
     return result
   }
 
-  /* 清除已经写入到本地存储里的配置项 */
   clear () {
     this.clearLocalStorage();
     this.clearGlobalStorage();
@@ -1566,8 +1400,6 @@ class ConfigManager {
   }
 
   /**
-   * 根据给定的配置路径，获取LocalStorage下定义的配置信息
-   * @param {String} confPath -必选，配置路径信息
    * @returns
    */
   getLocalStorage (confPath) {
@@ -1596,8 +1428,6 @@ class ConfigManager {
   }
 
   /**
-   * 根据给定的配置路径，获取GlobalStorage下定义的配置信息
-   * @param {String} confPath -必选，配置路径信息
    * @returns
    */
   getGlobalStorage (confPath) {
@@ -1615,7 +1445,6 @@ class ConfigManager {
         return this.getMemoryStorage(confPath)
       }
     } else {
-      /* 非油猴环境，回退到localStorage存储 */
       return this.getLocalStorage(confPath)
     }
   }
@@ -1630,7 +1459,6 @@ class ConfigManager {
   }
 
   /**
-   * 将配置结果写入到localStorage里
    * @param {String} confPath
    * @param {*} val
    * @returns {Boolean}
@@ -1663,7 +1491,6 @@ class ConfigManager {
   }
 
   /**
-   * 将配置结果写入到globalStorage里
    * @param {String} confPath
    * @param {*} val
    * @returns {Boolean}
@@ -1686,7 +1513,6 @@ class ConfigManager {
         return false
       }
     } else {
-      /* 非油猴环境，回退到localStorage存储 */
       return this.setLocalStorage(confPath, val)
     }
   }
@@ -1725,12 +1551,10 @@ class ConfigManager {
   getConfObj () {
     const confList = this.list();
 
-    /* 同步全局配置到this.opts.config */
     Object.keys(confList.globalConf).forEach((confPath) => {
       setValByPath(this.opts.config, confPath, confList.globalConf[confPath]);
     });
 
-    /* 同步本地配置到this.opts.config */
     Object.keys(confList.localConf).forEach((confPath) => {
       setValByPath(this.opts.config, confPath, confList.localConf[confPath]);
     });
@@ -1745,7 +1569,6 @@ class ConfigManager {
       const oldVal = getValByPath$1(oldConfig, confPath);
       const val = getValByPath$1(config, confPath);
 
-      /* 跳过一样的值或在旧配置中不存在的值 */
       if (oldVal === val || oldVal === undefined) {
         return
       }
@@ -1761,7 +1584,6 @@ class ConfigManager {
       const oldVal = getValByPath$1(oldConfig, confPath);
       const val = getValByPath$1(config, confPath);
 
-      /* 跳过一样的值或在旧配置中不存在的值 */
 
       if (oldVal === val || oldVal === undefined) {
         return
@@ -1799,16 +1621,13 @@ class ConfigManager {
   }
 }
 
-/* 使用示例： */
 // const myConfig = new ConfigManager({
 //   prefix: '_myConfig_',
 //   config: {
 //     hotkeys: [
 //       {
-//         desc: '测试',
 //         key: 'v',
 //         command: 'toggleVisible',
-//         /* 如需禁用快捷键，将disabled设为true */
 //         disabled: false,
 //       },
 //     ],
@@ -1817,7 +1636,6 @@ class ConfigManager {
 //   },
 // })
 // myConfig.set('enable', false)
-// /* 对于数组，暂不支持直接修改数组元素，需要先获取数组，再修改数组元素，再重新写入 */
 // const hotkeys = myConfig.get('hotkeys')
 // hotkeys[0].disabled = true
 // myConfig.set('hotkeys', hotkeys)
@@ -1831,323 +1649,316 @@ const configManager = new ConfigManager({
       playbackRate: 1,
       volume: 1,
 
-      /* 最后一次设定的播放速度，默认1.5 */
       lastPlaybackRate: 1.5,
 
-      /* 是否允许存储播放进度 */
       allowRestorePlayProgress: {
 
       },
-      /* 视频播放进度映射表 */
       progress: {}
     },
     enableHotkeys: true,
     hotkeys: [
       {
-        desc: '网页全屏',
+        desc: '',
         key: 'shift+enter',
         command: 'setWebFullScreen',
-        /* 如需禁用快捷键，将disabled设为true */
         disabled: false
       },
       {
-        desc: '全屏',
+        desc: '',
         key: 'enter',
         command: 'setFullScreen'
       },
       {
-        desc: '切换画中画模式',
+        desc: '',
         key: 'shift+p',
         command: 'togglePictureInPicture'
       },
       {
-        desc: '视频截图',
+        desc: '',
         key: 'shift+s',
         command: 'capture'
       },
       {
-        desc: '启用或禁止自动恢复播放进度功能',
+        desc: '',
         key: 'shift+r',
         command: 'switchRestorePlayProgressStatus'
       },
       {
-        desc: '垂直镜像翻转',
+        desc: '',
         key: 'shift+m',
         command: 'setMirror',
         args: [true]
       },
       {
-        desc: '水平镜像翻转',
+        desc: '',
         key: 'm',
         command: 'setMirror'
       },
       {
-        desc: '下载音视频文件（实验性功能）',
+        desc: '',
         key: 'shift+d',
         command: 'mediaDownload'
       },
       {
-        desc: '缩小视频画面 -0.05',
+        desc: ' -0.05',
         key: 'shift+x',
         command: 'setScaleDown',
         args: -0.05
       },
       {
-        desc: '放大视频画面 +0.05',
+        desc: ' +0.05',
         key: 'shift+c',
         command: 'setScaleUp',
         args: 0.05
       },
       {
-        desc: '恢复视频画面',
+        desc: '',
         key: 'shift+z',
         command: 'resetTransform'
       },
       {
-        desc: '画面向右移动10px',
+        desc: '10px',
         key: 'shift+arrowright',
         command: 'setTranslateRight',
         args: 10
       },
       {
-        desc: '画面向左移动10px',
+        desc: '10px',
         key: 'shift+arrowleft',
         command: 'setTranslateLeft',
         args: -10
       },
       {
-        desc: '画面向上移动10px',
+        desc: '10px',
         key: 'shift+arrowup',
         command: 'setTranslateUp',
         args: 10
       },
       {
-        desc: '画面向下移动10px',
+        desc: '10px',
         key: 'shift+arrowdown',
         command: 'setTranslateDown',
         args: -10
       },
       {
-        desc: '前进5秒',
+        desc: '5',
         key: 'arrowright',
         command: 'setCurrentTimeUp',
         args: 5
       },
       {
-        desc: '后退5秒',
+        desc: '5',
         key: 'arrowleft',
         command: 'setCurrentTimeDown',
         args: -5
       },
       {
-        desc: '前进30秒',
+        desc: '30',
         key: 'ctrl+arrowright',
         command: 'setCurrentTimeUp',
         args: [30]
       },
       {
-        desc: '后退30秒',
+        desc: '30',
         key: 'ctrl+arrowleft',
         command: 'setCurrentTimeDown',
         args: [-30]
       },
       {
-        desc: '音量升高 5%',
+        desc: ' 5%',
         key: 'arrowup',
         command: 'setVolumeUp',
         args: [0.05]
       },
       {
-        desc: '音量降低 5%',
+        desc: ' 5%',
         key: 'arrowdown',
         command: 'setVolumeDown',
         args: [-0.05]
       },
       {
-        desc: '音量升高 20%',
+        desc: ' 20%',
         key: 'ctrl+arrowup',
         command: 'setVolumeUp',
         args: [0.2]
       },
       {
-        desc: '音量降低 20%',
+        desc: ' 20%',
         key: 'ctrl+arrowdown',
         command: 'setVolumeDown',
         args: [-0.2]
       },
       {
-        desc: '切换暂停/播放',
+        desc: '/',
         key: 'space',
         command: 'switchPlayStatus'
       },
       {
-        desc: '减速播放',
+        desc: '',
         key: 'x',
         command: 'setPlaybackRateDown',
         args: -0.1
       },
       {
-        desc: '加速播放',
+        desc: '',
         key: 'c',
         command: 'setPlaybackRateUp',
         args: 0.1
       },
       {
-        desc: '正常速度播放',
+        desc: '',
         key: 'z',
         command: 'resetPlaybackRate'
       },
       {
-        desc: '设置1x的播放速度',
+        desc: '1x',
         key: 'Digit1',
         command: 'setPlaybackRatePlus',
         args: 1
       },
       {
-        desc: '设置1x的播放速度',
+        desc: '1x',
         key: 'Numpad1',
         command: 'setPlaybackRatePlus',
         args: 1
       },
       {
-        desc: '设置2x的播放速度',
+        desc: '2x',
         key: 'Digit2',
         command: 'setPlaybackRatePlus',
         args: 2
       },
       {
-        desc: '设置2x的播放速度',
+        desc: '2x',
         key: 'Numpad2',
         command: 'setPlaybackRatePlus',
         args: 2
       },
       {
-        desc: '设置3x的播放速度',
+        desc: '3x',
         key: 'Digit3',
         command: 'setPlaybackRatePlus',
         args: 3
       },
       {
-        desc: '设置3x的播放速度',
+        desc: '3x',
         key: 'Numpad3',
         command: 'setPlaybackRatePlus',
         args: 3
       },
       {
-        desc: '设置4x的播放速度',
+        desc: '4x',
         key: 'Digit4',
         command: 'setPlaybackRatePlus',
         args: 4
       },
       {
-        desc: '设置4x的播放速度',
+        desc: '4x',
         key: 'Numpad4',
         command: 'setPlaybackRatePlus',
         args: 4
       },
       {
-        desc: '下一帧',
+        desc: '',
         key: 'F',
         command: 'freezeFrame',
         args: 1
       },
       {
-        desc: '上一帧',
+        desc: '',
         key: 'D',
         command: 'freezeFrame',
         args: -1
       },
       {
-        desc: '增加亮度',
+        desc: '',
         key: 'E',
         command: 'setBrightnessUp'
       },
       {
-        desc: '减少亮度',
+        desc: '',
         key: 'W',
         command: 'setBrightnessDown'
       },
       {
-        desc: '增加对比度',
+        desc: '',
         key: 'T',
         command: 'setContrastUp'
       },
       {
-        desc: '减少对比度',
+        desc: '',
         key: 'R',
         command: 'setContrastDown'
       },
       {
-        desc: '增加饱和度',
+        desc: '',
         key: 'U',
         command: 'setSaturationUp'
       },
       {
-        desc: '减少饱和度',
+        desc: '',
         key: 'Y',
         command: 'setSaturationDown'
       },
       {
-        desc: '增加色相',
+        desc: '',
         key: 'O',
         command: 'setHueUp'
       },
       {
-        desc: '减少色相',
+        desc: '',
         key: 'I',
         command: 'setHueDown'
       },
       {
-        desc: '模糊增加 1 px',
+        desc: ' 1 px',
         key: 'K',
         command: 'setBlurUp'
       },
       {
-        desc: '模糊减少 1 px',
+        desc: ' 1 px',
         key: 'J',
         command: 'setBlurDown'
       },
       {
-        desc: '图像复位',
+        desc: '',
         key: 'Q',
         command: 'resetFilterAndTransform'
       },
       {
-        desc: '画面旋转 90 度',
+        desc: ' 90 ',
         key: 'S',
         command: 'setRotate'
       },
       {
-        desc: '播放下一集',
+        desc: '',
         key: 'N',
         command: 'setNextVideo'
       },
       {
-        desc: '插入debugger断点',
+        desc: 'debugger',
         key: 'ctrl+shift+alt+d',
         command: 'debuggerNow'
       },
       {
-        desc: '执行JS脚本',
+        desc: 'JS',
         key: 'ctrl+j ctrl+s',
         command: () => {
-          alert('自定义JS脚本');
+          alert('JS');
         },
         when: ''
       }
     ],
     mouse: {
       enable: false,
-      /* 长按多久响应鼠标长按事件 */
       longPressTime: 600
     },
     ui: {
       enable: true,
       alwaysShow: false,
 
-      /* UI模块的相关配置 */
       mod: {
-        /* 默认禁用推荐模块 */
         recommend: {
           enable: false
         }
@@ -2157,16 +1968,13 @@ const configManager = new ConfigManager({
       enable: true
     },
     enhance: {
-      /* 不禁用默认的调速逻辑，则在多个视频切换时，速度很容易被重置，所以该选项默认开启 */
       blockSetPlaybackRate: true,
 
       blockSetCurrentTime: false,
       blockSetVolume: false,
       allowExperimentFeatures: false,
       allowExternalCustomConfiguration: false,
-      /* 是否开启音量增益功能 */
       allowAcousticGain: false,
-      /* 是否开启跨域控制 */
       allowCrossOriginControl: true,
       unfoldMenu: false
     },
@@ -2174,9 +1982,6 @@ const configManager = new ConfigManager({
     debug: false,
     blacklist: {
       /**
-       * url黑名单，在这些url下面禁止运行h5player脚本
-       * 以适应一些难以排查、或难以通一兼容的页面，但又不希望对整个网站进行禁用的情况
-       * 例如：B站首页
        */
       urls: [
         'https://www.bilibili.com/'
@@ -2228,8 +2033,8 @@ const configManager = new ConfigManager({
    * Known and accepted: `l` and `i` override YouTube's seek-forward-10s and
    * miniplayer while a video is present. */
   configManager.setMemoryStorage('hotkeys', [
-    { desc: 'Slower',             key: 'ç',       command: 'setPlaybackRateDown', args: -0.1 },
-    { desc: 'Faster',             key: '.',       command: 'setPlaybackRateUp',   args: 0.1 },
+    { desc: 'Slower (-0.2x)',      key: 'ç',       command: 'setPlaybackRateDown', args: -0.2 },
+    { desc: 'Faster (+0.2x)',      key: '.',       command: 'setPlaybackRateUp',   args: 0.2 },
     { desc: '1x',                 key: 'l',       command: 'setPlaybackRatePlus', args: 1 },
     { desc: '1.5x',               key: 'ş',       command: 'setPlaybackRatePlus', args: 1.5 },
     { desc: '2x',                 key: 'i',       command: 'setPlaybackRatePlus', args: 2 },
@@ -2249,7 +2054,6 @@ async function initUiConfigManager () {
     const config = JSON.parse(JSON.stringify(configManager.getConfObj()));
     delete config.recommendList;
     if (Array.isArray(config.hotkeys)) {
-      /* 给hotkeys的各自项添加disabled选项，以便在界面侧可以快速禁用或启用某个项 */
       config.hotkeys.forEach(item => {
         if (item.disabled === undefined) {
           item.disabled = false;
@@ -2268,9 +2072,9 @@ async function initUiConfigManager () {
         const newConfig = editor.get();
         newConfig.recommendList = defConfig.recommendList || [];
         configManager.setGlobalStorageByObj(newConfig);
-        alert('配置已更新');
+        alert('');
       } catch (e) {
-        alert(`配置格式异常，保存失败：${e}`);
+        alert(`${e}`);
       }
     };
   }
@@ -2302,20 +2106,12 @@ async function initUiConfigManager () {
 initUiConfigManager();
 
 /**
- * 任务配置中心 Task Control Center
- * 用于配置所有无法进行通用处理的任务，如不同网站的全屏方式不一样，必须调用网站本身的全屏逻辑，才能确保字幕、弹幕等正常工作
  **/
 
 let TCC$1 = class TCC {
   constructor (taskConf, doTaskFunc) {
     this.conf = taskConf || {
       /**
-       * 配置示例
-       * 父级键名对应的是一级域名，
-       * 子级键名对应的相关功能名称，键值对应的该功能要触发的点击选择器或者要调用的相关函数
-       * 所有子级的键值都支持使用选择器触发或函数调用
-       * 配置了子级的则使用子级配置逻辑进行操作，否则使用默认逻辑
-       * 注意：include，exclude这两个子级键名除外，这两个是用来进行url范围匹配的
        * */
       'demo.demo': {
         fullScreen: '.fullscreen-btn',
@@ -2330,9 +2126,7 @@ let TCC$1 = class TCC {
         currentTime: function () {},
         addCurrentTime: '.add-currenttime',
         subtractCurrentTime: '.subtract-currenttime',
-        // 自定义快捷键的执行方式，如果是组合键，必须是 ctrl-->shift-->alt 这样的顺序，没有可以忽略，键名必须全小写
         shortcuts: {
-          /* 注册要执行自定义回调操作的快捷键 */
           register: [
             'ctrl+shift+alt+c',
             'ctrl+shift+c',
@@ -2340,27 +2134,22 @@ let TCC$1 = class TCC {
             'ctrl+c',
             'c'
           ],
-          /* 自定义快捷键的回调操作 */
           callback: function (h5Player, taskConf, data) {
             const { event, player } = data;
             console.log(event, player);
           }
         },
-        /* 当前域名下需包含的路径信息，默认整个域名下所有路径可用 必须是正则 */
         include: /^.*/,
-        /* 当前域名下需排除的路径信息，默认不排除任何路径 必须是正则 */
         exclude: /\t/
       }
     };
 
-    // 通过doTaskFunc回调定义配置该如何执行任务
     this.doTaskFunc = doTaskFunc instanceof Function ? doTaskFunc : function () {};
   }
 
   setTaskConf (taskConf) { this.conf = taskConf; }
 
   /**
-   * 获取域名 , 目前实现方式不好，需改造，对地区性域名（如com.cn）、三级及以上域名支持不好
    * */
   getDomain () {
     const host = window.location.host;
@@ -2374,8 +2163,6 @@ let TCC$1 = class TCC {
   }
 
   /**
-   * 格式化配置任务
-   * @param isAll { boolean } -可选 默认只格式当前域名或host下的配置任务，传入true则将所有域名下的任务配置都进行格式化
    */
   formatTCC (isAll) {
     const t = this;
@@ -2411,7 +2198,6 @@ let TCC$1 = class TCC {
     return result
   }
 
-  /* 判断所提供的配置任务是否适用于当前URL */
   isMatch (taskConf) {
     const url = window.location.href;
     let isMatch = false;
@@ -2429,8 +2215,6 @@ let TCC$1 = class TCC {
   }
 
   /**
-   * 获取任务配置，只能获取到当前域名下的任务配置信息
-   * @param taskName {string} -可选 指定具体任务，默认返回所有类型的任务配置
    */
   getTaskConfig () {
     const t = this;
@@ -2449,9 +2233,6 @@ let TCC$1 = class TCC {
   }
 
   /**
-   * 执行当前页面下的相应任务
-   * @param taskName {object|string} -必选，可直接传入任务配置对象，也可用是任务名称的字符串信息，自己去查找是否有任务需要执行
-   * @param data {object} -可选，传给回调函数的数据
    */
   doTask (taskName, data) {
     const t = this;
@@ -2475,20 +2256,16 @@ class Debug {
   constructor (config = {}) {
     this.config = {
       msg: '[Debug Msg]',
-      /* 显示调用栈信息 */
       trace: false,
-      /* 是否把调用栈信息和要打印的信息放在一组折叠起来，直接输出的话再大量较多信息的时候会显得非常凌乱，所以默认true */
       traceGroup: true,
       printTime: false,
 
-      /* 统一设置字体颜色，背景颜色，其它样式等 */
       color: '#000000',
       backgroundColor: 'transparent',
       style: '',
 
       ...config,
 
-      /* 为不同的调试方法设置不同的字体颜色，背景颜色，其它样式等 */
       colorMap: {
         info: '#2274A5',
         log: '#95B46A',
@@ -2610,41 +2387,28 @@ var debug = Debug$1.create({
 const $q = function (str) { return document.querySelector(str) };
 
 /**
- * 任务配置中心 Task Control Center
- * 用于配置所有无法进行通用处理的任务，如不同网站的全屏方式不一样，必须调用网站本身的全屏逻辑，才能确保字幕、弹幕等正常工作
  * */
 
 const taskConf = {
   /**
-   * 配置示例
-   * 父级键名对应的是一级域名，
-   * 子级键名对应的相关功能名称，键值对应的该功能要触发的点击选择器或者要调用的相关函数
-   * 所有子级的键值都支持使用选择器触发或函数调用
-   * 配置了子级的则使用子级配置逻辑进行操作，否则使用默认逻辑
-   * 注意：include，exclude这两个子级键名除外，这两个是用来进行url范围匹配的
    * */
   'demo.demo': {
-    // disable: true, // 在该域名下禁止插件的所有功能
     init: function (h5Player, taskConf) {},
     fullScreen: '.fullscreen-btn',
     exitFullScreen: '.exit-fullscreen-btn',
     webFullScreen: function () {},
     exitWebFullScreen: '.exit-fullscreen-btn',
     autoPlay: '.player-start-btn',
-    // pause: ['.player-pause', '.player-pause02'], //多种情况对应不同的选择器时，可使用数组，插件会对选择器进行遍历，知道找到可用的为止
     pause: '.player-pause',
     play: '.player-play',
     afterPlay: function (h5Player, taskConf) {},
     afterPause: function (h5Player, taskConf) {},
     switchPlayStatus: '.player-play',
     playbackRate: function () {},
-    // playbackRate: true, // 当给某个功能设置true时，表示使用网站自身的能力控制视频，而忽略插件的能力
     currentTime: function () {},
     addCurrentTime: '.add-currenttime',
     subtractCurrentTime: '.subtract-currenttime',
-    // 自定义快捷键的执行方式，如果是组合键，必须是 ctrl-->shift-->alt 这样的顺序，没有可以忽略，键名必须全小写
     shortcuts: {
-      /* 注册要执行自定义回调操作的快捷键 */
       register: [
         'ctrl+shift+alt+c',
         'ctrl+shift+c',
@@ -2652,23 +2416,17 @@ const taskConf = {
         'ctrl+c',
         'c'
       ],
-      /* 自定义快捷键的回调操作 */
       callback: function (h5Player, taskConf, data) {
         const { event, player } = data;
         console.log(event, player);
       }
     },
 
-    /* 阻止网站自身的调速行为，增强突破调速限制的能力 */
     blockSetPlaybackRate: true,
-    /* 阻止网站自身的播放进度控制逻辑，增强突破进度调控限制的能力 */
     blockSetCurrentTime: true,
-    /* 阻止网站自身的音量控制逻辑，排除网站自身的调音干扰 */
     blockSetVolume: true,
 
-    /* 当前域名下需包含的路径信息，默认整个域名下所有路径可用 必须是正则 */
     include: /^.*/,
-    /* 当前域名下需排除的路径信息，默认不排除任何路径 必须是正则 */
     exclude: /\t/
   },
   'youtube.com': {
@@ -2680,12 +2438,10 @@ const taskConf = {
       const skipHandler = (element) => {
         const endTime = new Date().getTime();
         const time = endTime - startTime;
-        /* 过早触发会导致广告无法跳过 */
         if (time < 3000) {
           return false
         }
 
-        /* 页面处于不可见状态时候也不触发 */
         if (document.hidden) {
           return false
         }
@@ -2717,10 +2473,8 @@ const taskConf = {
     fullScreen: 'button.ytp-fullscreen-button',
     next: '.ytp-next-button',
     afterPlay: function (h5Player, taskConf) {
-      /* 解决字幕显示停滞问题 */
       setTimeout(() => { h5Player.setCurrentTimeUp(0.01, true); }, 0);
 
-      /* 解决快捷键暂停、播放后一直有loading图标滞留的问题 */
       const player = h5Player.player();
       const playerwWrap = player.closest('.html5-video-player');
 
@@ -2763,12 +2517,10 @@ const taskConf = {
         const hiddenSpinner = () => { spinner && (spinner.style.visibility = 'hidden'); };
         const visibleSpinner = () => { spinner && (spinner.style.visibility = 'visible'); };
 
-        /* 点击播放时立即隐藏spinner */
         hiddenSpinner();
 
         clearTimeout(playerwWrap.spinnerTimer);
         playerwWrap.spinnerTimer = setTimeout(() => {
-          /* 1秒后将spinner设置为none，并且恢复Spinner的可见状态，以便其它逻辑仍能正确控制spinner的显隐状态 */
           spinner.style.display = 'none';
           visibleSpinner();
         }, 1000);
@@ -2791,7 +2543,6 @@ const taskConf = {
       callback: function (h5Player, taskConf, data) {
         const { event } = data;
         if (event.keyCode === 27) {
-          /* 取消播放下一个推荐的视频 */
           if (document.querySelector('.ytp-upnext').style.display !== 'none') {
             document.querySelector('.ytp-upnext-cancel-button').click();
           }
@@ -2800,13 +2551,11 @@ const taskConf = {
     }
   },
   'netflix.com': {
-    // 停止在netflix下使用插件的所有功能
     // disable: true,
     fullScreen: 'button.button-nfplayerFullscreen',
     addCurrentTime: 'button.button-nfplayerFastForward',
     subtractCurrentTime: 'button.button-nfplayerBackTen',
     /**
-     * 使用netflix自身的调速，因为目前插件没法解决调速导致的服务中断问题
      * https://github.com/xxxily/h5player/issues/234
      * https://github.com/xxxily/h5player/issues/317
      * https://github.com/xxxily/h5player/issues/381
@@ -2817,8 +2566,6 @@ const taskConf = {
     shortcuts: {
       /**
        * TODO
-       * netflix 一些用户习惯使用F键进行全屏，所以此处屏蔽掉f键的下一帧功能
-       * 后续开放自定义配置能力后，让用户自行决定是否屏蔽
        */
       register: [
         'f'
@@ -2844,7 +2591,6 @@ const taskConf = {
         const webFullscreen = oldWebFullscreen || (getComputedStyle(webFullscreenLeave).display === 'none' ? webFullscreenEnter : webFullscreenLeave);
         webFullscreen.click();
 
-        /* 取消弹幕框聚焦，干扰了快捷键的操作 */
         setTimeout(function () {
           const danmaku = $q('.bpx-player-dm-input') || $q('.bilibili-player-video-danmaku-input');
           danmaku && danmaku.blur();
@@ -2864,7 +2610,6 @@ const taskConf = {
       callback: function (h5Player, taskConf, data) {
         const { event } = data;
         if (event.keyCode === 27) {
-          /* 退出网页全屏 */
           const oldWebFullscreen = $q('.bilibili-player-video-web-fullscreen');
           if (oldWebFullscreen && oldWebFullscreen.classList.contains('closed')) {
             oldWebFullscreen.click();
@@ -2890,7 +2635,7 @@ const taskConf = {
           try {
             return JSON._stringifySource_.apply(this, arguments)
           } catch (e) {
-            console.error('JSON.stringify 解释出错：', e, arg1);
+            console.error('JSON.stringify ', e, arg1);
           }
         };
       }
@@ -2903,7 +2648,6 @@ const taskConf = {
     fullScreen: '[data-bind-key="screenTip"]',
     webFullScreen: '[data-bind-key="webTip"]',
     switchPlayStatus: function (h5player) {
-      /* 无法抢得控制权，只好延迟判断要不要干预 */
       const player = h5player.player();
       const status = player.paused;
       setTimeout(function () {
@@ -2930,9 +2674,7 @@ const taskConf = {
     webFullScreen: '.iqp-btn-webscreen',
     next: '.iqp-btn-next',
     init: function (h5Player, taskConf) {
-      // 隐藏水印
       hideDom('.iqp-logo-box');
-      // 移除暂停广告
       window.GM_addStyle(`
           div[templatetype="common_pause"]{ display:none }
           .iqp-logo-box{ display:none !important }
@@ -2943,7 +2685,6 @@ const taskConf = {
     fullScreen: '.control-fullscreen-icon',
     next: '.control-next-video',
     init: function (h5Player, taskConf) {
-      // 隐藏水印
       hideDom('.youku-layer-logo');
     }
   },
@@ -2961,19 +2702,16 @@ const taskConf = {
         const keyName = 'customShortcuts_' + key;
 
         if (!h5Player[keyName]) {
-          /* 第一次按下快捷键使用默认逻辑进行调速 */
           h5Player[keyName] = {
             time: Date.now(),
             playbackRate: h5Player.playbackRate
           };
           return false
         } else {
-          /* 第一次操作后的200ms内的操作都是由默认逻辑进行调速 */
           if (Date.now() - h5Player[keyName].time < 200) {
             return false
           }
 
-          /* 判断是否需进行降级处理，利用sessionStorage进行调速 */
           if (h5Player[keyName] === h5Player.playbackRate || h5Player[keyName] === true) {
             if (window.sessionStorage.playbackRate && /(c|x|z|1|2|3|4)/.test(key)) {
               const curSpeed = Number(window.sessionStorage.playbackRate);
@@ -3001,10 +2739,8 @@ const taskConf = {
               return true
             }
 
-            /* 标识默认调速方案失效，需启用sessionStorage调速方案 */
             h5Player[keyName] = true;
           } else {
-            /* 标识默认调速方案生效 */
             h5Player[keyName] = false;
           }
         }
@@ -3014,7 +2750,6 @@ const taskConf = {
     webFullScreen: 'txpdiv[data-report="browser-fullscreen"]',
     next: 'txpdiv[data-report="play-next"]',
     init: function (h5Player, taskConf) {
-      // 隐藏水印
       hideDom('.txp-watermark');
       hideDom('.txp-watermark-action');
     },
@@ -3033,7 +2768,6 @@ const taskConf = {
     fullScreen: function (h5Player, taskConf) {
       const actionBtn = h5Player.player().parentNode.querySelectorAll('button');
       if (actionBtn && actionBtn.length > 3) {
-        /* 模拟点击倒数第二个按钮 */
         actionBtn[actionBtn.length - 2].click();
         return true
       }
@@ -3041,17 +2775,14 @@ const taskConf = {
     webFullScreen: function (h5Player, taskConf) {
       const actionBtn = h5Player.player().parentNode.querySelectorAll('button');
       if (actionBtn && actionBtn.length > 3) {
-        /* 模拟点击倒数第二个按钮 */
         actionBtn[actionBtn.length - 2].click();
         return true
       }
     },
     shortcuts: {
-      /* 在视频模式下按esc键，自动返回上一层界面 */
       register: [
         'escape'
       ],
-      /* 自定义快捷键的回调操作 */
       callback: function (h5Player, taskConf, data) {
         eachParentNode(h5Player.player(), function (parentNode) {
           if (parentNode.getAttribute('data-fullscreen-container') === 'true') {
@@ -3093,7 +2824,6 @@ const taskConf = {
     init: function (h5Player, taskConf) {
       const player = h5Player.player();
       /**
-       * 不设置CORS标识，这样才能跨域截图
        * https://developer.mozilla.org/zh-CN/docs/Web/HTML/CORS_enabled_image
        * https://developer.mozilla.org/zh-CN/docs/Web/HTML/CORS_settings_attributes
        */
@@ -3127,7 +2857,6 @@ const taskConf = {
         if (wrapEl && wrapEl.querySelector('.video-info-detail')) {
           const videoInfo = wrapEl.querySelector('.video-info-detail');
           const accountNameEL = videoInfo.querySelector('.account-name');
-          /* 移除accountName前面的@符号 */
           const accountName = accountNameEL.innerText.replace(/^@*/, '');
 
           const titleEl = videoInfo.querySelector('.title');
@@ -3173,7 +2902,6 @@ const taskConf = {
   },
   'weibo.com': {
     fullScreen: ['button.wbpv-fullscreen-control'],
-    // webFullScreen: ['div[title="关闭弹层"]', 'div.wbpv-open-layer-button']
     webFullScreen: ['div.wbpv-open-layer-button']
   },
   'twitter.com': {
@@ -3215,7 +2943,7 @@ function h5PlayerTccInit (h5Player) {
         try {
           return task(h5Player, taskConf, data)
         } catch (e) {
-          debug.error('任务配置中心的自定义函数执行失败：', taskName, taskConf, data, e);
+          debug.error('', taskName, taskConf, data, e);
           return false
         }
       } else if (typeof task === 'boolean') {
@@ -3225,9 +2953,7 @@ function h5PlayerTccInit (h5Player) {
         for (let i = 0; i < selectorList.length; i++) {
           const selector = selectorList[i];
 
-          /* 触发选择器上的点击事件 */
           if (wrapDom && wrapDom.querySelector(selector)) {
-          // 在video的父元素里查找，是为了尽可能兼容多实例下的逻辑
             wrapDom.querySelector(selector).click();
             return true
           } else if (document.querySelector(selector)) {
@@ -3237,7 +2963,7 @@ function h5PlayerTccInit (h5Player) {
         }
       }
     } catch (e) {
-      debug.error('任务配置中心的自定义任务执行失败：', taskName, taskConf, data, e);
+      debug.error('', taskName, taskConf, data, e);
       return false
     }
   })
@@ -3247,13 +2973,11 @@ function mergeTaskConf (config) {
   return mergeObj(taskConf, config)
 }
 
-/* ua伪装配置 */
 const fakeConfig = {
   // 'tv.cctv.com': userAgentMap.iPhone.chrome,
   // 'v.qq.com': userAgentMap.iPad.chrome,
   'open.163.com': userAgentMap.iPhone.chrome,
   'm.open.163.com': userAgentMap.iPhone.chrome,
-  /* 百度盘的非会员会使用自身的专用播放器，导致没法使用h5player，所以需要通过伪装ua来解决该问题 */
   'pan.baidu.com': userAgentMap.iPhone.safari
 };
 
@@ -3262,10 +2986,6 @@ function setFakeUA (ua) {
   ua = ua || fakeConfig[host];
 
   /**
-   * 动态判断是否需要进行ua伪装
-   * 下面方案暂时不可用
-   * 由于部分网站跳转至移动端后域名不一致，形成跨域问题
-   * 导致无法同步伪装配置而不断死循环跳转
    * eg. open.163.com
    * */
   // let customUA = window.localStorage.getItem('_h5_player_user_agent_')
@@ -3281,7 +3001,6 @@ function setFakeUA (ua) {
 }
 
 /**
- * 元素全屏API，同时兼容网页全屏
  */
 
 class FullScreen {
@@ -3289,7 +3008,6 @@ class FullScreen {
     this.dom = dom;
     this.shadowRoot = null;
     this.fullStatus = false;
-    // 默认全屏模式，如果传入pageMode则表示进行的是页面全屏操作
     this.pageMode = pageMode || false;
     const fullPageStyle = `
       ._webfullscreen_box_size_ {
@@ -3310,13 +3028,11 @@ class FullScreen {
 				z-index: 999999 !important;
 			}
 		`;
-    /* 将样式插入到全局页面中 */
     if (!window._hasInitFullPageStyle_ && window.GM_addStyle) {
       window.GM_addStyle(fullPageStyle);
       window._hasInitFullPageStyle_ = true;
     }
 
-    /* 将样式插入到shadowRoot中 */
     const shadowRoot = isInShadow(dom, true);
     if (shadowRoot) {
       this.shadowRoot = shadowRoot;
@@ -3413,7 +3129,6 @@ class FullScreen {
     }
     addFullscreenStyleToParentNode(t.dom);
 
-    /* 判断dom自身是否需要加上webfullscreen样式 */
     if (t.dom.parentNode) {
       const domBox = t.dom.getBoundingClientRect();
       const domParentBox = t.dom.parentNode.getBoundingClientRect();
@@ -3497,14 +3212,12 @@ async function setClipboard (blob) {
       console.error('[setClipboard] clipboard err', blob.type, e);
     });
   } else {
-    console.error('当前网站不支持将数据写入到剪贴板里，见：\n https://developer.mozilla.org/en-US/docs/Web/API/Clipboard');
+    console.error('\n https://developer.mozilla.org/en-US/docs/Web/API/Clipboard');
   }
 }
 
 var videoCapturer = {
   /**
-   * 进行截图操作
-   * @param video {dom} -必选 video dom 标签
    * @returns {boolean}
    */
   capture (video, download, title) {
@@ -3513,7 +3226,6 @@ var videoCapturer = {
     const currentTime = `${Math.floor(video.currentTime / 60)}'${(video.currentTime % 60).toFixed(3)}''`;
     const captureTitle = title || `${document.title}_${currentTime}`;
 
-    /* 截图核心逻辑 */
     video.setAttribute('crossorigin', 'anonymous');
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
@@ -3530,7 +3242,6 @@ var videoCapturer = {
     return canvas
   },
   /**
-   * 预览截取到的画面内容
    * @param canvas
    */
   previe (canvas, title) {
@@ -3542,7 +3253,6 @@ var videoCapturer = {
     previewPage.document.body.appendChild(canvas);
   },
   /**
-   * canvas 下载截取到的内容
    * @param canvas
    */
   download (canvas, title, video) {
@@ -3550,16 +3260,12 @@ var videoCapturer = {
 
     try {
       /**
-       * 尝试复制到剪贴板
-       * 注意部分浏览器不支持将'image/jpeg'类型的数据写入到剪贴板，image/jpg可以，但会导致toBlob的结果为png的数据，
-       * 所以这里新起了'image/png'来尝试复制到剪贴板，而不能将setClipboard(blob)放到下面的try里
-       * 另外由于下面的自动下载截图会导致页面失焦，也会造成复制到剪贴板失败，所以这里先复制到剪贴板，再进行下载
        */
       canvas.toBlob(function (blob) {
         setClipboard(blob);
       }, 'image/png', 0.99);
     } catch (e) {
-      console.error('无法将截图复制到剪贴板。', e);
+      console.error('', e);
     }
 
     try {
@@ -3571,17 +3277,13 @@ var videoCapturer = {
       }, 'image/jpeg', 0.99);
     } catch (e) {
       videoCapturer.previe(canvas, title);
-      console.error('视频源受CORS标识限制，无法直接下载截图，见：\n https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS');
+      console.error('CORS\n https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS');
       console.error(video, e);
     }
   }
 };
 
 /**
- * 鼠标事件观测对象
- * 用于实现鼠标事件的穿透响应，有别于pointer-events:none
- * pointer-events:none是设置当前层允许穿透
- * 而MouseObserver是：即使不知道target上面存在多少层遮挡，一样可以响应鼠标事件
  */
 
 class MouseObserver {
@@ -3624,10 +3326,6 @@ class MouseObserver {
   }
 
   /**
-   * 增加事件绑定
-   * @param target {element} -必选 要绑定事件的dom对象
-   * @param type {string} -必选 要绑定的事件，只支持鼠标事件
-   * @param listener {function} -必选 符合触发条件时的响应函数
    */
   on (target, type, listener, options) {
     const t = this;
@@ -3650,14 +3348,12 @@ class MouseObserver {
           const isVisibility = target.IntersectionObserverEntry && target.IntersectionObserverEntry.intersectionRatio > 0;
           const isReg = target.MouseObserverEvent[event.type] === true;
           if (isVisibility && isReg) {
-            /* 判断是否符合触发侦听器事件条件 */
             const bound = target.getBoundingClientRect();
             const offsetX = event.x - bound.x;
             const offsetY = event.y - bound.y;
             const isNeedTap = offsetX <= bound.width && offsetX >= 0 && offsetY <= bound.height && offsetY >= 0;
 
             if (isNeedTap) {
-              /* 执行监听回调 */
               const listenerList = t._mouseObserver_[type];
               listenerList.forEach((listener) => {
                 if (listener instanceof Function) {
@@ -3673,17 +3369,12 @@ class MouseObserver {
       }, options);
     }
 
-    /* 将监听回调加入到事件队列 */
     if (listener instanceof Function) {
       t._mouseObserver_[type].push(listener);
     }
   }
 
   /**
-   * 解除事件绑定
-   * @param target {element} -必选 要解除事件的dom对象
-   * @param type {string} -必选 要解除的事件，只支持鼠标事件
-   * @param listener {function} -必选 绑定事件时的响应函数
    * @returns {boolean}
    */
   off (target, type, listener) {
@@ -3704,12 +3395,10 @@ class MouseObserver {
     if (isMatch) {
       t._mouseObserver_[type] = newListenerList;
 
-      /* 侦听器已被完全移除 */
       if (newListenerList.length === 0) {
         delete target.MouseObserverEvent[type];
       }
 
-      /* 当MouseObserverEvent为空对象时移除观测对象 */
       if (JSON.stringify(target.MouseObserverEvent[type]) === '{}') {
         t._unobserve(target);
       }
@@ -3718,7 +3407,6 @@ class MouseObserver {
 }
 
 /**
- * 简单的i18n库
  */
 
 class I18n {
@@ -3734,7 +3422,6 @@ class I18n {
 
     const t = this;
     t._locale = config.locale || t._locale;
-    /* 指定当前要是使用的语言环境，默认无需指定，会自动读取 */
     t._languages = config.languages || t._languages;
     t._defaultLanguage = config.defaultLanguage || t._defaultLanguage;
   }
@@ -3745,7 +3432,6 @@ class I18n {
     const t = this;
     let result = t.getValByPath(t._languages[t._locale] || {}, path);
 
-    /* 版本回退 */
     if (!result && t._locale !== t._defaultLanguage) {
       result = t.getValByPath(t._languages[t._defaultLanguage] || {}, path);
     }
@@ -3753,7 +3439,6 @@ class I18n {
     return result || ''
   }
 
-  /* 当前语言值 */
   language () {
     return this._locale
   }
@@ -3772,13 +3457,10 @@ class I18n {
   }
 
   /**
-   * 给出特定的语言环境，判断是否匹配当前设定的语言环境
-   * @param {String | Array} lang -必选 语言环境
    */
   isMatchCurLang (lang) {
     const curLang = this.language() || '';
 
-    /* 兼容各种可能的语言配置写法，假如当前设定为：zh-CN，则给定的lang中包含zh-CN、zhCN、zh_CN、zh，都认为是匹配的 */
     const curLang2 = curLang.replace('-', '');
     const curLang3 = curLang.replace('-', '_');
     const curLang4 = curLang.split('-')[0];
@@ -3788,9 +3470,6 @@ class I18n {
   }
 
   /**
-   * 根据文本路径获取对象里面的值
-   * @param obj {Object} -必选 要操作的对象
-   * @param path {String} -必选 路径信息
    * @returns {*}
    */
   getValByPath (obj, path) {
@@ -3798,7 +3477,6 @@ class I18n {
     const pathArr = path.split('.');
     let result = obj;
 
-    /* 递归提取结果值 */
     for (let i = 0; i < pathArr.length; i++) {
       if (!result) break
       result = result[pathArr[i]];
@@ -3807,163 +3485,11 @@ class I18n {
     return result
   }
 
-  /* 获取客户端当前的语言环境 */
   getClientLang () {
     return navigator.languages ? navigator.languages[0] : navigator.language
   }
 }
 
-var zhCN = {
-  website: '🏠脚本官网',
-  about: '关于',
-  issues: '问题反馈',
-  faq: '常见问题',
-  setting: '设置',
-  hotkeys: '快捷键',
-  keyboardControl: '键盘控制',
-  mouseControl: '鼠标控制',
-  hotkeysDocs: '快捷键文档',
-  enable: '启用',
-  disable: '禁用',
-  toggleStates: '启用/禁用',
-  disableHotkeysTemporarily: '临时禁用快捷键',
-  toggleHotkeysTemporarily: '临时启用/禁用快捷键',
-  enableHotkeys: '启用快捷键',
-  disableHotkeys: '禁用快捷键',
-  enableMouseControl: '启用鼠标控制',
-  disableMouseControl: '禁用鼠标控制',
-  donate: '👍请作者喝杯咖啡',
-  aboutDonate: '100万级安装量的作品，有多少打赏？',
-  aiProjects: '4000+ AI开源项目',
-  aboutAuthor: '关于作者',
-  recommend: '❤️ 免费ChatGPT-4 ❤️',
-  enableScript: '启用脚本',
-  disableScript: '禁用脚本',
-  disableCurrentInstanceGUI: '关闭当前图形用户界面',
-  disableGUITemporarily: '临时禁用图形用户界面',
-  enableGUI: '启用图形用户界面',
-  disableGUI: '禁用图形用户界面',
-  graphicalInterface: '图形界面',
-  alwaysShowGraphicalInterface: '始终显示图形界面',
-  openCrossOriginFramePage: '单独打开跨域的页面',
-  disableInitAutoPlay: '禁止在此网站自动播放视频',
-  enableInitAutoPlay: '允许在此网站自动播放视频',
-  restoreConfiguration: '还原全局的默认配置',
-  blockSetPlaybackRate: '禁用默认速度调节逻辑',
-  blockSetCurrentTime: '禁用默认播放进度控制逻辑',
-  blockSetVolume: '禁用默认音量控制逻辑',
-  unblockSetPlaybackRate: '允许默认速度调节逻辑',
-  unblockSetCurrentTime: '允许默认播放进度控制逻辑',
-  unblockSetVolume: '允许默认音量控制逻辑',
-  allowAcousticGain: '开启音量增益能力',
-  notAllowAcousticGain: '禁用音量增益能力',
-  allowCrossOriginControl: '开启跨域控制能力',
-  notAllowCrossOriginControl: '禁用跨域控制能力',
-  allowExperimentFeatures: '开启实验性功能',
-  notAllowExperimentFeatures: '禁用实验性功能',
-  experimentFeaturesWarning: '实验性功能容易造成一些不确定的问题，请谨慎开启',
-  useMediaDownloadTips: '使用下载功能，需开启实验性功能，\n实验性功能容易造成一些不确定的问题，确定要开启吗？',
-  allowExternalCustomConfiguration: '开启外部自定义能力',
-  notAllowExternalCustomConfiguration: '关闭外部自定义能力',
-  changeLog: '更新日志',
-  currentVersion: '当前版本',
-  checkVersion: '检查是否有新版本？',
-  configFail: '配置失败',
-  globalSetting: '全局设置',
-  openCustomConfigurationEditor: '打开自定义配置编辑器',
-  localSetting: '仅用于此网站',
-  openDebugMode: '开启调试模式',
-  closeDebugMode: '关闭调试模式',
-  unfoldMenu: '展开菜单',
-  foldMenu: '折叠菜单',
-  addGroupChat: '💬添加群聊',
-  speed: '倍速',
-  capture: '截图',
-  download: '下载',
-  mediaDownload: {
-    enable: '开启媒体下载',
-    disable: '关闭媒体下载',
-    downloadOptions: '下载选项',
-    downloading: '文件正在下载中，确定重复执行此操作？',
-    hasDownload: '文件已经下载，确定重复执行此操作？',
-    confirmTitle: '请输入文件名',
-    notSupport: '当前媒体文件无法下载，下载功能待优化完善',
-    notEndOfStream: '媒体数据还没完全就绪，确定要执行下载操作？',
-    cancelAutoDownload: '是否取消自动下载？',
-    autoDownload: '媒体数据完全就绪后，是否自动下载？',
-    notFoundMediaSource: '未找到对应的媒体流数据，数据可能被清理或者媒体元素已经被移除，建议刷新页面后重试'
-  },
-  menu: '菜单',
-  more: '更多',
-  moreActions: '更多操作',
-  videoFilter: '画面滤镜',
-  resetFilterAndTransform: '图像复位',
-  brightnessUp: '增加亮度',
-  brightnessDown: '减少亮度',
-  contrastUp: '增加对比度',
-  contrastDown: '减少对比度',
-  saturationUp: '增加饱和度',
-  saturationDown: '减少饱和度',
-  hueUp: '增加色相',
-  hueDown: '减少色相',
-  blurUp: '增加模糊度',
-  blurDown: '减少模糊度',
-  rotateAndMirror: '旋转镜像',
-  rotate90: '画面旋转 90 度',
-  horizontalMirror: '画面水平镜像翻转',
-  verticalMirror: '画面垂直镜像翻转',
-  videoTransform: '画面位移',
-  translateRight: '画面向右移动',
-  translateLeft: '画面向左移动',
-  translateUp: '画面向上移动',
-  translateDown: '画面向下移动',
-  languageSettings: '语言设置',
-  default: '默认',
-  autoChoose: '自动选择',
-  comingSoon: '更多功能正在完善中，敬请期待',
-  ffmpegScript: '音视频合并/转换脚本',
-  autoGotoBufferedTime: '自动跟随跳转到缓冲区时间',
-  disableAutoGotoBufferedTime: '禁用自动跟随跳转到缓冲区时间',
-  mouse: {
-    enable: '启用鼠标控制',
-    disable: '禁用鼠标控制',
-    longPressTime: '长按多久响应鼠标长按事件'
-  },
-  tipsMsg: {
-    playspeed: '播放速度：',
-    forward: '前进：',
-    backward: '后退：',
-    seconds: '秒',
-    volume: '音量：',
-    nextframe: '定位：下一帧',
-    previousframe: '定位：上一帧',
-    stopframe: '定格帧画面：',
-    play: '播放',
-    pause: '暂停',
-    arpl: '允许自动恢复播放进度',
-    drpl: '禁止自动恢复播放进度',
-    brightness: '图像亮度：',
-    contrast: '图像对比度：',
-    saturation: '图像饱和度：',
-    hue: '图像色相：',
-    blur: '图像模糊度：',
-    imgattrreset: '图像属性：复位',
-    imgrotate: '画面旋转：',
-    onplugin: '启用h5Player插件',
-    offplugin: '禁用h5Player插件',
-    globalmode: '全局模式：',
-    playbackrestored: '为你恢复上次播放进度',
-    playbackrestoreoff: '恢复播放进度功能已禁用，按 SHIFT+R 可开启该功能',
-    horizontal: '水平位移：',
-    vertical: '垂直位移：',
-    horizontalMirror: '水平镜像',
-    verticalMirror: '垂直镜像',
-    videozoom: '视频缩放率：'
-  },
-  faqList: {
-    //
-  }
-};
 
 var enUS = {
   website: '🏠Script Homepage',
@@ -4258,157 +3784,8 @@ var ru = {
   }
 };
 
-var zhTW = {
-  website: '🏠腳本官網',
-  about: '關於',
-  issues: '反饋',
-  faq: '常見問題',
-  setting: '設置',
-  hotkeys: '快捷鍵',
-  keyboardControl: '鍵盤控制',
-  mouseControl: '鼠標控制',
-  hotkeysDocs: '快捷鍵文檔',
-  enable: '啟用',
-  disable: '禁用',
-  toggleStates: '啟用/禁用',
-  disableHotkeysTemporarily: '臨時禁用快捷鍵',
-  toggleHotkeysTemporarily: '臨時啟用/禁用快捷鍵',
-  enableHotkeys: '啟用快捷鍵',
-  disableHotkeys: '禁用快捷鍵',
-  donate: '👍讚賞',
-  aboutDonate: '100萬級安裝量的作品，有多少打賞？',
-  aiProjects: '4000+ AI開源項目',
-  aboutAuthor: '關於作者',
-  enableScript: '啟用腳本',
-  disableScript: '禁用腳本',
-  disableCurrentInstanceGUI: '關閉當前圖形用戶界面',
-  disableGUITemporarily: '臨時禁用圖形用戶界面',
-  enableGUI: '啟用圖形用戶界面',
-  disableGUI: '禁用圖形用戶界面',
-  graphicalInterface: '圖形界面',
-  alwaysShowGraphicalInterface: '始終顯示圖形界面',
-  openCrossOriginFramePage: '單獨打開跨域的頁面',
-  disableInitAutoPlay: '禁止在此網站自動播放視頻',
-  enableInitAutoPlay: '允許在此網站自動播放視頻',
-  restoreConfiguration: '還原全局的默認配置',
-  blockSetPlaybackRate: '禁用默認速度調節邏輯',
-  blockSetCurrentTime: '禁用默認播放進度控制邏輯',
-  blockSetVolume: '禁用默認音量控制邏輯',
-  unblockSetPlaybackRate: '允許默認速度調節邏輯',
-  unblockSetCurrentTime: '允許默認播放進度控制邏輯',
-  unblockSetVolume: '允許默認音量控制邏輯',
-  allowAcousticGain: '開啟音量增益能力',
-  notAllowAcousticGain: '禁用音量增益能力',
-  allowCrossOriginControl: '開啟跨域控制能力',
-  notAllowCrossOriginControl: '禁用跨域控制能力',
-  allowExperimentFeatures: '開啟實驗性功能',
-  notAllowExperimentFeatures: '禁用實驗性功能',
-  experimentFeaturesWarning: '實驗性功能容易造成一些不確定的問題，請謹慎開啟',
-  useMediaDownloadTips: '使用下載功能，需開啟實驗功能，\n實驗功能容易造成一些不確定的問題，確定要開啟嗎？',
-  allowExternalCustomConfiguration: '開啟外部自定義能力',
-  notAllowExternalCustomConfiguration: '關閉外部自定義能力',
-  changeLog: '更新日誌',
-  currentVersion: '當前版本',
-  checkVersion: '檢查是否有新版本？',
-  configFail: '配置失敗',
-  globalSetting: '全局設置',
-  openCustomConfigurationEditor: '打開自定義配置編輯器',
-  localSetting: '僅用於此網站',
-  openDebugMode: '開啟調試模式',
-  closeDebugMode: '關閉調試模式',
-  unfoldMenu: '展開菜單',
-  foldMenu: '折疊菜單',
-  addGroupChat: '💬新增群聊',
-  speed: '倍速',
-  capture: '截圖',
-  download: '下載',
-  mediaDownload: {
-    enable: '開啟媒體下載',
-    disable: '關閉媒體下載',
-    downloadOptions: '下載選項',
-    downloading: '文件正在下載中，確定重複執行此操作？',
-    hasDownload: '文件已經下載，確定重複執行此操作？',
-    confirmTitle: '請輸入文件名',
-    notSupport: '目前媒體檔案無法下載，下載功能要優化完善',
-    notEndOfStream: '媒體資料還沒完全就緒，確定要執行下載操作？',
-    cancelAutoDownload: '是否取消自動下載？',
-    autoDownload: '媒體資料完全就緒後，是否自動下載？',
-    notFoundMediaSource: '未找到對應的媒體流數據，數據可能被清理或媒體元素已經被移除，建議刷新頁面後重試'
-  },
-  menu: '菜單',
-  more: '更多',
-  moreActions: '更多操作',
-  videoFilter: '視頻濾鏡',
-  resetFilterAndTransform: '圖像復位',
-  brightnessUp: '增加亮度',
-  brightnessDown: '減少亮度',
-  contrastUp: '增加對比度',
-  contrastDown: '減少對比度',
-  saturationUp: '增加飽和度',
-  saturationDown: '減少飽和度',
-  hueUp: '增加色相',
-  hueDown: '減少色相',
-  blurUp: '增加模糊度',
-  blurDown: '減少模糊度',
-  rotateAndMirror: '旋轉和鏡像',
-  rotate90: '畫面旋轉 90 度',
-  horizontalMirror: '畫面水平鏡像翻轉',
-  verticalMirror: '畫面垂直鏡像翻轉',
-  videoTransform: '畫面位移',
-  translateRight: '畫面向右移動',
-  translateLeft: '畫面向左移動',
-  translateUp: '畫面向上移動',
-  translateDown: '畫面向下移動',
-  languageSettings: '語言設置',
-  default: '默認',
-  autoChoose: '自動選擇',
-  comingSoon: '更多功能正在完善中，敬請期待',
-  ffmpegScript: '音視頻合併/轉換腳本',
-  autoGotoBufferedTime: '自動跟隨跳轉到緩衝區時間',
-  disableAutoGotoBufferedTime: '禁用自動跟隨跳轉到緩衝區時間',
-  mouse: {
-    enable: '啟用鼠標控制',
-    disable: '禁用鼠標控制',
-    longPressTime: '長按多久響應鼠標長按事件'
-  },
-  tipsMsg: {
-    playspeed: '播放速度：',
-    forward: '向前：',
-    backward: '向後：',
-    seconds: '秒',
-    volume: '音量：',
-    nextframe: '定位：下一幀',
-    previousframe: '定位：上一幀',
-    stopframe: '定格幀畫面：',
-    play: '播放',
-    pause: '暫停',
-    arpl: '允許自動恢復播放進度',
-    drpl: '禁止自動恢復播放進度',
-    brightness: '圖像亮度：',
-    contrast: '圖像對比度：',
-    saturation: '圖像飽和度：',
-    hue: '圖像色相：',
-    blur: '圖像模糊度：',
-    imgattrreset: '圖像屬性：復位',
-    imgrotate: '畫面旋轉：',
-    onplugin: '啟用h5Player插件',
-    offplugin: '禁用h5Player插件',
-    globalmode: '全局模式：',
-    playbackrestored: '為你恢復上次播放進度',
-    playbackrestoreoff: '恢復播放進度功能已禁用，按 SHIFT+R 可開啟該功能',
-    horizontal: '水平位移：',
-    vertical: '垂直位移：',
-    horizontalMirror: '水平鏡像',
-    verticalMirror: '垂直鏡像',
-    videozoom: '視頻縮放率：'
-  }
-};
 
 const messages = {
-  'zh-CN': zhCN,
-  zh: zhCN,
-  'zh-HK': zhTW,
-  'zh-TW': zhTW,
   'en-US': enUS,
   en: enUS,
   ru
@@ -4416,7 +3793,6 @@ const messages = {
 
 const i18n = new I18n({
   defaultLanguage: 'en',
-  /* 指定当前要是使用的语言环境，默认无需指定，会自动读取 */
   // locale: 'zh-TW',
   languages: messages
 });
@@ -4424,7 +3800,6 @@ const i18n = new I18n({
 const lang = configManager.get('language');
 lang && i18n.changeLanguage(lang);
 
-/* 用于获取全局唯一的id */
 let __globalId__ = 0;
 function getId () {
   if (window.GM_getValue && window.GM_setValue) {
@@ -4434,7 +3809,6 @@ function getId () {
     window.GM_setValue('_global_id_', gID);
     return gID
   } else {
-    /* 如果不处于油猴插件下，则该id为页面自己独享的id */
     __globalId__ = Number(__globalId__) + 1;
     return __globalId__
   }
@@ -4443,7 +3817,6 @@ function getId () {
 let curTabId = null;
 
 /**
- * 获取当前TAB标签的Id号，可用于iframe确定自己是否处于同一TAB标签下
  * @returns {Promise<any>}
  */
 function getTabId () {
@@ -4454,18 +3827,15 @@ function getTabId () {
           obj.tabId = getId();
           window.GM_saveTab(obj);
         }
-        /* 每次获取都更新当前Tab的id号 */
         curTabId = obj.tabId;
         resolve(obj.tabId);
       });
     } else {
-      /* 非油猴插件下，无法确定iframe是否处于同一个tab下 */
       resolve(Date.now());
     }
   })
 }
 
-/* 一开始就初始化好curTabId，这样后续就不需要异步获取Tabid，部分场景下需要用到 */
 getTabId();
 
 /*!
@@ -4477,9 +3847,6 @@ getTabId();
 // import debug from './debug'
 
 /**
- * 将对象数据里面可存储到GM_setValue里面的值提取出来
- * @param obj {objcet} -必选 打算要存储的对象数据
- * @param deep {number} -可选 如果对象层级非常深，则须限定递归的层级，默认最高不能超过3级
  * @returns {{}}
  */
 function extractDatafromOb (obj, deep) {
@@ -4499,7 +3866,6 @@ function extractDatafromOb (obj, deep) {
           enumerable: true
         });
       } else if (valType === 'object' && Object.prototype.propertyIsEnumerable.call(obj, key)) {
-        /* 进行递归提取 */
         result[key] = extractDatafromOb(val, deep + 1);
       } else if (valType === 'array') {
         result[key] = val;
@@ -4511,10 +3877,6 @@ function extractDatafromOb (obj, deep) {
 
 const monkeyMsg = {
   /**
-   * 发送消息，除了正常发送信息外，还会补充各类必要的信息
-   * @param name {string} -必选 要发送给那个字段，接收时要一致才能监听的正确
-   * @param data {Any} -必选 要发送的数据
-   * @param throttleInterval -可选，因为会出现莫名奇妙的重复发送情况，为了消除重复发送带来的副作用，所以引入节流限制逻辑，即限制某个时间间隔内只能发送一次，多余的次数自动抛弃掉，默认80ms
    * @returns {Promise<void>}
    */
   send (name, data, throttleInterval = 80) {
@@ -4522,7 +3884,6 @@ const monkeyMsg = {
       return false
     }
 
-    /* 阻止频繁发送修改事件 */
     const oldMsg = window.GM_getValue(name);
     if (oldMsg && oldMsg.updateTime) {
       const interval = Math.abs(Date.now() - oldMsg.updateTime);
@@ -4532,15 +3893,10 @@ const monkeyMsg = {
     }
 
     const msg = {
-      /* 发送过来的数据 */
       data,
-      /* 补充标签ID，用于判断是否同处一个tab标签下 */
       tabId: curTabId || 'undefined',
-      /* 补充消息的页面来源的标题信息 */
       title: document.title,
-      /* 补充消息的页面来源信息 */
       referrer: extractDatafromOb(window.location),
-      /* 最近一次更新该数据的时间 */
       updateTime: Date.now()
     };
     if (typeof data === 'object') {
@@ -4555,7 +3911,6 @@ const monkeyMsg = {
   on: (name, fn) => window.GM_addValueChangeListener && window.GM_addValueChangeListener(name, function (name, oldVal, newVal, remote) {
     // debug.info(`[monkeyMsg-on][${name}]`, oldVal, newVal, remote)
 
-    /* 补充消息来源是否出自同一个Tab的判断字段 */
     newVal.originTab = newVal.tabId === curTabId;
 
     fn instanceof Function && fn.apply(null, arguments);
@@ -4563,11 +3918,6 @@ const monkeyMsg = {
   off: (listenerId) => window.GM_removeValueChangeListener && window.GM_removeValueChangeListener(listenerId),
 
   /**
-   * 进行monkeyMsg的消息广播，该广播每两秒钟发送一次，其它任意页面可通接收到的广播信息来更新一些变量信息
-   * 主要用以解决通过setInterval或setTimeout因页面可视状态和性能策略导致的不运行或执行频率异常而不能正确更新变量状态的问题
-   * 见： https://developer.mozilla.org/zh-CN/docs/Web/API/Page_Visibility_API
-   * 广播也不能100%保证不受性能策略的影响，但只要有一个网页处于前台运行，则就能正常工作
-   * @param handler {Function} -必选 接收到广播信息时的回调函数
    * @returns
    */
   broadcast (handler) {
@@ -4586,7 +3936,6 @@ const monkeyMsg = {
     });
 
     setInterval(function () {
-      /* 通过限定时间间隔来防止多个页面批量发起广播信息 */
       const data = monkeyMsg.get(broadcastName);
       if (data && Date.now() - data.updateTime < 1000 * 2) {
         return false
@@ -4601,16 +3950,13 @@ const monkeyMsg = {
 
 /*!
  * @name         crossTabCtl.js
- * @description  跨Tab控制脚本逻辑
  * @version      0.0.1
  * @author       Blaze
- * @date         2019/11/21 上午11:56
  * @github       https://github.com/xxxily
  */
 
 
 const crossTabCtl = {
-  /* 在进行跨Tab控制时，排除转发的快捷键，以减少对重要快捷键的干扰 */
   excludeShortcuts (event) {
     if (!event || typeof event.keyCode === 'undefined') {
       return false
@@ -4629,7 +3975,6 @@ const crossTabCtl = {
       return false
     }
   },
-  /* 意外退出的时候leavepictureinpicture事件并不会被调用，所以只能通过轮询来更新画中画信息 */
   updatePictureInPictureInfo () {
     setInterval(function () {
       if (document.pictureInPictureElement) {
@@ -4640,9 +3985,6 @@ const crossTabCtl = {
     }, 1000 * 1.5);
 
     /**
-     * 通过setInterval来更新globalPictureInPictureInfo会受页面可见性和性能策略影响而得不到更新
-     * 见： https://developer.mozilla.org/zh-CN/docs/Web/API/Page_Visibility_API
-     * 所以通过增加monkeyMsg广播机制来校准globalPictureInPictureInfo状态
      */
     monkeyMsg.broadcast(function () {
       // console.log('[monkeyMsg][broadcast]', ...arguments)
@@ -4653,18 +3995,14 @@ const crossTabCtl = {
       }
     });
   },
-  /* 判断当前是否开启了画中画功能 */
   hasOpenPictureInPicture () {
     const data = monkeyMsg.get('globalPictureInPictureInfo');
 
-    /* 画中画的全局信息更新时间差在3s内，才认为当前开启了画中画模式，否则有可能意外退出，而没修改usePictureInPicture的值，造成误判 */
     if (data && data.data) {
       if (data.data.usePictureInPicture) {
         return Math.abs(Date.now() - data.updateTime) < 1000 * 3
       } else {
         /**
-         * 检测到画中画已经被关闭，但还没关闭太久的话，允许有个短暂的时间段内让用户跨TAB控制视频
-         * 例如：暂停视频播放
          */
         return Math.abs(Date.now() - data.updateTime) < 1000 * 15
       }
@@ -4673,12 +4011,10 @@ const crossTabCtl = {
     return false
   },
   /**
-   * 判断是否需要发送跨Tab控制按键信息
    */
   isNeedSendCrossTabCtlEvent () {
     const t = crossTabCtl;
 
-    /* 画中画开启后，判断不在同一个Tab才发送事件 */
     const data = monkeyMsg.get('globalPictureInPictureInfo');
     if (t.hasOpenPictureInPicture() && data.tabId !== curTabId) {
       return true
@@ -4688,16 +4024,12 @@ const crossTabCtl = {
   },
   crossTabKeydownEvent (event) {
     const t = crossTabCtl;
-    /* 处于可编辑元素中不执行任何快捷键 */
     const target = event.composedPath ? event.composedPath()[0] || event.target : event.target;
     if (isEditableTarget(target)) return
     if (t.isNeedSendCrossTabCtlEvent() && isRegisterKey(event) && !t.excludeShortcuts(event)) {
-      // 阻止事件冒泡和默认事件
       event.stopPropagation();
       event.preventDefault();
 
-      /* 广播按键消息，进行跨Tab控制 */
-      // keydownEvent里已经包含了globalKeydownEvent事件
       // monkeyMsg.send('globalKeydownEvent', event)
 
       return true
@@ -4719,7 +4051,6 @@ const crossTabCtl = {
 
 /*!
  * @name         index.js
- * @description  hookJs JS AOP切面编程辅助库
  * @version      0.0.1
  * @author       Blaze
  * @date         2020/10/22 17:40
@@ -4728,12 +4059,10 @@ const crossTabCtl = {
 
 const win = typeof window === 'undefined' ? global : window;
 const toStr = Function.prototype.call.bind(Object.prototype.toString);
-/* 特殊场景，如果把Boolean也hook了，很容易导致调用溢出，所以是需要使用原生Boolean */
 const toBoolean = Boolean.originMethod ? Boolean.originMethod : Boolean;
 const util = {
   toStr,
   isObj: obj => toStr(obj) === '[object Object]',
-  /* 判断是否为引用类型，用于更宽泛的场景 */
   isRef: obj => typeof obj === 'object',
   isReg: obj => toStr(obj) === '[object RegExp]',
   isFn: obj => obj instanceof Function,
@@ -4745,14 +4074,12 @@ const util = {
   debug: {
     log () {
       let log = win.console.log;
-      /* 如果log也被hook了，则使用未被hook前的log函数 */
       if (log.originMethod) { log = log.originMethod; }
       if (win._debugMode_) {
         log.apply(win.console, arguments);
       }
     }
   },
-  /* 获取包含自身、继承、可枚举、不可枚举的键名 */
   getAllKeys (obj) {
     const tmpArr = [];
     for (const key in obj) { tmpArr.push(key); }
@@ -4778,7 +4105,6 @@ class HookJs {
       hookMethodProperties[hookKeyName] = [];
     }
 
-    /* 注册（储存）要被调用的hook函数，同时防止重复注册 */
     let hasSameHook = false;
     for (let i = 0; i < hookMethodProperties[hookKeyName].length; i++) {
       if (fn === hookMethodProperties[hookKeyName][i]) {
@@ -4835,8 +4161,6 @@ class HookJs {
 
     if (hangUpHooks.length || replaceHooks.length) {
       /**
-       * 当存在hangUpHooks或replaceHooks的时候是不会触发原来函数的
-       * 本质上来说hangUpHooks和replaceHooks是一样的，只是外部的定义描述不一致和分类不一致而已
        */
       runHooks(hangUpHooks, 'hangUp');
       runHooks(replaceHooks, 'replace');
@@ -4857,9 +4181,6 @@ class HookJs {
     }
 
     /**
-     * 执行afterHooks，如果返回的是Promise，理论上应该进行进一步的细分处理
-     * 但添加细分处理逻辑后发现性能下降得比较厉害，且容易出现各种异常，所以决定不在hook里处理Promise情况
-     * 下面是原Promise处理逻辑，添加后会导致以下网站卡死或无法访问：
      * wenku.baidu.com
      * https://pubs.rsc.org/en/content/articlelanding/2021/sc/d1sc01881g#!divAbstract
      * https://www.elsevier.com/connect/coronavirus-information-center
@@ -4886,7 +4207,6 @@ class HookJs {
     const useProxy = t.useProxy;
     let hookMethod = null;
 
-    /* 存在缓存则使用缓存的hookMethod */
     if (t.isHook(originMethod)) {
       hookMethod = originMethod;
     } else if (originMethod[t.hookPropertiesKeyName] && t.isHook(originMethod[t.hookPropertiesKeyName].hookMethod)) {
@@ -4895,19 +4215,15 @@ class HookJs {
 
     if (hookMethod) {
       if (!hookMethod[t.hookPropertiesKeyName].isHook) {
-        /* 重新标注被hook状态 */
         hookMethod[t.hookPropertiesKeyName].isHook = true;
         util.debug.log(`[hook method] ${util.toStr(parentObj)} ${methodName}`);
       }
       return hookMethod
     }
 
-    /* 使用Proxy模式进行hook可以获得更多特性，但性能也会稍差一些 */
     if (useProxy && Proxy) {
-      /* 注意：使用Proxy代理，hookMethod和originMethod将共用同一对象 */
       const handler = { ...proxyHandler };
 
-      /* 下面的写法确定了proxyHandler是无法覆盖construct和apply操作的 */
       if (classHook) {
         handler.construct = function (target, args, newTarget) {
           context = context || this;
@@ -4924,15 +4240,11 @@ class HookJs {
     } else {
       hookMethod = function () {
         /**
-         * 注意此处不能通过 context = context || this
-         * 然后通过把context当ctx传递过去
-         * 这将导致ctx引用错误
          */
         const ctx = context || this;
         return t._runHooks(parentObj, methodName, originMethod, hookMethod, originMethod, ctx, arguments, classHook, t.hookPropertiesKeyName)
       };
 
-      /* 确保子对象和原型链跟originMethod保持一致 */
       const keys = Reflect.ownKeys(originMethod);
       keys.forEach(keyName => {
         try {
@@ -4946,7 +4258,6 @@ class HookJs {
             configurable: true
           });
         } catch (err) {
-          // 设置defineProperty的时候出现异常，可能导致hookMethod部分功能缺失，也可能不受影响
           util.debug.log(`[proxyMethodcGenerator] hookMethod defineProperty abnormal.  hookMethod:${methodName}, definePropertyName:${keyName}`, err);
         }
       });
@@ -4976,7 +4287,6 @@ class HookJs {
     }
 
     /**
-     * for in、Object.keys与Reflect.ownKeys的区别见：
      * https://es6.ruanyifeng.com/#docs/object#%E5%B1%9E%E6%80%A7%E7%9A%84%E9%81%8D%E5%8E%86
      */
     if (rule === '*') {
@@ -4989,7 +4299,6 @@ class HookJs {
       result = util.getAllKeys(obj).filter(keyName => rule.test(keyName));
     }
 
-    /* 如果存在排除规则，则需要进行排除 */
     if (excludeRule) {
       result = Array.isArray(result) ? result : [result];
       if (util.isReg(excludeRule)) {
@@ -5005,8 +4314,6 @@ class HookJs {
   }
 
   /**
-   * 判断某个函数是否已经被hook
-   * @param fn {Function} -必选 要判断的函数
    * @returns {boolean}
    */
   isHook (fn) {
@@ -5018,35 +4325,20 @@ class HookJs {
   }
 
   /**
-   * 判断对象下的某个值是否具备hook的条件
-   * 注意：具备hook条件和能否直接修改值是两回事，
-   * 在进行hook的时候还要检查descriptor.writable是否为false
-   * 如果为false则要修改成true才能hook成功
    * @param parentObj
    * @param keyName
    * @returns {boolean}
    */
   isAllowHook (parentObj, keyName) {
-    /* 有些对象会设置getter，让读取值的时候就抛错，所以需要try catch 判断能否正常读取属性 */
     try { if (!parentObj[keyName]) return false } catch (e) { return false }
     const descriptor = Object.getOwnPropertyDescriptor(parentObj, keyName);
     return !(descriptor && descriptor.configurable === false)
   }
 
   /**
-   * hook 核心函数
-   * @param parentObj {Object} -必选 被hook函数依赖的父对象
-   * @param hookMethods {Object|Array|RegExp|string} -必选 被hook函数的函数名或函数名的匹配规则
-   * @param fn {Function} -必选 hook之后的回调方法
-   * @param type {String} -可选 默认before，指定运行hook函数回调的时机，可选字符串：before、after、replace、error、hangUp
-   * @param classHook {Boolean} -可选 默认false，指定是否为针对new（class）操作的hook
-   * @param context {Object} -可选 指定运行被hook函数时的上下文对象
-   * @param proxyHandler {Object} -可选 仅当用Proxy进行hook时有效，默认使用的是Proxy的apply handler进行hook，如果你有特殊需求也可以配置自己的handler以实现更复杂的功能
-   * 附注：不使用Proxy进行hook，可以获得更高性能，但也意味着通用性更差些，对于要hook HTMLElement.prototype、EventTarget.prototype这些对象里面的非实例的函数往往会失败而导致被hook函数执行出错
    * @returns {boolean}
    */
   hook (parentObj, hookMethods, fn, type, classHook, context, proxyHandler) {
-    /* 支持对象形式的传参 */
     const opts = arguments[0];
     if (util.isObj(opts) && opts.parentObj && opts.hookMethods) {
       parentObj = opts.parentObj;
@@ -5082,7 +4374,6 @@ class HookJs {
       const originMethod = parentObj[methodName];
       let hookMethod = null;
 
-      /* 非函数无法进行hook操作 */
       if (!util.isFn(originMethod)) {
         return false
       }
@@ -5095,7 +4386,6 @@ class HookJs {
         return false
       }
 
-      /* 使用hookMethod接管需要被hook的方法 */
       if (parentObj[methodName] !== hookMethod) {
         parentObj[methodName] = hookMethod;
       }
@@ -5104,17 +4394,11 @@ class HookJs {
     });
   }
 
-  /* 专门针对new操作的hook，本质上是hook函数的别名，可以少传classHook这个参数，并且明确语义 */
   hookClass (parentObj, hookMethods, fn, type, context, proxyHandler) {
     return this.hook(parentObj, hookMethods, fn, type, true, context, proxyHandler)
   }
 
   /**
-   * 取消对某个函数的hook
-   * @param parentObj {Object} -必选 要取消被hook函数依赖的父对象
-   * @param hookMethods {Object|Array|RegExp|string} -必选 要取消被hook函数的函数名或函数名的匹配规则
-   * @param type {String} -可选 默认before，指定要取消的hook类型，可选字符串：before、after、replace、error、hangUp，如果不指定该选项则取消所有类型下的所有回调
-   * @param fn {Function} -必选 取消指定的hook回调函数，如果不指定该选项则取消对应type类型下的所有回调
    * @returns {boolean}
    */
   unHook (parentObj, hookMethods, type, fn) {
@@ -5143,10 +4427,8 @@ class HookJs {
         const hooks = hookMethodProperties[hookKeyName] || [];
 
         if (fn) {
-          /* 删除指定类型下的指定hook函数 */
           for (let i = 0; i < hooks.length; i++) {
             if (fn === hooks[i]) {
-              /* 移除hook函数上的classHook标记 */
               delete fn.classHook;
               hookMethodProperties[hookKeyName].splice(i, 1);
               util.debug.log(`[unHook ${hookKeyName} func] ${util.toStr(parentObj)} ${methodName}`, fn);
@@ -5154,7 +4436,6 @@ class HookJs {
             }
           }
 
-          /* 如果所有类型的hooks都为空，则完全还原原始方法 */
           const hasHooks = ['beforeHooks', 'afterHooks', 'errorHooks', 'hangUpHooks', 'replaceHooks'].some(key => {
             return Array.isArray(hookMethodProperties[key]) && hookMethodProperties[key].length > 0
           });
@@ -5164,9 +4445,7 @@ class HookJs {
             delete parentObj[methodName][t.hookPropertiesKeyName];
           }
         } else {
-          /* 删除指定类型下的所有hook函数 */
           if (Array.isArray(hookMethodProperties[hookKeyName])) {
-            /* 移除所有hook函数上的classHook标记 */
             hookMethodProperties[hookKeyName].forEach(hook => {
               delete hook.classHook;
             });
@@ -5175,9 +4454,7 @@ class HookJs {
           }
         }
       } else {
-        /* 彻底还原被hook的函数 */
         if (util.isFn(originMethod)) {
-          /* 移除所有类型下的所有hook函数的classHook标记 */
           ['beforeHooks', 'afterHooks', 'errorHooks', 'hangUpHooks', 'replaceHooks'].forEach(key => {
             if (Array.isArray(hookMethodProperties[key])) {
               hookMethodProperties[key].forEach(hook => {
@@ -5220,27 +4497,22 @@ class HookJs {
     }
   }
 
-  /* 源函数运行前的hook */
   before (obj, hookMethods, fn, classHook, context, proxyHandler) {
     return this.hook(obj, hookMethods, fn, 'before', classHook, context, proxyHandler)
   }
 
-  /* 源函数运行后的hook */
   after (obj, hookMethods, fn, classHook, context, proxyHandler) {
     return this.hook(obj, hookMethods, fn, 'after', classHook, context, proxyHandler)
   }
 
-  /* 替换掉要hook的函数，不再运行源函数，换成运行其他逻辑 */
   replace (obj, hookMethods, fn, classHook, context, proxyHandler) {
     return this.hook(obj, hookMethods, fn, 'replace', classHook, context, proxyHandler)
   }
 
-  /* 源函数运行出错时的hook */
   error (obj, hookMethods, fn, classHook, context, proxyHandler) {
     return this.hook(obj, hookMethods, fn, 'error', classHook, context, proxyHandler)
   }
 
-  /* 底层实现逻辑与replace一样，都是替换掉要hook的函数，不再运行源函数，只不过是为了明确语义，将源函数挂起不再执行，原则上也不再执行其他逻辑，如果要执行其他逻辑请使用replace hook */
   hangUp (obj, hookMethods, fn, classHook, context, proxyHandler) {
     return this.hook(obj, hookMethods, fn, 'hangUp', classHook, context, proxyHandler)
   }
@@ -5249,10 +4521,6 @@ class HookJs {
 const hookJs = new HookJs(true);
 
 /**
- * 禁止对playbackRate进行锁定
- * 部分播放器会阻止修改playbackRate
- * 通过hackDefineProperty来反阻止playbackRate的修改
- * 参考： https://greasyfork.org/zh-CN/scripts/372673
  */
 
 function hackDefineProperCore (target, key, option) {
@@ -5264,11 +4532,11 @@ function hackDefineProperCore (target, key, option) {
     const unLockProperties = ['playbackRate', 'currentTime', 'volume', 'muted'];
     if (unLockProperties.includes(key)) {
       try {
-        debug.log(`禁止对${key}进行锁定`);
+        debug.log(`${key}`);
         option.configurable = true;
         key = key + '_hack';
       } catch (e) {
-        debug.error(`禁止锁定${key}失败！`, e);
+        debug.error(`${key}`, e);
       }
     }
   }
@@ -5279,7 +4547,6 @@ function hackDefineProperCore (target, key, option) {
 function hackDefineProperOnError (args, parentObj, methodName, originMethod, execInfo, ctx) {
   debug.error(`${methodName} error:`, execInfo.error);
 
-  /* 忽略执行异常 */
   return 'SKIP-ERROR'
 }
 
@@ -5344,9 +4611,6 @@ const monkeyMenu = {
       delete this.menuIds[id];
 
       /**
-       * 批量移除已注册的按钮时，在某些性能较差的机子上会留下数字title的菜单残留
-       * 应该属于插件自身导致的BUG，暂时无法解决
-       * 所以此处暂时不进行菜单移除，tampermonkey会自动对同名菜单进行合并
        */
       // return window.GM_unregisterMenuCommand(id)
     }
@@ -5359,8 +4623,6 @@ const monkeyMenu = {
   },
 
   /**
-   * 通过菜单配置进行批量注册，注册前会清空之前注册过的所有菜单
-   * @param {array|function} menuOpts 菜单配置，如果是函数则会调用该函数获取菜单配置，并且当菜单被点击后会重新创建菜单，实现菜单的动态更新
    */
   build (menuOpts) {
     this.clear();
@@ -5385,7 +4647,6 @@ const monkeyMenu = {
               console.error('[monkeyMenu]', menu.title, e);
             }
 
-            // 每次菜单点击后，重新注册菜单，这样可以确保菜单的状态是最新的
             setTimeout(() => {
               // console.log('[monkeyMenu rebuild]', menu.title)
               this.build(this._menuBuilder_);
@@ -5404,7 +4665,7 @@ const monkeyMenu = {
 const version = '4.2.7';
 
 function refreshPage(msg) {
-  msg = msg || '配置已更改，马上刷新页面让配置生效？';
+  msg = msg || '';
   const status = confirm(msg);
   if (status) {
     window.location.reload();
@@ -5419,7 +4680,6 @@ function getHomePage() {
     'https://h5player.anzz.top'
   ];
 
-  /* 从homePageLinks中随机选取一个链接返回 */
   return isChinese() ? homePageLinks[0] : homePageLinks[1]
 }
 
@@ -5436,7 +4696,6 @@ function openDocsByPath(path) {
   const basePath = chinese ? 'https://h5player.anzz.site' : 'https://h5player.anzz.top';
   let url = basePath + path;
 
-  /* 判断是否为中文环境，且link不是/zh开头，则自动加上/zh前缀 */
   if (chinese && !path.startsWith('/zh')) {
     url = basePath + '/zh' + path;
   }
@@ -5445,8 +4704,6 @@ function openDocsByPath(path) {
 }
 
 /**
- * 全局可调用的功能，会提供给monkeyMenu调用和UI界面的相关位置进行调用
- * 为了便于调用编排所以使用对象的方式进行管理
  */
 const globalFunctional = {
   openInTab,
@@ -5456,7 +4713,6 @@ const globalFunctional = {
     fn: () => getHomePage()
   },
 
-  /* 打开官网 */
   openWebsite: {
     title: i18n.t('website'),
     desc: i18n.t('website'),
@@ -5520,7 +4776,7 @@ const globalFunctional = {
     title: i18n.t('checkVersion'),
     desc: i18n.t('checkVersion'),
     fn: () => {
-      const confirm = window.confirm(`${i18n.t('currentVersion')}「${version}」\n${i18n.t('checkVersion')}`);
+      const confirm = window.confirm(`${i18n.t('currentVersion')}${version}\n${i18n.t('checkVersion')}`);
       if (confirm) {
         openInTab('https://greasyfork.org/zh-CN/scripts/381682/versions');
       }
@@ -5558,10 +4814,9 @@ const globalFunctional = {
     fn: (path) => openDocsByPath(path)
   },
 
-  /* 切换tampermonkey菜单的展开或折叠状态 */
   toggleExpandedOrCollapsedStateOfMonkeyMenu: {
-    title: `${configManager.get('enhance.unfoldMenu') ? i18n.t('foldMenu') : i18n.t('unfoldMenu')} 「${i18n.t('globalSetting')}」`,
-    desc: `${configManager.get('enhance.unfoldMenu') ? i18n.t('foldMenu') : i18n.t('unfoldMenu')} 「${i18n.t('globalSetting')}」`,
+    title: `${configManager.get('enhance.unfoldMenu') ? i18n.t('foldMenu') : i18n.t('unfoldMenu')} ${i18n.t('globalSetting')}`,
+    desc: `${configManager.get('enhance.unfoldMenu') ? i18n.t('foldMenu') : i18n.t('unfoldMenu')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.unfoldMenu') ? i18n.t('foldMenu') : i18n.t('unfoldMenu'));
       if (confirm) {
@@ -5570,10 +4825,9 @@ const globalFunctional = {
       }
     }
   },
-  /* 切换脚本的启用或禁用状态 */
   toggleScriptEnableState: {
-    title: `${(configManager.get('blacklist.domains') || []).includes(location.host) ? i18n.t('enableScript') : i18n.t('disableScript')} 「${i18n.t('localSetting')}」`,
-    desc: `${(configManager.get('blacklist.domains') || []).includes(location.host) ? i18n.t('enableScript') : i18n.t('disableScript')} 「${i18n.t('localSetting')}」`,
+    title: `${(configManager.get('blacklist.domains') || []).includes(location.host) ? i18n.t('enableScript') : i18n.t('disableScript')} ${i18n.t('localSetting')}`,
+    desc: `${(configManager.get('blacklist.domains') || []).includes(location.host) ? i18n.t('enableScript') : i18n.t('disableScript')} ${i18n.t('localSetting')}`,
     fn: () => {
       const blackDomainList = configManager.get('blacklist.domains') || [];
       const isInBlacklist = blackDomainList.includes(location.host);
@@ -5589,11 +4843,9 @@ const globalFunctional = {
       }
     }
   },
-  /* 切换默认播放进度的控制逻辑 */
   toggleSetCurrentTimeFunctional: {
-    /* 标题使用函数是为了下次调用的时候读取到最新的状态信息 */
-    title: () => `${configManager.get('enhance.blockSetCurrentTime') ? i18n.t('unblockSetCurrentTime') : i18n.t('blockSetCurrentTime')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.get('enhance.blockSetCurrentTime') ? i18n.t('unblockSetCurrentTime') : i18n.t('blockSetCurrentTime')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.get('enhance.blockSetCurrentTime') ? i18n.t('unblockSetCurrentTime') : i18n.t('blockSetCurrentTime')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.get('enhance.blockSetCurrentTime') ? i18n.t('unblockSetCurrentTime') : i18n.t('blockSetCurrentTime')} ${i18n.t('localSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.blockSetCurrentTime') ? i18n.t('unblockSetCurrentTime') : i18n.t('blockSetCurrentTime'));
       if (confirm) {
@@ -5603,8 +4855,8 @@ const globalFunctional = {
     }
   },
   toggleSetVolumeFunctional: {
-    title: () => `${configManager.get('enhance.blockSetVolume') ? i18n.t('unblockSetVolume') : i18n.t('blockSetVolume')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.get('enhance.blockSetVolume') ? i18n.t('unblockSetVolume') : i18n.t('blockSetVolume')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.get('enhance.blockSetVolume') ? i18n.t('unblockSetVolume') : i18n.t('blockSetVolume')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.get('enhance.blockSetVolume') ? i18n.t('unblockSetVolume') : i18n.t('blockSetVolume')} ${i18n.t('localSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.blockSetVolume') ? i18n.t('unblockSetVolume') : i18n.t('blockSetVolume'));
       if (confirm) {
@@ -5614,20 +4866,19 @@ const globalFunctional = {
     }
   },
   toggleSetPlaybackRateFunctional: {
-    title: () => `${configManager.get('enhance.blockSetPlaybackRate') ? i18n.t('unblockSetPlaybackRate') : i18n.t('blockSetPlaybackRate')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.get('enhance.blockSetPlaybackRate') ? i18n.t('unblockSetPlaybackRate') : i18n.t('blockSetPlaybackRate')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.get('enhance.blockSetPlaybackRate') ? i18n.t('unblockSetPlaybackRate') : i18n.t('blockSetPlaybackRate')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.get('enhance.blockSetPlaybackRate') ? i18n.t('unblockSetPlaybackRate') : i18n.t('blockSetPlaybackRate')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.blockSetPlaybackRate') ? i18n.t('unblockSetPlaybackRate') : i18n.t('blockSetPlaybackRate'));
       if (confirm) {
-        /* 倍速参数，只能全局设置 */
         configManager.setGlobalStorage('enhance.blockSetPlaybackRate', !configManager.get('enhance.blockSetPlaybackRate'));
         window.location.reload();
       }
     }
   },
   toggleAcousticGainFunctional: {
-    title: () => `${configManager.get('enhance.allowAcousticGain') ? i18n.t('notAllowAcousticGain') : i18n.t('allowAcousticGain')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.get('enhance.allowAcousticGain') ? i18n.t('notAllowAcousticGain') : i18n.t('allowAcousticGain')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.get('enhance.allowAcousticGain') ? i18n.t('notAllowAcousticGain') : i18n.t('allowAcousticGain')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.get('enhance.allowAcousticGain') ? i18n.t('notAllowAcousticGain') : i18n.t('allowAcousticGain')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.allowAcousticGain') ? i18n.t('notAllowAcousticGain') : i18n.t('allowAcousticGain'));
       if (confirm) {
@@ -5637,8 +4888,8 @@ const globalFunctional = {
     }
   },
   toggleCrossOriginControlFunctional: {
-    title: () => `${configManager.get('enhance.allowCrossOriginControl') ? i18n.t('notAllowCrossOriginControl') : i18n.t('allowCrossOriginControl')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.get('enhance.allowCrossOriginControl') ? i18n.t('notAllowCrossOriginControl') : i18n.t('allowCrossOriginControl')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.get('enhance.allowCrossOriginControl') ? i18n.t('notAllowCrossOriginControl') : i18n.t('allowCrossOriginControl')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.get('enhance.allowCrossOriginControl') ? i18n.t('notAllowCrossOriginControl') : i18n.t('allowCrossOriginControl')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.allowCrossOriginControl') ? i18n.t('notAllowCrossOriginControl') : i18n.t('allowCrossOriginControl'));
       if (confirm) {
@@ -5648,8 +4899,8 @@ const globalFunctional = {
     }
   },
   toggleExperimentFeatures: {
-    title: () => `${configManager.get('enhance.allowExperimentFeatures') ? i18n.t('notAllowExperimentFeatures') : i18n.t('allowExperimentFeatures')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.get('enhance.allowExperimentFeatures') ? i18n.t('notAllowExperimentFeatures') : i18n.t('allowExperimentFeatures')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.get('enhance.allowExperimentFeatures') ? i18n.t('notAllowExperimentFeatures') : i18n.t('allowExperimentFeatures')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.get('enhance.allowExperimentFeatures') ? i18n.t('notAllowExperimentFeatures') : i18n.t('allowExperimentFeatures')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.allowExperimentFeatures') ? i18n.t('notAllowExperimentFeatures') : i18n.t('experimentFeaturesWarning'));
       if (confirm) {
@@ -5659,8 +4910,8 @@ const globalFunctional = {
     }
   },
   toggleExternalCustomConfiguration: {
-    title: () => `${configManager.get('enhance.allowExternalCustomConfiguration') ? i18n.t('notAllowExternalCustomConfiguration') : i18n.t('allowExternalCustomConfiguration')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.get('enhance.allowExternalCustomConfiguration') ? i18n.t('notAllowExternalCustomConfiguration') : i18n.t('allowExternalCustomConfiguration')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.get('enhance.allowExternalCustomConfiguration') ? i18n.t('notAllowExternalCustomConfiguration') : i18n.t('allowExternalCustomConfiguration')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.get('enhance.allowExternalCustomConfiguration') ? i18n.t('notAllowExternalCustomConfiguration') : i18n.t('allowExternalCustomConfiguration')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.get('enhance.allowExternalCustomConfiguration') ? i18n.t('notAllowExternalCustomConfiguration') : i18n.t('allowExternalCustomConfiguration'));
       if (confirm) {
@@ -5670,8 +4921,8 @@ const globalFunctional = {
     }
   },
   toggleDebugMode: {
-    title: () => `${configManager.getGlobalStorage('debug') ? i18n.t('closeDebugMode') : i18n.t('openDebugMode')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.getGlobalStorage('debug') ? i18n.t('closeDebugMode') : i18n.t('openDebugMode')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.getGlobalStorage('debug') ? i18n.t('closeDebugMode') : i18n.t('openDebugMode')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.getGlobalStorage('debug') ? i18n.t('closeDebugMode') : i18n.t('openDebugMode')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const confirm = window.confirm(configManager.getGlobalStorage('debug') ? i18n.t('closeDebugMode') : i18n.t('openDebugMode'));
       if (confirm) {
@@ -5681,7 +4932,6 @@ const globalFunctional = {
     }
   },
 
-  /* 还原全局的默认配置 */
   restoreGlobalConfiguration: {
     title: i18n.t('restoreConfiguration'),
     desc: i18n.t('restoreConfiguration'),
@@ -5698,12 +4948,11 @@ const globalFunctional = {
     }
   },
 
-  /* 切换脚本UI界面的显示或隐藏状态，注意：只有明确为fasle才隐藏GUI，其它情况都要显示GUI，例如null、undefined等都正常显示GUI */
   toggleGUIStatus: {
-    title: () => `${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('globalSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('globalSetting')}」`);
+      const confirm = window.confirm(`${configManager.getGlobalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('globalSetting')}`);
       if (confirm) {
         configManager.setGlobalStorage('ui.enable', !configManager.getGlobalStorage('ui.enable'));
         window.location.reload();
@@ -5711,12 +4960,11 @@ const globalFunctional = {
     }
   },
 
-  /* 切换当前网站下的脚本UI界面的显示或隐藏状态 */
   toggleGUIStatusUnderCurrentSite: {
-    title: () => `${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('localSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} 「${i18n.t('localSetting')}」`);
+      const confirm = window.confirm(`${configManager.getLocalStorage('ui.enable') === false ? i18n.t('enableGUI') : i18n.t('disableGUI')} ${i18n.t('localSetting')}`);
       if (confirm) {
         configManager.setLocalStorage('ui.enable', !configManager.getLocalStorage('ui.enable'));
         window.location.reload();
@@ -5724,11 +4972,11 @@ const globalFunctional = {
     }
   },
   alwaysShowGraphicalInterface: {
-    title: `${i18n.t('toggleStates')}${i18n.t('alwaysShowGraphicalInterface')} 「${i18n.t('globalSetting')}」`,
-    desc: `${i18n.t('toggleStates')}${i18n.t('alwaysShowGraphicalInterface')} 「${i18n.t('globalSetting')}」`,
+    title: `${i18n.t('toggleStates')}${i18n.t('alwaysShowGraphicalInterface')} ${i18n.t('globalSetting')}`,
+    desc: `${i18n.t('toggleStates')}${i18n.t('alwaysShowGraphicalInterface')} ${i18n.t('globalSetting')}`,
     fn: () => {
       const alwaysShow = configManager.getGlobalStorage('ui.alwaysShow');
-      const confirm = window.confirm(alwaysShow === true ? `${i18n.t('disable')}${i18n.t('alwaysShowGraphicalInterface')} 「${i18n.t('globalSetting')}」` : `${i18n.t('alwaysShowGraphicalInterface')} 「${i18n.t('globalSetting')}」`);
+      const confirm = window.confirm(alwaysShow === true ? `${i18n.t('disable')}${i18n.t('alwaysShowGraphicalInterface')} ${i18n.t('globalSetting')}` : `${i18n.t('alwaysShowGraphicalInterface')} ${i18n.t('globalSetting')}`);
       if (confirm) {
         configManager.setGlobalStorage('ui.alwaysShow', !alwaysShow);
         window.location.reload();
@@ -5737,10 +4985,10 @@ const globalFunctional = {
   },
 
   toggleHotkeysStatus: {
-    title: () => `${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('globalSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('globalSetting')}」`);
+      const confirm = window.confirm(`${configManager.getGlobalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('globalSetting')}`);
       if (confirm) {
         configManager.setGlobalStorage('enableHotkeys', !configManager.getGlobalStorage('enableHotkeys'));
         window.location.reload();
@@ -5749,10 +4997,10 @@ const globalFunctional = {
   },
 
   toggleHotkeysStatusUnderCurrentSite: {
-    title: () => `${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('localSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} 「${i18n.t('localSetting')}」`);
+      const confirm = window.confirm(`${configManager.getLocalStorage('enableHotkeys') === false ? i18n.t('enableHotkeys') : i18n.t('disableHotkeys')} ${i18n.t('localSetting')}`);
       if (confirm) {
         configManager.setLocalStorage('enableHotkeys', !configManager.getLocalStorage('enableHotkeys'));
         window.location.reload();
@@ -5761,10 +5009,10 @@ const globalFunctional = {
   },
 
   toggleMouseControl: {
-    title: () => `${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('globalSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('globalSetting')}」`);
+      const confirm = window.confirm(`${configManager.getGlobalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('globalSetting')}`);
       if (confirm) {
         configManager.setGlobalStorage('mouse.enable', !configManager.getGlobalStorage('mouse.enable'));
         window.location.reload();
@@ -5773,10 +5021,10 @@ const globalFunctional = {
   },
 
   toggleMouseControlUnderCurrentSite: {
-    title: () => `${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('localSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} 「${i18n.t('localSetting')}」`);
+      const confirm = window.confirm(`${configManager.getLocalStorage('mouse.enable') === false ? i18n.t('mouse.enable') : i18n.t('mouse.disable')} ${i18n.t('localSetting')}`);
       if (confirm) {
         configManager.setLocalStorage('mouse.enable', !configManager.getLocalStorage('mouse.enable'));
         window.location.reload();
@@ -5785,10 +5033,10 @@ const globalFunctional = {
   },
 
   setMouseLongPressTime: {
-    title: `${i18n.t('mouse.longPressTime')}「${i18n.t('globalSetting')}」`,
-    desc: `${i18n.t('mouse.longPressTime')}「${i18n.t('globalSetting')}」`,
+    title: `${i18n.t('mouse.longPressTime')}${i18n.t('globalSetting')}`,
+    desc: `${i18n.t('mouse.longPressTime')}${i18n.t('globalSetting')}`,
     fn: () => {
-      const longPressTime = prompt(`${i18n.t('mouse.longPressTime')}「${i18n.t('globalSetting')}」`, configManager.getGlobalStorage('mouse.longPressTime') || 600);
+      const longPressTime = prompt(`${i18n.t('mouse.longPressTime')}${i18n.t('globalSetting')}`, configManager.getGlobalStorage('mouse.longPressTime') || 600);
       if (longPressTime) {
         configManager.setGlobalStorage('mouse.longPressTime', Number(longPressTime));
         window.location.reload();
@@ -5797,10 +5045,10 @@ const globalFunctional = {
   },
 
   toggleDownloadControl: {
-    title: () => `${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('globalSetting')}」`,
-    desc: () => `${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('globalSetting')}」`,
+    title: () => `${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('globalSetting')}`,
+    desc: () => `${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('globalSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('globalSetting')}」`);
+      const confirm = window.confirm(`${configManager.getGlobalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('globalSetting')}`);
       if (confirm) {
         configManager.setGlobalStorage('download.enable', !configManager.getGlobalStorage('download.enable'));
         window.location.reload();
@@ -5809,10 +5057,10 @@ const globalFunctional = {
   },
 
   toggleDownloadControlUnderCurrentSite: {
-    title: () => `${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('localSetting')}」`,
-    desc: () => `${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('localSetting')}」`,
+    title: () => `${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('localSetting')}`,
+    desc: () => `${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('localSetting')}`,
     fn: () => {
-      const confirm = window.confirm(`${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} 「${i18n.t('localSetting')}」`);
+      const confirm = window.confirm(`${configManager.getLocalStorage('download.enable') === false ? i18n.t('mediaDownload.enable') : i18n.t('mediaDownload.disable')} ${i18n.t('localSetting')}`);
       if (confirm) {
         configManager.setLocalStorage('download.enable', !configManager.getLocalStorage('download.enable'));
         window.location.reload();
@@ -5821,8 +5069,8 @@ const globalFunctional = {
   },
 
   setLanguage: {
-    title: `${i18n.t('languageSettings')}「${i18n.t('globalSetting')}」`,
-    desc: `${i18n.t('languageSettings')}「${i18n.t('globalSetting')}」`,
+    title: `${i18n.t('languageSettings')}${i18n.t('globalSetting')}`,
+    desc: `${i18n.t('languageSettings')}${i18n.t('globalSetting')}`,
     fn: (lang) => {
       const confirm = window.confirm(`${i18n.t('languageSettings')}[${lang}] ?`);
       if (confirm) {
@@ -5850,7 +5098,6 @@ const globalFunctional = {
 
 /*!
  * @name         menuManager.js
- * @description  菜单管理器
  * @version      0.0.1
  * @author       xxxily
  * @date         2022/08/11 10:05
@@ -5886,7 +5133,6 @@ let monkeyMenuList = [
     disable: configManager.get('enableHotkeys') !== false
   },
   { ...globalFunctional.openCustomConfigurationEditor },
-  /* 展开或收起菜单 */
   { ...globalFunctional.toggleExpandedOrCollapsedStateOfMonkeyMenu },
   {
     ...globalFunctional.restoreGlobalConfiguration,
@@ -5894,37 +5140,30 @@ let monkeyMenuList = [
   }
 ];
 
-/* 菜单构造函数（必须是函数才能在点击后动态更新菜单状态） */
 function menuBuilder () {
   return monkeyMenuList
 }
 
-/* 注册动态菜单 */
 function menuRegister () {
   monkeyMenu.build(menuBuilder);
 }
 
 /**
- * 增加菜单项
- * @param {Object|Array} menuOpts 菜单的配置项目，多个配置项目用数组表示
  */
 function addMenu (menuOpts, before) {
   menuOpts = Array.isArray(menuOpts) ? menuOpts : [menuOpts];
   menuOpts = menuOpts.filter(item => item.title && !item.disabled);
 
   if (before) {
-    /* 将菜单追加到其它菜单的前面 */
     monkeyMenuList = menuOpts.concat(monkeyMenuList);
   } else {
     monkeyMenuList = monkeyMenuList.concat(menuOpts);
   }
 
-  /* 重新注册菜单 */
   menuRegister();
 }
 
 /**
- * 注册跟h5player相关的菜单，只有检测到存在媒体标签了才会注册
  */
 function registerH5playerMenus (h5player) {
   const t = h5player;
@@ -5982,7 +5221,6 @@ function registerH5playerMenus (h5player) {
     if (isInIframe()) {
       titlePrefix = `[${location.hostname}]`;
 
-      /* 补充title前缀 */
       menus.forEach(menu => {
         const titleFn = menu.title;
         if (titleFn instanceof Function && menu.type === 'local') {
@@ -5998,7 +5236,6 @@ function registerH5playerMenus (h5player) {
 }
 
 /**
-   * 代理视频播放器的事件注册和取消注册的函数，以对注册事件进行调试或阻断
    * @param {*} player
    * @returns
    */
@@ -6015,12 +5252,10 @@ function proxyHTMLMediaElementEvent () {
       const eventName = args[0];
       const listener = args[1];
       if (listener instanceof Function && eventName === 'ratechange') {
-        /* 对注册了ratechange事件进行检测，如果存在异常行为，则尝试挂起事件 */
 
         args[1] = new Proxy(listener, {
           apply (target, ctx, args) {
             if (ctx) {
-              /* 阻止调速检测，并进行反阻止 */
               if (ctx.playbackRate && eventName === 'ratechange') {
                 if (ctx._hasBlockRatechangeEvent_) {
                   return true
@@ -6032,14 +5267,11 @@ function proxyHTMLMediaElementEvent () {
                 const result = target.apply(ctx, args);
 
                 /**
-                 * 通过判断执行ratechange前后的速率是否被改变，
-                 * 以及是否出现了超长的执行时间（可能出现了alert弹窗）来检测是否可能存在阻止调速的行为
-                 * 其他检测手段待补充
                  */
                 const blockRatechangeBehave1 = oldRate !== ctx.playbackRate || Date.now() - startTime > 1000;
                 const blockRatechangeBehave2 = ctx._setPlaybackRate_ && ctx._setPlaybackRate_.value !== ctx.playbackRate;
                 if (blockRatechangeBehave1 || blockRatechangeBehave2) {
-                  debug.info(`[execVideoEvent][${eventName}]检测到可能存在阻止调速的行为，已禁止${eventName}事件的执行`, listener);
+                  debug.info(`[execVideoEvent][${eventName}]${eventName}`, listener);
                   ctx._hasBlockRatechangeEvent_ = true;
                   return true
                 } else {
@@ -6081,23 +5313,18 @@ const mediaSource = (function () {
     });
   }
 
-  /* 如果mediaSourceMap中关联的mediaEl检测到不存在了，则清理mediaSourceMap中的数据，减少内存占用 */
   function cleanMediaSourceData () {
     function removeMediaSourceData (mediaSourceInfo) {
       console.log('[cleanMediaSourceData][removeMediaSourceData]', mediaSourceInfo.mediaUrl || mediaSourceInfo.mediaSource.__objURL__);
 
-      /* 清理sourceBuffer相关数据 */
       if (mediaSourceInfo.sourceBuffer && mediaSourceInfo.sourceBuffer.length) {
         mediaSourceInfo.sourceBuffer.forEach(sourceBufferItem => {
-          /* 清空buffer数据 */
           sourceBufferItem.bufferData = [];
-          /* 移除原始appendBuffer的引用 */
           sourceBufferItem.originAppendBuffer = null;
         });
         mediaSourceInfo.sourceBuffer = [];
       }
 
-      /* 移除对mediaElement的引用 */
       mediaSourceInfo.mediaElement = null;
 
       original.map.delete.call(mediaSourceMap, mediaSourceInfo.mediaSource);
@@ -6120,7 +5347,6 @@ const mediaSource = (function () {
       return false
     }
 
-    // TODO 该代理在上层调用生效可能存在延迟，原因待研究
     originURLMethods.createObjectURL = originURLMethods.createObjectURL || URL.prototype.constructor.createObjectURL;
     URL.prototype.constructor.createObjectURL = new original.Proxy(originURLMethods.createObjectURL, {
       apply (target, ctx, args) {
@@ -6159,7 +5385,6 @@ const mediaSource = (function () {
         };
 
         try {
-          // mimeCodecs字符串示例：'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
           const mediaInfo = sourceBufferItem.mediaInfo;
           const tmpArr = sourceBufferItem.mimeCodecs.split(';');
 
@@ -6167,12 +5392,11 @@ const mediaSource = (function () {
           mediaInfo.format = tmpArr[0].split('/')[1];
           mediaInfo.codecs = tmpArr[1].trim().replace('codecs=', '').replace(/["']/g, '');
         } catch (e) {
-          original.console.error('[addSourceBuffer][mediaInfo] 媒体信息解析出错', sourceBufferItem, e);
+          original.console.error('[addSourceBuffer][mediaInfo] ', sourceBufferItem, e);
         }
 
         mediaSourceInfo.sourceBuffer.push(sourceBufferItem);
 
-        /* 代理sourceBuffer.appendBuffer函数，并将buffer存一份到mediaSourceInfo里 */
         sourceBuffer.appendBuffer = new original.Proxy(sourceBufferItem.originAppendBuffer, {
           apply (bufTarget, bufCtx, bufArgs) {
             const buffer = bufArgs[0];
@@ -6181,12 +5405,10 @@ const mediaSource = (function () {
               sourceBufferItem.bufferData.push(buffer);
             }
 
-            /* 确保mediaUrl的存在和对应 */
             if (original.map.get.call(objectURLMap, ctx)) {
               mediaSourceInfo.mediaUrl = original.map.get.call(objectURLMap, ctx);
             }
 
-            /* 如果appendBuffer依然活跃，但对应的mediaSource却被清理了，则尝试重新将数据关联回去 */
             if (!original.map.get.call(mediaSourceMap, ctx)) {
               original.map.set.call(mediaSourceMap, ctx, mediaSourceInfo);
             }
@@ -6201,7 +5423,6 @@ const mediaSource = (function () {
 
     MediaSource.prototype.endOfStream = new original.Proxy(originMethods.endOfStream, {
       apply (target, ctx, args) {
-        /* 标识当前媒体流已加载完成 */
         const mediaSourceInfo = original.map.get.call(mediaSourceMap, ctx);
         if (mediaSourceInfo) {
           mediaSourceInfo.endOfStream = true;
@@ -6217,7 +5438,6 @@ const mediaSource = (function () {
   }
 
   /**
-   * 下载媒体资源，下载代码参考：https://juejin.cn/post/6873267073674379277
    */
   function downloadMediaSource (mediaEl, title) {
     // const srcList = mediaEl.srcList || []
@@ -6236,7 +5456,6 @@ const mediaSource = (function () {
         return false
       }
 
-      /* 排除非当前媒体元素的媒体流 */
       // if (srcList.length > 0 && !srcList.includes(mediaSource.__objURL__)) {
       //   return false
       // }
@@ -6257,7 +5476,6 @@ const mediaSource = (function () {
       }
 
       if (!mediaSourceInfo.hasDownload && !mediaSourceInfo.endOfStream) {
-        // original.console.log('[downloadMediaSource] 媒体数据还没完全就绪', mediaSourceInfo)
 
         const confirm = original.confirm(i18n.t('mediaDownload.notEndOfStream'));
         if (!confirm) {
@@ -6280,7 +5498,7 @@ const mediaSource = (function () {
       let mediaSourceTitle = null;
       mediaSourceInfo.sourceBuffer.forEach(sourceBufferItem => {
         if (!sourceBufferItem.mimeCodecs || sourceBufferItem.mimeCodecs.toString().indexOf(';') === -1) {
-          const msg = '[downloadMediaSource][mimeCodecs][error] mimeCodecs不存在或信息异常，无法下载';
+          const msg = '[downloadMediaSource][mimeCodecs][error] mimeCodecs';
           original.console.error(msg, sourceBufferItem);
           original.alert(msg);
           return false
@@ -6299,7 +5517,6 @@ const mediaSource = (function () {
 
           mediaSourceTitle = mediaTitle;
 
-          /* 自动补充媒体类型和文件后缀 */
           mediaTitle = `${mediaTitle}_${sourceBufferItem.mediaInfo.type}.${sourceBufferItem.mediaInfo.format}`;
 
           const a = document.createElement('a');
@@ -6311,9 +5528,7 @@ const mediaSource = (function () {
             a.click();
             mediaSourceInfo.hasDownload = true;
           } finally {
-            /* 确保无论下载是否成功都释放blob URL */
             URL.revokeObjectURL(blobUrl);
-            /* 下载完成后清空buffer数据 */
             sourceBufferItem.bufferData = [];
           }
         } catch (e) {
@@ -6371,7 +5586,6 @@ const mediaSource = (function () {
 
 /*!
  * @name         hotkeysRunner.js
- * @description  热键运行器，实现类似vscode的热键配置方式
  * @version      0.0.1
  * @author       xxxily
  * @date         2022/11/23 18:22
@@ -6387,7 +5601,6 @@ function getValByPath (obj, path) {
   const pathArr = path.split('.');
   let result = obj;
 
-  /* 递归提取结果值 */
   for (let i = 0; i < pathArr.length; i++) {
     if (!result) break
     result = result[pathArr[i]];
@@ -6445,8 +5658,6 @@ const combinationKeysMonitor = (function () {
       }
 
       /**
-       * combinationKeysState状态必须保留一段时间，否则当外部定义的是keyup事件时候，由于这个先注册也先执行，
-       * 马上更改combinationKeysState状态，会导致后面定义的事件拿到的是未激活组合键的状态
        */
       if (isModifierKey(event.code)) {
         clearTimeout(timers[event.code]);
@@ -6483,7 +5694,6 @@ class HotkeysRunner {
   constructor (hotkeys, win = window) {
     this.window = win;
     this.windowList = [win];
-    /* Mac和window使用的修饰符是不一样的 */
     this.MOD = typeof navigator === 'object' && /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'Meta' : 'Ctrl';
     // 'Control', 'Shift', 'Alt', 'Meta'
 
@@ -6494,7 +5704,6 @@ class HotkeysRunner {
     combinationKeysMonitor.init(win);
   }
 
-  /* 设置其它window对象的组合键监控逻辑 */
   setCombinationKeysMonitor (win) {
     this.window = win;
 
@@ -6505,7 +5714,6 @@ class HotkeysRunner {
     combinationKeysMonitor.init(win);
   }
 
-  /* 数据预处理 */
   hotkeysPreprocess (hotkeys) {
     if (!Array.isArray(hotkeys)) {
       return false
@@ -6519,7 +5727,6 @@ class HotkeysRunner {
       const keyName = config.key.trim().toLowerCase();
       const mod = this.MOD.toLowerCase();
 
-      /* 增加格式化后的hotkeys数组 */
       config.keyBindings = keyName.split(' ').map(press => {
         const keys = press.split(/\b\+/);
         const mods = [];
@@ -6547,9 +5754,7 @@ class HotkeysRunner {
   }
 
   /**
-   * 判断当前提供的键盘事件和预期的热键配置是否匹配
    * @param {KeyboardEvent} event
-   * @param {Array} press 例如：[['alt', 'shift'], 's']
    * @param {Object} prevCombinationKeys
    * @returns
    */
@@ -6560,21 +5765,17 @@ class HotkeysRunner {
     const mods = press[0];
     const key = press[1];
 
-    /* 修饰符个数不匹配 */
     if (mods.length !== combinationKeys.size) {
       return false
     }
 
-    /* 当前按下的键位和预期的键位不匹配 */
     if (key && event.key.toLowerCase() !== key && event.code.toLowerCase() !== key) {
       return false
     }
 
-    /* 当前按下的修饰符和预期的修饰符不匹配 */
     let result = true;
     const modsKey = new Map$1();
     combinationKeys.forEach((val, key) => {
-      /* 补充各种可能情况的标识 */
       modsKey.set(key, val);
       modsKey.set(key.toLowerCase(), val);
       keyAlias[key] && modsKey.set(keyAlias[key], val);
@@ -6592,7 +5793,6 @@ class HotkeysRunner {
   isMatchPrevPress (press) { return this.isMatch(this.prevPress, press) }
 
   run (opts = {}) {
-    // 这里只对单个window有效
     // const KeyboardEvent = this.window.KeyboardEvent
     // if (!(opts.event instanceof KeyboardEvent)) { return false }
 
@@ -6614,12 +5814,10 @@ class HotkeysRunner {
 
       let press = hotkeyConf.keyBindings[0];
 
-      /* 当存在prevPress，则不再响应与prevPress不匹配的其它快捷键 */
       if (this.prevPress && (hotkeyConf.keyBindings.length <= 1 || !this.isMatchPrevPress(press))) {
         return false
       }
 
-      /* 如果存在上一轮的操作快捷键记录，且之前的快捷键与第一个keyBindings定义的快捷键匹配，则去匹配第二个keyBindings */
       if (this.prevPress && hotkeyConf.keyBindings.length > 1 && this.isMatchPrevPress(press)) {
         press = hotkeyConf.keyBindings[1];
       }
@@ -6629,15 +5827,12 @@ class HotkeysRunner {
 
       matchResult = hotkeyConf;
 
-      /* 是否阻止事件冒泡和阻止默认事件 */
       const stopPropagation = opts.stopPropagation || hotkeyConf.stopPropagation;
       const preventDefault = opts.preventDefault || hotkeyConf.preventDefault;
       stopPropagation && event.stopPropagation();
       preventDefault && event.preventDefault();
 
-      /* 记录上一次操作的快捷键，且一段时间后清空该操作的记录 */
       if (press === hotkeyConf.keyBindings[0] && hotkeyConf.keyBindings.length > 1) {
-        /* 将prevPress变成一个具有event相关字段的对象 */
         this.prevPress = {
           combinationKeys: combinationKeysMonitor.getCombinationKeys(),
           code: event.code,
@@ -6655,12 +5850,10 @@ class HotkeysRunner {
         return true
       }
 
-      /* 如果当前匹配到了第二个快捷键，则当forEach循环结束后，马上注销prevPress，给其它快捷键让行 */
       if (hotkeyConf.keyBindings.length > 1 && press !== hotkeyConf.keyBindings[0]) {
         setTimeout(() => { this.prevPress = null; }, 0);
       }
 
-      /* 执行hotkeyConf.command对应的函数或命令 */
       const args = toArrArgs(hotkeyConf.args);
       let commandFunc = hotkeyConf.command;
       if (target && typeof hotkeyConf.command === 'string') {
@@ -6668,7 +5861,7 @@ class HotkeysRunner {
       }
 
       if (!(commandFunc instanceof Function) && target) {
-        throw new Error(`[hotkeysRunner] 未找到command: ${hotkeyConf.command} 对应的函数`)
+        throw new Error(`[hotkeysRunner] command: ${hotkeyConf.command} `)
       }
 
       if (hotkeyConf.when && conditionHandler instanceof Function) {
@@ -6686,7 +5879,7 @@ class HotkeysRunner {
 
   binding (opts = {}) {
     if (!isObj(opts) || !Array.isArray(opts.hotkeys)) {
-      throw new Error('[hotkeysRunner] 提供给binding的参数不正确')
+      throw new Error('[hotkeysRunner] binding')
     }
 
     opts.el = opts.el || this.window;
@@ -6770,7 +5963,6 @@ function download (url, title) {
 
 function mediaDownload (mediaEl, title, downloadType) {
   /**
-   * 当媒体包含source标签时，媒体标签的真实地址将会是currentSrc
    * https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentSrc
    */
   const mediaUrl = mediaEl.src || mediaEl.currentSrc;
@@ -6783,10 +5975,8 @@ function mediaDownload (mediaEl, title, downloadType) {
     };
     let mediaTitle = `${title || mediaEl.getAttribute('data-title') || document.title || Date.now()}_${mediaInfo.type}.${mediaInfo.format}`;
 
-    /* 小于5分钟的媒体文件，尝试通过fetch下载 */
     if (downloadType === 'blob' || mediaEl.duration < 60 * 5) {
       if (mediaState.downloading) {
-        /* 距上次点下载小于1s的情况直接不响应任何操作 */
         if (Date.now() - mediaState.downloading < 1000 * 1) {
           return false
         } else {
@@ -6813,7 +6003,6 @@ function mediaDownload (mediaEl, title, downloadType) {
 
       let fetchUrl = mediaUrl;
       if (mediaUrl.startsWith('http://') && location.href.startsWith('https://')) {
-        /* 在https里fetch http资源会导致 block:mixed-content 错误，所以尝试将地址统一成https开头 */
         fetchUrl = mediaUrl.replace('http://', 'https://');
       }
 
@@ -6830,9 +6019,8 @@ function mediaDownload (mediaEl, title, downloadType) {
           window.URL.revokeObjectURL(blobUrl);
         });
       }).catch(err => {
-        original.console.error('fetch下载操作失败:', err);
+        original.console.error('fetch:', err);
 
-        /* 下载兜底 */
         download(mediaUrl, mediaTitle);
 
         delete mediaState.downloading;
@@ -6843,7 +6031,6 @@ function mediaDownload (mediaEl, title, downloadType) {
       download(mediaUrl, mediaTitle);
     }
   } else if (mediaSource.hasInit()) {
-    /* 下载通过MediaSource管理的媒体文件 */
     mediaSource.downloadMediaSource(mediaEl, title);
   } else {
     original.alert(i18n.t('mediaDownload.notSupport'));
@@ -6875,7 +6062,6 @@ const device = {
 };
 
 /**
- * 提供一些跟h5player共享的全局方法，减少重复代码，和共享一些需要提前执行才能获取得到得对象
  */
 
 
@@ -6893,9 +6079,6 @@ const h5playerUIProvider = {
 };
 
 /**
- * 通过proxy创建个window的沙盒传递给h5playerUiWraper
- * 目的是可以提供一些干净的全局对象给到h5playerUI
- * 另外是避免h5playerUI中的代码污染到实际的window对象
  */
 
 const windowSandbox = new Proxy({}, {
@@ -6913,10 +6096,6 @@ const windowSandbox = new Proxy({}, {
 });
 
 /**
- * 跟官网进行互动，以实现以下功能
- * 1、新版本检测 (待实现)
- * 2、脚本安装使用情况统计
- * 3、获取最新的推荐信息
  */
 
 
@@ -6926,7 +6105,6 @@ const remoteHelper = {
   init () {
     this.remoteHandler();
 
-    /* 减少重复加载和防止循环嵌套 */
     if (isInIframe()) { return false }
 
     if (!configManager.isGlobalStorageUsable()) { return false }
@@ -6939,9 +6117,6 @@ const remoteHelper = {
     }
 
     /**
-     * 减少跟远程助手的握手次数
-     * 12小时内有成功握手过的话，就不再重复握手
-     * 最少间隔1分钟才进行下一次握手
      */
     const syncInterval = configManager.getGlobalStorage('remoteHelperSyncInterval') || 1000 * 60 * 60 * 12;
     if (contactRemoteHelperSuccessTime && Date.now() - contactRemoteHelperSuccessTime < syncInterval) { return false }
@@ -6967,7 +6142,6 @@ const remoteHelper = {
       insertIframe();
     }
 
-    /* 不管握手成功与否，10秒后移除iframe，主动终止跟远程助手的连接 */
     setTimeout(() => { document.body.removeChild(iframe); }, 10000);
   },
 
@@ -6979,7 +6153,6 @@ const remoteHelper = {
         configManager.setGlobalStorage('recommendList', pageWindow.recommendList);
       }
 
-      /* 待增加版本对比判断逻辑 */
       if (pageWindow.remoteVersion) {
         configManager.setGlobalStorage('remoteVersion', pageWindow.remoteVersion);
       }
@@ -7013,34 +6186,23 @@ const remoteHelper = {
 };
 
 /**
-  * 检测当前页面是否为 Cloudflare 的 challenge 页面
-  * @returns {boolean} 如果是 Cloudflare challenge 页面则返回 true，否则返回 false
   */
 function isCloudflareChallengePage () {
-  // 特征1: 检查页面标题是否包含特定文本
   const titleCheck = document.title.includes('Just a moment') ||
                      document.title.includes('Cloudflare') ||
                      document.title.includes('challenge');
 
-  // 特征2: 检查是否存在特定的 meta 标签
   const metaRefreshExists = !!document.querySelector('meta[http-equiv="refresh"]');
   const robotsNoindexExists = !!document.querySelector('meta[name="robots"][content*="noindex"]');
 
-  // 特征3: 检查页面上是否有特定的 DOM 元素或类名
   const mainWrapperExists = !!document.querySelector('.main-wrapper[role="main"]');
   const challengeErrorExists = !!document.querySelector('#challenge-error-text');
   const bodyNoJsClass = document.body && document.body.classList ? document.body.classList.contains('no-js') : false;
 
-  // 特征4: 检查页面样式中是否包含特定的 Cloudflare 相关样式
   const hasCloudflareStyling = document.styleSheets.length > 0 &&
                               (document.documentElement.innerHTML.includes('background-image: url(data:image/svg+xml;base64,') ||
                                document.documentElement.innerHTML.includes('challenge'));
 
-  // 至少满足以下条件组合之一才判定为 Cloudflare challenge 页面:
-  // 1. 标题特征 + 至少一个 meta 特征
-  // 2. 标题特征 + 至少一个 DOM 特征
-  // 3. 至少两个 DOM 特征 + 至少一个 meta 特征
-  // 4. 样式特征 + 至少一个其他类型的特征
 
   const metaFeatures = metaRefreshExists || robotsNoindexExists;
   const domFeatures = mainWrapperExists || challengeErrorExists || bodyNoJsClass;
@@ -7069,11 +6231,9 @@ function registerMouseEvent (h5player) {
 
     if (!isCoordinateInElement(event.clientX, event.clientY, player)) { return }
 
-    /* 预留出底部80px的区域，避免导致工具栏的操作异常 */
     const rect = player.getBoundingClientRect();
     if (event.clientY > rect.bottom - 80) { return }
 
-    /* 鼠标左键事件 */
     if (event.button === 0) {
       mouseEventTimer = setTimeout(() => {
         hasHandleEvent = true;
@@ -7111,7 +6271,7 @@ function registerMouseEvent (h5player) {
 
 const h5playerUI = function (window) {var h5playerUI = (function () {
 
-  const sheet = new CSSStyleSheet();sheet.replaceSync(":root,\n:host,\n.sl-theme-light {\n  color-scheme: light;\n\n  --sl-color-gray-50: hsl(0 0% 97.5%);\n  --sl-color-gray-100: hsl(240 4.8% 95.9%);\n  --sl-color-gray-200: hsl(240 5.9% 90%);\n  --sl-color-gray-300: hsl(240 4.9% 83.9%);\n  --sl-color-gray-400: hsl(240 5% 64.9%);\n  --sl-color-gray-500: hsl(240 3.8% 46.1%);\n  --sl-color-gray-600: hsl(240 5.2% 33.9%);\n  --sl-color-gray-700: hsl(240 5.3% 26.1%);\n  --sl-color-gray-800: hsl(240 3.7% 15.9%);\n  --sl-color-gray-900: hsl(240 5.9% 10%);\n  --sl-color-gray-950: hsl(240 7.3% 8%);\n\n  --sl-color-red-50: hsl(0 85.7% 97.3%);\n  --sl-color-red-100: hsl(0 93.3% 94.1%);\n  --sl-color-red-200: hsl(0 96.3% 89.4%);\n  --sl-color-red-300: hsl(0 93.5% 81.8%);\n  --sl-color-red-400: hsl(0 90.6% 70.8%);\n  --sl-color-red-500: hsl(0 84.2% 60.2%);\n  --sl-color-red-600: hsl(0 72.2% 50.6%);\n  --sl-color-red-700: hsl(0 73.7% 41.8%);\n  --sl-color-red-800: hsl(0 70% 35.3%);\n  --sl-color-red-900: hsl(0 62.8% 30.6%);\n  --sl-color-red-950: hsl(0 60% 19.6%);\n\n  --sl-color-orange-50: hsl(33.3 100% 96.5%);\n  --sl-color-orange-100: hsl(34.3 100% 91.8%);\n  --sl-color-orange-200: hsl(32.1 97.7% 83.1%);\n  --sl-color-orange-300: hsl(30.7 97.2% 72.4%);\n  --sl-color-orange-400: hsl(27 96% 61%);\n  --sl-color-orange-500: hsl(24.6 95% 53.1%);\n  --sl-color-orange-600: hsl(20.5 90.2% 48.2%);\n  --sl-color-orange-700: hsl(17.5 88.3% 40.4%);\n  --sl-color-orange-800: hsl(15 79.1% 33.7%);\n  --sl-color-orange-900: hsl(15.3 74.6% 27.8%);\n  --sl-color-orange-950: hsl(15.2 69.1% 19%);\n\n  --sl-color-amber-50: hsl(48 100% 96.1%);\n  --sl-color-amber-100: hsl(48 96.5% 88.8%);\n  --sl-color-amber-200: hsl(48 96.6% 76.7%);\n  --sl-color-amber-300: hsl(45.9 96.7% 64.5%);\n  --sl-color-amber-400: hsl(43.3 96.4% 56.3%);\n  --sl-color-amber-500: hsl(37.7 92.1% 50.2%);\n  --sl-color-amber-600: hsl(32.1 94.6% 43.7%);\n  --sl-color-amber-700: hsl(26 90.5% 37.1%);\n  --sl-color-amber-800: hsl(22.7 82.5% 31.4%);\n  --sl-color-amber-900: hsl(21.7 77.8% 26.5%);\n  --sl-color-amber-950: hsl(22.9 74.1% 16.7%);\n\n  --sl-color-yellow-50: hsl(54.5 91.7% 95.3%);\n  --sl-color-yellow-100: hsl(54.9 96.7% 88%);\n  --sl-color-yellow-200: hsl(52.8 98.3% 76.9%);\n  --sl-color-yellow-300: hsl(50.4 97.8% 63.5%);\n  --sl-color-yellow-400: hsl(47.9 95.8% 53.1%);\n  --sl-color-yellow-500: hsl(45.4 93.4% 47.5%);\n  --sl-color-yellow-600: hsl(40.6 96.1% 40.4%);\n  --sl-color-yellow-700: hsl(35.5 91.7% 32.9%);\n  --sl-color-yellow-800: hsl(31.8 81% 28.8%);\n  --sl-color-yellow-900: hsl(28.4 72.5% 25.7%);\n  --sl-color-yellow-950: hsl(33.1 69% 13.9%);\n\n  --sl-color-lime-50: hsl(78.3 92% 95.1%);\n  --sl-color-lime-100: hsl(79.6 89.1% 89.2%);\n  --sl-color-lime-200: hsl(80.9 88.5% 79.6%);\n  --sl-color-lime-300: hsl(82 84.5% 67.1%);\n  --sl-color-lime-400: hsl(82.7 78% 55.5%);\n  --sl-color-lime-500: hsl(83.7 80.5% 44.3%);\n  --sl-color-lime-600: hsl(84.8 85.2% 34.5%);\n  --sl-color-lime-700: hsl(85.9 78.4% 27.3%);\n  --sl-color-lime-800: hsl(86.3 69% 22.7%);\n  --sl-color-lime-900: hsl(87.6 61.2% 20.2%);\n  --sl-color-lime-950: hsl(86.5 60.6% 13.9%);\n\n  --sl-color-green-50: hsl(138.5 76.5% 96.7%);\n  --sl-color-green-100: hsl(140.6 84.2% 92.5%);\n  --sl-color-green-200: hsl(141 78.9% 85.1%);\n  --sl-color-green-300: hsl(141.7 76.6% 73.1%);\n  --sl-color-green-400: hsl(141.9 69.2% 58%);\n  --sl-color-green-500: hsl(142.1 70.6% 45.3%);\n  --sl-color-green-600: hsl(142.1 76.2% 36.3%);\n  --sl-color-green-700: hsl(142.4 71.8% 29.2%);\n  --sl-color-green-800: hsl(142.8 64.2% 24.1%);\n  --sl-color-green-900: hsl(143.8 61.2% 20.2%);\n  --sl-color-green-950: hsl(144.3 60.7% 12%);\n\n  --sl-color-emerald-50: hsl(151.8 81% 95.9%);\n  --sl-color-emerald-100: hsl(149.3 80.4% 90%);\n  --sl-color-emerald-200: hsl(152.4 76% 80.4%);\n  --sl-color-emerald-300: hsl(156.2 71.6% 66.9%);\n  --sl-color-emerald-400: hsl(158.1 64.4% 51.6%);\n  --sl-color-emerald-500: hsl(160.1 84.1% 39.4%);\n  --sl-color-emerald-600: hsl(161.4 93.5% 30.4%);\n  --sl-color-emerald-700: hsl(162.9 93.5% 24.3%);\n  --sl-color-emerald-800: hsl(163.1 88.1% 19.8%);\n  --sl-color-emerald-900: hsl(164.2 85.7% 16.5%);\n  --sl-color-emerald-950: hsl(164.3 87.5% 9.4%);\n\n  --sl-color-teal-50: hsl(166.2 76.5% 96.7%);\n  --sl-color-teal-100: hsl(167.2 85.5% 89.2%);\n  --sl-color-teal-200: hsl(168.4 83.8% 78.2%);\n  --sl-color-teal-300: hsl(170.6 76.9% 64.3%);\n  --sl-color-teal-400: hsl(172.5 66% 50.4%);\n  --sl-color-teal-500: hsl(173.4 80.4% 40%);\n  --sl-color-teal-600: hsl(174.7 83.9% 31.6%);\n  --sl-color-teal-700: hsl(175.3 77.4% 26.1%);\n  --sl-color-teal-800: hsl(176.1 69.4% 21.8%);\n  --sl-color-teal-900: hsl(175.9 60.8% 19%);\n  --sl-color-teal-950: hsl(176.5 58.6% 11.4%);\n\n  --sl-color-cyan-50: hsl(183.2 100% 96.3%);\n  --sl-color-cyan-100: hsl(185.1 95.9% 90.4%);\n  --sl-color-cyan-200: hsl(186.2 93.5% 81.8%);\n  --sl-color-cyan-300: hsl(187 92.4% 69%);\n  --sl-color-cyan-400: hsl(187.9 85.7% 53.3%);\n  --sl-color-cyan-500: hsl(188.7 94.5% 42.7%);\n  --sl-color-cyan-600: hsl(191.6 91.4% 36.5%);\n  --sl-color-cyan-700: hsl(192.9 82.3% 31%);\n  --sl-color-cyan-800: hsl(194.4 69.6% 27.1%);\n  --sl-color-cyan-900: hsl(196.4 63.6% 23.7%);\n  --sl-color-cyan-950: hsl(196.8 61% 16.1%);\n\n  --sl-color-sky-50: hsl(204 100% 97.1%);\n  --sl-color-sky-100: hsl(204 93.8% 93.7%);\n  --sl-color-sky-200: hsl(200.6 94.4% 86.1%);\n  --sl-color-sky-300: hsl(199.4 95.5% 73.9%);\n  --sl-color-sky-400: hsl(198.4 93.2% 59.6%);\n  --sl-color-sky-500: hsl(198.6 88.7% 48.4%);\n  --sl-color-sky-600: hsl(200.4 98% 39.4%);\n  --sl-color-sky-700: hsl(201.3 96.3% 32.2%);\n  --sl-color-sky-800: hsl(201 90% 27.5%);\n  --sl-color-sky-900: hsl(202 80.3% 23.9%);\n  --sl-color-sky-950: hsl(202.3 73.8% 16.5%);\n\n  --sl-color-blue-50: hsl(213.8 100% 96.9%);\n  --sl-color-blue-100: hsl(214.3 94.6% 92.7%);\n  --sl-color-blue-200: hsl(213.3 96.9% 87.3%);\n  --sl-color-blue-300: hsl(211.7 96.4% 78.4%);\n  --sl-color-blue-400: hsl(213.1 93.9% 67.8%);\n  --sl-color-blue-500: hsl(217.2 91.2% 59.8%);\n  --sl-color-blue-600: hsl(221.2 83.2% 53.3%);\n  --sl-color-blue-700: hsl(224.3 76.3% 48%);\n  --sl-color-blue-800: hsl(225.9 70.7% 40.2%);\n  --sl-color-blue-900: hsl(224.4 64.3% 32.9%);\n  --sl-color-blue-950: hsl(226.2 55.3% 18.4%);\n\n  --sl-color-indigo-50: hsl(225.9 100% 96.7%);\n  --sl-color-indigo-100: hsl(226.5 100% 93.9%);\n  --sl-color-indigo-200: hsl(228 96.5% 88.8%);\n  --sl-color-indigo-300: hsl(229.7 93.5% 81.8%);\n  --sl-color-indigo-400: hsl(234.5 89.5% 73.9%);\n  --sl-color-indigo-500: hsl(238.7 83.5% 66.7%);\n  --sl-color-indigo-600: hsl(243.4 75.4% 58.6%);\n  --sl-color-indigo-700: hsl(244.5 57.9% 50.6%);\n  --sl-color-indigo-800: hsl(243.7 54.5% 41.4%);\n  --sl-color-indigo-900: hsl(242.2 47.4% 34.3%);\n  --sl-color-indigo-950: hsl(243.5 43.6% 22.9%);\n\n  --sl-color-violet-50: hsl(250 100% 97.6%);\n  --sl-color-violet-100: hsl(251.4 91.3% 95.5%);\n  --sl-color-violet-200: hsl(250.5 95.2% 91.8%);\n  --sl-color-violet-300: hsl(252.5 94.7% 85.1%);\n  --sl-color-violet-400: hsl(255.1 91.7% 76.3%);\n  --sl-color-violet-500: hsl(258.3 89.5% 66.3%);\n  --sl-color-violet-600: hsl(262.1 83.3% 57.8%);\n  --sl-color-violet-700: hsl(263.4 70% 50.4%);\n  --sl-color-violet-800: hsl(263.4 69.3% 42.2%);\n  --sl-color-violet-900: hsl(263.5 67.4% 34.9%);\n  --sl-color-violet-950: hsl(265.1 61.5% 21.4%);\n\n  --sl-color-purple-50: hsl(270 100% 98%);\n  --sl-color-purple-100: hsl(268.7 100% 95.5%);\n  --sl-color-purple-200: hsl(268.6 100% 91.8%);\n  --sl-color-purple-300: hsl(269.2 97.4% 85.1%);\n  --sl-color-purple-400: hsl(270 95.2% 75.3%);\n  --sl-color-purple-500: hsl(270.7 91% 65.1%);\n  --sl-color-purple-600: hsl(271.5 81.3% 55.9%);\n  --sl-color-purple-700: hsl(272.1 71.7% 47.1%);\n  --sl-color-purple-800: hsl(272.9 67.2% 39.4%);\n  --sl-color-purple-900: hsl(273.6 65.6% 32%);\n  --sl-color-purple-950: hsl(276 59.5% 16.5%);\n\n  --sl-color-fuchsia-50: hsl(289.1 100% 97.8%);\n  --sl-color-fuchsia-100: hsl(287 100% 95.5%);\n  --sl-color-fuchsia-200: hsl(288.3 95.8% 90.6%);\n  --sl-color-fuchsia-300: hsl(291.1 93.1% 82.9%);\n  --sl-color-fuchsia-400: hsl(292 91.4% 72.5%);\n  --sl-color-fuchsia-500: hsl(292.2 84.1% 60.6%);\n  --sl-color-fuchsia-600: hsl(293.4 69.5% 48.8%);\n  --sl-color-fuchsia-700: hsl(294.7 72.4% 39.8%);\n  --sl-color-fuchsia-800: hsl(295.4 70.2% 32.9%);\n  --sl-color-fuchsia-900: hsl(296.7 63.6% 28%);\n  --sl-color-fuchsia-950: hsl(297.1 56.8% 14.5%);\n\n  --sl-color-pink-50: hsl(327.3 73.3% 97.1%);\n  --sl-color-pink-100: hsl(325.7 77.8% 94.7%);\n  --sl-color-pink-200: hsl(325.9 84.6% 89.8%);\n  --sl-color-pink-300: hsl(327.4 87.1% 81.8%);\n  --sl-color-pink-400: hsl(328.6 85.5% 70.2%);\n  --sl-color-pink-500: hsl(330.4 81.2% 60.4%);\n  --sl-color-pink-600: hsl(333.3 71.4% 50.6%);\n  --sl-color-pink-700: hsl(335.1 77.6% 42%);\n  --sl-color-pink-800: hsl(335.8 74.4% 35.3%);\n  --sl-color-pink-900: hsl(335.9 69% 30.4%);\n  --sl-color-pink-950: hsl(336.2 65.4% 15.9%);\n\n  --sl-color-rose-50: hsl(355.7 100% 97.3%);\n  --sl-color-rose-100: hsl(355.6 100% 94.7%);\n  --sl-color-rose-200: hsl(352.7 96.1% 90%);\n  --sl-color-rose-300: hsl(352.6 95.7% 81.8%);\n  --sl-color-rose-400: hsl(351.3 94.5% 71.4%);\n  --sl-color-rose-500: hsl(349.7 89.2% 60.2%);\n  --sl-color-rose-600: hsl(346.8 77.2% 49.8%);\n  --sl-color-rose-700: hsl(345.3 82.7% 40.8%);\n  --sl-color-rose-800: hsl(343.4 79.7% 34.7%);\n  --sl-color-rose-900: hsl(341.5 75.5% 30.4%);\n  --sl-color-rose-950: hsl(341.3 70.1% 17.1%);\n\n  --sl-color-primary-50: var(--sl-color-sky-50);\n  --sl-color-primary-100: var(--sl-color-sky-100);\n  --sl-color-primary-200: var(--sl-color-sky-200);\n  --sl-color-primary-300: var(--sl-color-sky-300);\n  --sl-color-primary-400: var(--sl-color-sky-400);\n  --sl-color-primary-500: var(--sl-color-sky-500);\n  --sl-color-primary-600: var(--sl-color-sky-600);\n  --sl-color-primary-700: var(--sl-color-sky-700);\n  --sl-color-primary-800: var(--sl-color-sky-800);\n  --sl-color-primary-900: var(--sl-color-sky-900);\n  --sl-color-primary-950: var(--sl-color-sky-950);\n\n  --sl-color-success-50: var(--sl-color-green-50);\n  --sl-color-success-100: var(--sl-color-green-100);\n  --sl-color-success-200: var(--sl-color-green-200);\n  --sl-color-success-300: var(--sl-color-green-300);\n  --sl-color-success-400: var(--sl-color-green-400);\n  --sl-color-success-500: var(--sl-color-green-500);\n  --sl-color-success-600: var(--sl-color-green-600);\n  --sl-color-success-700: var(--sl-color-green-700);\n  --sl-color-success-800: var(--sl-color-green-800);\n  --sl-color-success-900: var(--sl-color-green-900);\n  --sl-color-success-950: var(--sl-color-green-950);\n\n  --sl-color-warning-50: var(--sl-color-amber-50);\n  --sl-color-warning-100: var(--sl-color-amber-100);\n  --sl-color-warning-200: var(--sl-color-amber-200);\n  --sl-color-warning-300: var(--sl-color-amber-300);\n  --sl-color-warning-400: var(--sl-color-amber-400);\n  --sl-color-warning-500: var(--sl-color-amber-500);\n  --sl-color-warning-600: var(--sl-color-amber-600);\n  --sl-color-warning-700: var(--sl-color-amber-700);\n  --sl-color-warning-800: var(--sl-color-amber-800);\n  --sl-color-warning-900: var(--sl-color-amber-900);\n  --sl-color-warning-950: var(--sl-color-amber-950);\n\n  --sl-color-danger-50: var(--sl-color-red-50);\n  --sl-color-danger-100: var(--sl-color-red-100);\n  --sl-color-danger-200: var(--sl-color-red-200);\n  --sl-color-danger-300: var(--sl-color-red-300);\n  --sl-color-danger-400: var(--sl-color-red-400);\n  --sl-color-danger-500: var(--sl-color-red-500);\n  --sl-color-danger-600: var(--sl-color-red-600);\n  --sl-color-danger-700: var(--sl-color-red-700);\n  --sl-color-danger-800: var(--sl-color-red-800);\n  --sl-color-danger-900: var(--sl-color-red-900);\n  --sl-color-danger-950: var(--sl-color-red-950);\n\n  --sl-color-neutral-50: var(--sl-color-gray-50);\n  --sl-color-neutral-100: var(--sl-color-gray-100);\n  --sl-color-neutral-200: var(--sl-color-gray-200);\n  --sl-color-neutral-300: var(--sl-color-gray-300);\n  --sl-color-neutral-400: var(--sl-color-gray-400);\n  --sl-color-neutral-500: var(--sl-color-gray-500);\n  --sl-color-neutral-600: var(--sl-color-gray-600);\n  --sl-color-neutral-700: var(--sl-color-gray-700);\n  --sl-color-neutral-800: var(--sl-color-gray-800);\n  --sl-color-neutral-900: var(--sl-color-gray-900);\n  --sl-color-neutral-950: var(--sl-color-gray-950);\n\n  --sl-color-neutral-0: hsl(0, 0%, 100%);\n  --sl-color-neutral-1000: hsl(0, 0%, 0%);\n\n  --sl-border-radius-small: 0.1875rem;\n  --sl-border-radius-medium: 0.25rem;\n  --sl-border-radius-large: 0.5rem;\n  --sl-border-radius-x-large: 1rem;\n\n  --sl-border-radius-circle: 50%;\n  --sl-border-radius-pill: 9999px;\n\n  --sl-shadow-x-small: 0 1px 2px hsl(240 3.8% 46.1% / 6%);\n  --sl-shadow-small: 0 1px 2px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-medium: 0 2px 4px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-large: 0 2px 8px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-x-large: 0 4px 16px hsl(240 3.8% 46.1% / 12%);\n\n  --sl-spacing-3x-small: 0.125rem;\n  --sl-spacing-2x-small: 0.25rem;\n  --sl-spacing-x-small: 0.5rem;\n  --sl-spacing-small: 0.75rem;\n  --sl-spacing-medium: 1rem;\n  --sl-spacing-large: 1.25rem;\n  --sl-spacing-x-large: 1.75rem;\n  --sl-spacing-2x-large: 2.25rem;\n  --sl-spacing-3x-large: 3rem;\n  --sl-spacing-4x-large: 4.5rem;\n\n  --sl-transition-x-slow: 1000ms;\n  --sl-transition-slow: 500ms;\n  --sl-transition-medium: 250ms;\n  --sl-transition-fast: 150ms;\n  --sl-transition-x-fast: 50ms;\n\n  --sl-font-mono: SFMono-Regular, Consolas, \"Liberation Mono\", Menlo, monospace;\n  --sl-font-sans: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto,\n    Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\",\n    \"Segoe UI Symbol\";\n  --sl-font-serif: Georgia, \"Times New Roman\", serif;\n\n  --sl-font-size-2x-small: 0.625rem;\n  --sl-font-size-x-small: 0.75rem;\n  --sl-font-size-small: 0.875rem;\n  --sl-font-size-medium: 1rem;\n  --sl-font-size-large: 1.25rem;\n  --sl-font-size-x-large: 1.5rem;\n  --sl-font-size-2x-large: 2.25rem;\n  --sl-font-size-3x-large: 3rem;\n  --sl-font-size-4x-large: 4.5rem;\n\n  --sl-font-weight-light: 300;\n  --sl-font-weight-normal: 400;\n  --sl-font-weight-semibold: 500;\n  --sl-font-weight-bold: 700;\n\n  --sl-letter-spacing-denser: -0.03em;\n  --sl-letter-spacing-dense: -0.015em;\n  --sl-letter-spacing-normal: normal;\n  --sl-letter-spacing-loose: 0.075em;\n  --sl-letter-spacing-looser: 0.15em;\n\n  --sl-line-height-denser: 1;\n  --sl-line-height-dense: 1.4;\n  --sl-line-height-normal: 1.8;\n  --sl-line-height-loose: 2.2;\n  --sl-line-height-looser: 2.6;\n\n  --sl-focus-ring-color: var(--sl-color-primary-600);\n  --sl-focus-ring-style: solid;\n  --sl-focus-ring-width: 3px;\n  --sl-focus-ring: var(--sl-focus-ring-style) var(--sl-focus-ring-width)\n    var(--sl-focus-ring-color);\n  --sl-focus-ring-offset: 1px;\n\n  --sl-button-font-size-small: var(--sl-font-size-x-small);\n  --sl-button-font-size-medium: var(--sl-font-size-small);\n  --sl-button-font-size-large: var(--sl-font-size-medium);\n\n  --sl-input-height-small: 1.875rem;\n  --sl-input-height-medium: 2.5rem;\n  --sl-input-height-large: 3.125rem;\n\n  --sl-input-background-color: var(--sl-color-neutral-0);\n  --sl-input-background-color-hover: var(--sl-input-background-color);\n  --sl-input-background-color-focus: var(--sl-input-background-color);\n  --sl-input-background-color-disabled: var(--sl-color-neutral-100);\n  --sl-input-border-color: var(--sl-color-neutral-300);\n  --sl-input-border-color-hover: var(--sl-color-neutral-400);\n  --sl-input-border-color-focus: var(--sl-color-primary-500);\n  --sl-input-border-color-disabled: var(--sl-color-neutral-300);\n  --sl-input-border-width: 1px;\n  --sl-input-required-content: \"*\";\n  --sl-input-required-content-offset: -2px;\n  --sl-input-required-content-color: var(--sl-input-label-color);\n\n  --sl-input-border-radius-small: var(--sl-border-radius-medium);\n  --sl-input-border-radius-medium: var(--sl-border-radius-medium);\n  --sl-input-border-radius-large: var(--sl-border-radius-medium);\n\n  --sl-input-font-family: var(--sl-font-sans);\n  --sl-input-font-weight: var(--sl-font-weight-normal);\n  --sl-input-font-size-small: var(--sl-font-size-small);\n  --sl-input-font-size-medium: var(--sl-font-size-medium);\n  --sl-input-font-size-large: var(--sl-font-size-large);\n  --sl-input-letter-spacing: var(--sl-letter-spacing-normal);\n\n  --sl-input-color: var(--sl-color-neutral-700);\n  --sl-input-color-hover: var(--sl-color-neutral-700);\n  --sl-input-color-focus: var(--sl-color-neutral-700);\n  --sl-input-color-disabled: var(--sl-color-neutral-900);\n  --sl-input-icon-color: var(--sl-color-neutral-500);\n  --sl-input-icon-color-hover: var(--sl-color-neutral-600);\n  --sl-input-icon-color-focus: var(--sl-color-neutral-600);\n  --sl-input-placeholder-color: var(--sl-color-neutral-500);\n  --sl-input-placeholder-color-disabled: var(--sl-color-neutral-600);\n  --sl-input-spacing-small: var(--sl-spacing-small);\n  --sl-input-spacing-medium: var(--sl-spacing-medium);\n  --sl-input-spacing-large: var(--sl-spacing-large);\n\n  --sl-input-focus-ring-color: hsl(198.6 88.7% 48.4% / 40%);\n  --sl-input-focus-ring-offset: 0;\n\n  --sl-input-filled-background-color: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-hover: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-focus: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-disabled: var(--sl-color-neutral-100);\n  --sl-input-filled-color: var(--sl-color-neutral-800);\n  --sl-input-filled-color-hover: var(--sl-color-neutral-800);\n  --sl-input-filled-color-focus: var(--sl-color-neutral-700);\n  --sl-input-filled-color-disabled: var(--sl-color-neutral-800);\n\n  --sl-input-label-font-size-small: var(--sl-font-size-small);\n  --sl-input-label-font-size-medium: var(--sl-font-size-medium);\n  --sl-input-label-font-size-large: var(--sl-font-size-large);\n  --sl-input-label-color: inherit;\n\n  --sl-input-help-text-font-size-small: var(--sl-font-size-x-small);\n  --sl-input-help-text-font-size-medium: var(--sl-font-size-small);\n  --sl-input-help-text-font-size-large: var(--sl-font-size-medium);\n  --sl-input-help-text-color: var(--sl-color-neutral-500);\n\n  --sl-toggle-size-small: 0.875rem;\n  --sl-toggle-size-medium: 1.125rem;\n  --sl-toggle-size-large: 1.375rem;\n\n  --sl-overlay-background-color: hsl(240 3.8% 46.1% / 33%);\n\n  --sl-panel-background-color: var(--sl-color-neutral-0);\n  --sl-panel-border-color: var(--sl-color-neutral-200);\n  --sl-panel-border-width: 1px;\n\n  --sl-tooltip-border-radius: var(--sl-border-radius-medium);\n  --sl-tooltip-background-color: var(--sl-color-neutral-800);\n  --sl-tooltip-color: var(--sl-color-neutral-0);\n  --sl-tooltip-font-family: var(--sl-font-sans);\n  --sl-tooltip-font-weight: var(--sl-font-weight-normal);\n  --sl-tooltip-font-size: var(--sl-font-size-small);\n  --sl-tooltip-line-height: var(--sl-line-height-dense);\n  --sl-tooltip-padding: var(--sl-spacing-2x-small) var(--sl-spacing-x-small);\n  --sl-tooltip-arrow-size: 6px;\n\n  --sl-z-index-drawer: 999700;\n  --sl-z-index-dialog: 999800;\n  --sl-z-index-dropdown: 999900;\n  --sl-z-index-toast: 999950;\n  --sl-z-index-tooltip: 9991000;\n}\n\n.sl-scroll-lock {\n  padding-right: var(--sl-scroll-lock-size) !important;\n  overflow: hidden !important;\n}\n\n.sl-toast-stack {\n  position: fixed;\n  top: 0;\n  inset-inline-end: 0;\n  z-index: var(--sl-z-index-toast);\n  width: 28rem;\n  max-width: 100%;\n  max-height: 100%;\n  overflow: auto;\n}\n\n.sl-toast-stack sl-alert {\n  margin: var(--sl-spacing-medium);\n}\n\n.sl-toast-stack sl-alert::part(base) {\n  box-shadow: var(--sl-shadow-large);\n}\n\nsl-drawer::part(base) {\n  color: var(--sl-color-neutral-800) !important;\n}\n\n.h5player-popup-wrap {\n  position: relative;\n  z-index: 99999999;\n  opacity: 0;\n}\n\n.h5player-popup-wrap sl-popup {\n  position: relative;\n}\n\n.h5player-popup-wrap .h5player-popup-content {\n  background-color: rgba(0, 0, 0, 0.9);\n  color: #fff;\n  font-size: 16px;\n  min-width: 220px;\n  height: 48px;\n  line-height: 48px;\n  display: flex;\n  padding: 0 16px;\n  border-radius: 6px 6px 0 0;\n  border-bottom: 2px solid rgba(255, 255, 255, 0.2);\n\n  /* 灰色向下的过度阴影 */\n  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n@keyframes text-lumos {\n  0%,100%{ color:#fff; }\n\t50%{ color:#ccc; }\n}\n\n.h5player-popup-content .h5p-logo-mod {\n  white-space: nowrap;\n  font-weight: 500;\n  text-shadow: 0px 0px 2px #666, 0 0 30px #666;\n  animation: text-lumos 5s infinite;\n}\n\n.h5player-popup-content .h5p-menu-wrap {}\n\n.h5player-popup-content .h5p-action-mod {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.h5player-popup-content .h5p-action-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 14px;\n  padding: 0 8px;\n  cursor: pointer;\n  white-space: nowrap;\n}\n\n.h5player-popup-content .h5p-action-btn:hover {\n  background-color: rgba(255, 255, 255, 0.2);\n}\n\n.h5player-popup-content .h5p-action-btn sl-icon {\n  padding: 0 4px;\n}\n\n/* 激活态 */\n.h5player-popup-active {\n  opacity: 0.8;\n  transition: opacity 0.2s;\n}\n\n.h5player-popup-content a, .h5player-popup-content a:visited{\n  color: #fff;\n  cursor: pointer;\n  text-decoration: none;\n}\n\n.h5player-popup-wrap:hover, .h5player-popup-full-active {\n  opacity: 1 !important;\n  transition: opacity 0.2s;\n}\n\n.h5player-popup-wrap:hover .h5player-popup-content, .h5player-popup-full-active .h5player-popup-content {\n  border-bottom: 2px solid rgba(255, 255, 255, 0.6);\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu {\n  background-color: rgba(0, 0, 0, 0.9);\n  color: #fff;\n  border-radius: 4px;\n  padding: 5px 0;\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu-item::part(base) {\n  /* background-color: rgba(0, 0, 0, 0.9); */\n  color: #fff;\n  font-size: 14px;\n  padding: 2px 0;\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu-item::part(base):hover {\n  background-color: var(--sl-color-primary-500);\n  color: #fff;\n}\n\n.h5player-popup-content .h5p-recommend-wrap {\n  flex-grow: 1;\n  box-sizing: border-box;\n  margin: 0 20px;\n  text-align: center;\n  font-size: 14px;\n  overflow: hidden;\n  white-space: nowrap;\n\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  position: relative;\n}\n\n@keyframes text-marquee {\n  0% { transform: translateX(0); }\n  100% { transform: translateX(-100%); }\n}\n\n.h5player-popup-content .h5p-recommend-mod {\n  display: inline-block;\n  word-break: keep-all;\n  white-space: nowrap;\n  /* 无限循环滚动的动画效果 */\n  /* padding-left: 100%; */\n  /* animation: text-marquee 15s linear infinite; */\n}\n.h5player-popup-content .h5p-recommend-item {\n  word-break: keep-all;\n  white-space: nowrap;\n\n  position: absolute;\n  top: 0;\n  right: 0;\n  pointer-events: none;\n  opacity: 0;\n  transition: opacity 0.4s;\n}\n\n.h5player-popup-content .h5p-recommend-item__active {\n  opacity: 1;\n  z-index: 99;\n  pointer-events: auto;\n}\n\n.h5player-popup-content .h5p-recommend-wrap>div {\n  opacity: 0.5;\n}\n.h5player-popup-content .h5p-recommend-wrap>div:hover{\n  opacity: 1;\n}\n.h5player-popup-content .h5p-recommend-wrap>div:hover .h5p-recommend-mod {\n  animation-play-state: paused;\n}");
+  const sheet = new CSSStyleSheet();sheet.replaceSync(":root,\n:host,\n.sl-theme-light {\n  color-scheme: light;\n\n  --sl-color-gray-50: hsl(0 0% 97.5%);\n  --sl-color-gray-100: hsl(240 4.8% 95.9%);\n  --sl-color-gray-200: hsl(240 5.9% 90%);\n  --sl-color-gray-300: hsl(240 4.9% 83.9%);\n  --sl-color-gray-400: hsl(240 5% 64.9%);\n  --sl-color-gray-500: hsl(240 3.8% 46.1%);\n  --sl-color-gray-600: hsl(240 5.2% 33.9%);\n  --sl-color-gray-700: hsl(240 5.3% 26.1%);\n  --sl-color-gray-800: hsl(240 3.7% 15.9%);\n  --sl-color-gray-900: hsl(240 5.9% 10%);\n  --sl-color-gray-950: hsl(240 7.3% 8%);\n\n  --sl-color-red-50: hsl(0 85.7% 97.3%);\n  --sl-color-red-100: hsl(0 93.3% 94.1%);\n  --sl-color-red-200: hsl(0 96.3% 89.4%);\n  --sl-color-red-300: hsl(0 93.5% 81.8%);\n  --sl-color-red-400: hsl(0 90.6% 70.8%);\n  --sl-color-red-500: hsl(0 84.2% 60.2%);\n  --sl-color-red-600: hsl(0 72.2% 50.6%);\n  --sl-color-red-700: hsl(0 73.7% 41.8%);\n  --sl-color-red-800: hsl(0 70% 35.3%);\n  --sl-color-red-900: hsl(0 62.8% 30.6%);\n  --sl-color-red-950: hsl(0 60% 19.6%);\n\n  --sl-color-orange-50: hsl(33.3 100% 96.5%);\n  --sl-color-orange-100: hsl(34.3 100% 91.8%);\n  --sl-color-orange-200: hsl(32.1 97.7% 83.1%);\n  --sl-color-orange-300: hsl(30.7 97.2% 72.4%);\n  --sl-color-orange-400: hsl(27 96% 61%);\n  --sl-color-orange-500: hsl(24.6 95% 53.1%);\n  --sl-color-orange-600: hsl(20.5 90.2% 48.2%);\n  --sl-color-orange-700: hsl(17.5 88.3% 40.4%);\n  --sl-color-orange-800: hsl(15 79.1% 33.7%);\n  --sl-color-orange-900: hsl(15.3 74.6% 27.8%);\n  --sl-color-orange-950: hsl(15.2 69.1% 19%);\n\n  --sl-color-amber-50: hsl(48 100% 96.1%);\n  --sl-color-amber-100: hsl(48 96.5% 88.8%);\n  --sl-color-amber-200: hsl(48 96.6% 76.7%);\n  --sl-color-amber-300: hsl(45.9 96.7% 64.5%);\n  --sl-color-amber-400: hsl(43.3 96.4% 56.3%);\n  --sl-color-amber-500: hsl(37.7 92.1% 50.2%);\n  --sl-color-amber-600: hsl(32.1 94.6% 43.7%);\n  --sl-color-amber-700: hsl(26 90.5% 37.1%);\n  --sl-color-amber-800: hsl(22.7 82.5% 31.4%);\n  --sl-color-amber-900: hsl(21.7 77.8% 26.5%);\n  --sl-color-amber-950: hsl(22.9 74.1% 16.7%);\n\n  --sl-color-yellow-50: hsl(54.5 91.7% 95.3%);\n  --sl-color-yellow-100: hsl(54.9 96.7% 88%);\n  --sl-color-yellow-200: hsl(52.8 98.3% 76.9%);\n  --sl-color-yellow-300: hsl(50.4 97.8% 63.5%);\n  --sl-color-yellow-400: hsl(47.9 95.8% 53.1%);\n  --sl-color-yellow-500: hsl(45.4 93.4% 47.5%);\n  --sl-color-yellow-600: hsl(40.6 96.1% 40.4%);\n  --sl-color-yellow-700: hsl(35.5 91.7% 32.9%);\n  --sl-color-yellow-800: hsl(31.8 81% 28.8%);\n  --sl-color-yellow-900: hsl(28.4 72.5% 25.7%);\n  --sl-color-yellow-950: hsl(33.1 69% 13.9%);\n\n  --sl-color-lime-50: hsl(78.3 92% 95.1%);\n  --sl-color-lime-100: hsl(79.6 89.1% 89.2%);\n  --sl-color-lime-200: hsl(80.9 88.5% 79.6%);\n  --sl-color-lime-300: hsl(82 84.5% 67.1%);\n  --sl-color-lime-400: hsl(82.7 78% 55.5%);\n  --sl-color-lime-500: hsl(83.7 80.5% 44.3%);\n  --sl-color-lime-600: hsl(84.8 85.2% 34.5%);\n  --sl-color-lime-700: hsl(85.9 78.4% 27.3%);\n  --sl-color-lime-800: hsl(86.3 69% 22.7%);\n  --sl-color-lime-900: hsl(87.6 61.2% 20.2%);\n  --sl-color-lime-950: hsl(86.5 60.6% 13.9%);\n\n  --sl-color-green-50: hsl(138.5 76.5% 96.7%);\n  --sl-color-green-100: hsl(140.6 84.2% 92.5%);\n  --sl-color-green-200: hsl(141 78.9% 85.1%);\n  --sl-color-green-300: hsl(141.7 76.6% 73.1%);\n  --sl-color-green-400: hsl(141.9 69.2% 58%);\n  --sl-color-green-500: hsl(142.1 70.6% 45.3%);\n  --sl-color-green-600: hsl(142.1 76.2% 36.3%);\n  --sl-color-green-700: hsl(142.4 71.8% 29.2%);\n  --sl-color-green-800: hsl(142.8 64.2% 24.1%);\n  --sl-color-green-900: hsl(143.8 61.2% 20.2%);\n  --sl-color-green-950: hsl(144.3 60.7% 12%);\n\n  --sl-color-emerald-50: hsl(151.8 81% 95.9%);\n  --sl-color-emerald-100: hsl(149.3 80.4% 90%);\n  --sl-color-emerald-200: hsl(152.4 76% 80.4%);\n  --sl-color-emerald-300: hsl(156.2 71.6% 66.9%);\n  --sl-color-emerald-400: hsl(158.1 64.4% 51.6%);\n  --sl-color-emerald-500: hsl(160.1 84.1% 39.4%);\n  --sl-color-emerald-600: hsl(161.4 93.5% 30.4%);\n  --sl-color-emerald-700: hsl(162.9 93.5% 24.3%);\n  --sl-color-emerald-800: hsl(163.1 88.1% 19.8%);\n  --sl-color-emerald-900: hsl(164.2 85.7% 16.5%);\n  --sl-color-emerald-950: hsl(164.3 87.5% 9.4%);\n\n  --sl-color-teal-50: hsl(166.2 76.5% 96.7%);\n  --sl-color-teal-100: hsl(167.2 85.5% 89.2%);\n  --sl-color-teal-200: hsl(168.4 83.8% 78.2%);\n  --sl-color-teal-300: hsl(170.6 76.9% 64.3%);\n  --sl-color-teal-400: hsl(172.5 66% 50.4%);\n  --sl-color-teal-500: hsl(173.4 80.4% 40%);\n  --sl-color-teal-600: hsl(174.7 83.9% 31.6%);\n  --sl-color-teal-700: hsl(175.3 77.4% 26.1%);\n  --sl-color-teal-800: hsl(176.1 69.4% 21.8%);\n  --sl-color-teal-900: hsl(175.9 60.8% 19%);\n  --sl-color-teal-950: hsl(176.5 58.6% 11.4%);\n\n  --sl-color-cyan-50: hsl(183.2 100% 96.3%);\n  --sl-color-cyan-100: hsl(185.1 95.9% 90.4%);\n  --sl-color-cyan-200: hsl(186.2 93.5% 81.8%);\n  --sl-color-cyan-300: hsl(187 92.4% 69%);\n  --sl-color-cyan-400: hsl(187.9 85.7% 53.3%);\n  --sl-color-cyan-500: hsl(188.7 94.5% 42.7%);\n  --sl-color-cyan-600: hsl(191.6 91.4% 36.5%);\n  --sl-color-cyan-700: hsl(192.9 82.3% 31%);\n  --sl-color-cyan-800: hsl(194.4 69.6% 27.1%);\n  --sl-color-cyan-900: hsl(196.4 63.6% 23.7%);\n  --sl-color-cyan-950: hsl(196.8 61% 16.1%);\n\n  --sl-color-sky-50: hsl(204 100% 97.1%);\n  --sl-color-sky-100: hsl(204 93.8% 93.7%);\n  --sl-color-sky-200: hsl(200.6 94.4% 86.1%);\n  --sl-color-sky-300: hsl(199.4 95.5% 73.9%);\n  --sl-color-sky-400: hsl(198.4 93.2% 59.6%);\n  --sl-color-sky-500: hsl(198.6 88.7% 48.4%);\n  --sl-color-sky-600: hsl(200.4 98% 39.4%);\n  --sl-color-sky-700: hsl(201.3 96.3% 32.2%);\n  --sl-color-sky-800: hsl(201 90% 27.5%);\n  --sl-color-sky-900: hsl(202 80.3% 23.9%);\n  --sl-color-sky-950: hsl(202.3 73.8% 16.5%);\n\n  --sl-color-blue-50: hsl(213.8 100% 96.9%);\n  --sl-color-blue-100: hsl(214.3 94.6% 92.7%);\n  --sl-color-blue-200: hsl(213.3 96.9% 87.3%);\n  --sl-color-blue-300: hsl(211.7 96.4% 78.4%);\n  --sl-color-blue-400: hsl(213.1 93.9% 67.8%);\n  --sl-color-blue-500: hsl(217.2 91.2% 59.8%);\n  --sl-color-blue-600: hsl(221.2 83.2% 53.3%);\n  --sl-color-blue-700: hsl(224.3 76.3% 48%);\n  --sl-color-blue-800: hsl(225.9 70.7% 40.2%);\n  --sl-color-blue-900: hsl(224.4 64.3% 32.9%);\n  --sl-color-blue-950: hsl(226.2 55.3% 18.4%);\n\n  --sl-color-indigo-50: hsl(225.9 100% 96.7%);\n  --sl-color-indigo-100: hsl(226.5 100% 93.9%);\n  --sl-color-indigo-200: hsl(228 96.5% 88.8%);\n  --sl-color-indigo-300: hsl(229.7 93.5% 81.8%);\n  --sl-color-indigo-400: hsl(234.5 89.5% 73.9%);\n  --sl-color-indigo-500: hsl(238.7 83.5% 66.7%);\n  --sl-color-indigo-600: hsl(243.4 75.4% 58.6%);\n  --sl-color-indigo-700: hsl(244.5 57.9% 50.6%);\n  --sl-color-indigo-800: hsl(243.7 54.5% 41.4%);\n  --sl-color-indigo-900: hsl(242.2 47.4% 34.3%);\n  --sl-color-indigo-950: hsl(243.5 43.6% 22.9%);\n\n  --sl-color-violet-50: hsl(250 100% 97.6%);\n  --sl-color-violet-100: hsl(251.4 91.3% 95.5%);\n  --sl-color-violet-200: hsl(250.5 95.2% 91.8%);\n  --sl-color-violet-300: hsl(252.5 94.7% 85.1%);\n  --sl-color-violet-400: hsl(255.1 91.7% 76.3%);\n  --sl-color-violet-500: hsl(258.3 89.5% 66.3%);\n  --sl-color-violet-600: hsl(262.1 83.3% 57.8%);\n  --sl-color-violet-700: hsl(263.4 70% 50.4%);\n  --sl-color-violet-800: hsl(263.4 69.3% 42.2%);\n  --sl-color-violet-900: hsl(263.5 67.4% 34.9%);\n  --sl-color-violet-950: hsl(265.1 61.5% 21.4%);\n\n  --sl-color-purple-50: hsl(270 100% 98%);\n  --sl-color-purple-100: hsl(268.7 100% 95.5%);\n  --sl-color-purple-200: hsl(268.6 100% 91.8%);\n  --sl-color-purple-300: hsl(269.2 97.4% 85.1%);\n  --sl-color-purple-400: hsl(270 95.2% 75.3%);\n  --sl-color-purple-500: hsl(270.7 91% 65.1%);\n  --sl-color-purple-600: hsl(271.5 81.3% 55.9%);\n  --sl-color-purple-700: hsl(272.1 71.7% 47.1%);\n  --sl-color-purple-800: hsl(272.9 67.2% 39.4%);\n  --sl-color-purple-900: hsl(273.6 65.6% 32%);\n  --sl-color-purple-950: hsl(276 59.5% 16.5%);\n\n  --sl-color-fuchsia-50: hsl(289.1 100% 97.8%);\n  --sl-color-fuchsia-100: hsl(287 100% 95.5%);\n  --sl-color-fuchsia-200: hsl(288.3 95.8% 90.6%);\n  --sl-color-fuchsia-300: hsl(291.1 93.1% 82.9%);\n  --sl-color-fuchsia-400: hsl(292 91.4% 72.5%);\n  --sl-color-fuchsia-500: hsl(292.2 84.1% 60.6%);\n  --sl-color-fuchsia-600: hsl(293.4 69.5% 48.8%);\n  --sl-color-fuchsia-700: hsl(294.7 72.4% 39.8%);\n  --sl-color-fuchsia-800: hsl(295.4 70.2% 32.9%);\n  --sl-color-fuchsia-900: hsl(296.7 63.6% 28%);\n  --sl-color-fuchsia-950: hsl(297.1 56.8% 14.5%);\n\n  --sl-color-pink-50: hsl(327.3 73.3% 97.1%);\n  --sl-color-pink-100: hsl(325.7 77.8% 94.7%);\n  --sl-color-pink-200: hsl(325.9 84.6% 89.8%);\n  --sl-color-pink-300: hsl(327.4 87.1% 81.8%);\n  --sl-color-pink-400: hsl(328.6 85.5% 70.2%);\n  --sl-color-pink-500: hsl(330.4 81.2% 60.4%);\n  --sl-color-pink-600: hsl(333.3 71.4% 50.6%);\n  --sl-color-pink-700: hsl(335.1 77.6% 42%);\n  --sl-color-pink-800: hsl(335.8 74.4% 35.3%);\n  --sl-color-pink-900: hsl(335.9 69% 30.4%);\n  --sl-color-pink-950: hsl(336.2 65.4% 15.9%);\n\n  --sl-color-rose-50: hsl(355.7 100% 97.3%);\n  --sl-color-rose-100: hsl(355.6 100% 94.7%);\n  --sl-color-rose-200: hsl(352.7 96.1% 90%);\n  --sl-color-rose-300: hsl(352.6 95.7% 81.8%);\n  --sl-color-rose-400: hsl(351.3 94.5% 71.4%);\n  --sl-color-rose-500: hsl(349.7 89.2% 60.2%);\n  --sl-color-rose-600: hsl(346.8 77.2% 49.8%);\n  --sl-color-rose-700: hsl(345.3 82.7% 40.8%);\n  --sl-color-rose-800: hsl(343.4 79.7% 34.7%);\n  --sl-color-rose-900: hsl(341.5 75.5% 30.4%);\n  --sl-color-rose-950: hsl(341.3 70.1% 17.1%);\n\n  --sl-color-primary-50: var(--sl-color-sky-50);\n  --sl-color-primary-100: var(--sl-color-sky-100);\n  --sl-color-primary-200: var(--sl-color-sky-200);\n  --sl-color-primary-300: var(--sl-color-sky-300);\n  --sl-color-primary-400: var(--sl-color-sky-400);\n  --sl-color-primary-500: var(--sl-color-sky-500);\n  --sl-color-primary-600: var(--sl-color-sky-600);\n  --sl-color-primary-700: var(--sl-color-sky-700);\n  --sl-color-primary-800: var(--sl-color-sky-800);\n  --sl-color-primary-900: var(--sl-color-sky-900);\n  --sl-color-primary-950: var(--sl-color-sky-950);\n\n  --sl-color-success-50: var(--sl-color-green-50);\n  --sl-color-success-100: var(--sl-color-green-100);\n  --sl-color-success-200: var(--sl-color-green-200);\n  --sl-color-success-300: var(--sl-color-green-300);\n  --sl-color-success-400: var(--sl-color-green-400);\n  --sl-color-success-500: var(--sl-color-green-500);\n  --sl-color-success-600: var(--sl-color-green-600);\n  --sl-color-success-700: var(--sl-color-green-700);\n  --sl-color-success-800: var(--sl-color-green-800);\n  --sl-color-success-900: var(--sl-color-green-900);\n  --sl-color-success-950: var(--sl-color-green-950);\n\n  --sl-color-warning-50: var(--sl-color-amber-50);\n  --sl-color-warning-100: var(--sl-color-amber-100);\n  --sl-color-warning-200: var(--sl-color-amber-200);\n  --sl-color-warning-300: var(--sl-color-amber-300);\n  --sl-color-warning-400: var(--sl-color-amber-400);\n  --sl-color-warning-500: var(--sl-color-amber-500);\n  --sl-color-warning-600: var(--sl-color-amber-600);\n  --sl-color-warning-700: var(--sl-color-amber-700);\n  --sl-color-warning-800: var(--sl-color-amber-800);\n  --sl-color-warning-900: var(--sl-color-amber-900);\n  --sl-color-warning-950: var(--sl-color-amber-950);\n\n  --sl-color-danger-50: var(--sl-color-red-50);\n  --sl-color-danger-100: var(--sl-color-red-100);\n  --sl-color-danger-200: var(--sl-color-red-200);\n  --sl-color-danger-300: var(--sl-color-red-300);\n  --sl-color-danger-400: var(--sl-color-red-400);\n  --sl-color-danger-500: var(--sl-color-red-500);\n  --sl-color-danger-600: var(--sl-color-red-600);\n  --sl-color-danger-700: var(--sl-color-red-700);\n  --sl-color-danger-800: var(--sl-color-red-800);\n  --sl-color-danger-900: var(--sl-color-red-900);\n  --sl-color-danger-950: var(--sl-color-red-950);\n\n  --sl-color-neutral-50: var(--sl-color-gray-50);\n  --sl-color-neutral-100: var(--sl-color-gray-100);\n  --sl-color-neutral-200: var(--sl-color-gray-200);\n  --sl-color-neutral-300: var(--sl-color-gray-300);\n  --sl-color-neutral-400: var(--sl-color-gray-400);\n  --sl-color-neutral-500: var(--sl-color-gray-500);\n  --sl-color-neutral-600: var(--sl-color-gray-600);\n  --sl-color-neutral-700: var(--sl-color-gray-700);\n  --sl-color-neutral-800: var(--sl-color-gray-800);\n  --sl-color-neutral-900: var(--sl-color-gray-900);\n  --sl-color-neutral-950: var(--sl-color-gray-950);\n\n  --sl-color-neutral-0: hsl(0, 0%, 100%);\n  --sl-color-neutral-1000: hsl(0, 0%, 0%);\n\n  --sl-border-radius-small: 0.1875rem;\n  --sl-border-radius-medium: 0.25rem;\n  --sl-border-radius-large: 0.5rem;\n  --sl-border-radius-x-large: 1rem;\n\n  --sl-border-radius-circle: 50%;\n  --sl-border-radius-pill: 9999px;\n\n  --sl-shadow-x-small: 0 1px 2px hsl(240 3.8% 46.1% / 6%);\n  --sl-shadow-small: 0 1px 2px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-medium: 0 2px 4px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-large: 0 2px 8px hsl(240 3.8% 46.1% / 12%);\n  --sl-shadow-x-large: 0 4px 16px hsl(240 3.8% 46.1% / 12%);\n\n  --sl-spacing-3x-small: 0.125rem;\n  --sl-spacing-2x-small: 0.25rem;\n  --sl-spacing-x-small: 0.5rem;\n  --sl-spacing-small: 0.75rem;\n  --sl-spacing-medium: 1rem;\n  --sl-spacing-large: 1.25rem;\n  --sl-spacing-x-large: 1.75rem;\n  --sl-spacing-2x-large: 2.25rem;\n  --sl-spacing-3x-large: 3rem;\n  --sl-spacing-4x-large: 4.5rem;\n\n  --sl-transition-x-slow: 1000ms;\n  --sl-transition-slow: 500ms;\n  --sl-transition-medium: 250ms;\n  --sl-transition-fast: 150ms;\n  --sl-transition-x-fast: 50ms;\n\n  --sl-font-mono: SFMono-Regular, Consolas, \"Liberation Mono\", Menlo, monospace;\n  --sl-font-sans: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto,\n    Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\",\n    \"Segoe UI Symbol\";\n  --sl-font-serif: Georgia, \"Times New Roman\", serif;\n\n  --sl-font-size-2x-small: 0.625rem;\n  --sl-font-size-x-small: 0.75rem;\n  --sl-font-size-small: 0.875rem;\n  --sl-font-size-medium: 1rem;\n  --sl-font-size-large: 1.25rem;\n  --sl-font-size-x-large: 1.5rem;\n  --sl-font-size-2x-large: 2.25rem;\n  --sl-font-size-3x-large: 3rem;\n  --sl-font-size-4x-large: 4.5rem;\n\n  --sl-font-weight-light: 300;\n  --sl-font-weight-normal: 400;\n  --sl-font-weight-semibold: 500;\n  --sl-font-weight-bold: 700;\n\n  --sl-letter-spacing-denser: -0.03em;\n  --sl-letter-spacing-dense: -0.015em;\n  --sl-letter-spacing-normal: normal;\n  --sl-letter-spacing-loose: 0.075em;\n  --sl-letter-spacing-looser: 0.15em;\n\n  --sl-line-height-denser: 1;\n  --sl-line-height-dense: 1.4;\n  --sl-line-height-normal: 1.8;\n  --sl-line-height-loose: 2.2;\n  --sl-line-height-looser: 2.6;\n\n  --sl-focus-ring-color: var(--sl-color-primary-600);\n  --sl-focus-ring-style: solid;\n  --sl-focus-ring-width: 3px;\n  --sl-focus-ring: var(--sl-focus-ring-style) var(--sl-focus-ring-width)\n    var(--sl-focus-ring-color);\n  --sl-focus-ring-offset: 1px;\n\n  --sl-button-font-size-small: var(--sl-font-size-x-small);\n  --sl-button-font-size-medium: var(--sl-font-size-small);\n  --sl-button-font-size-large: var(--sl-font-size-medium);\n\n  --sl-input-height-small: 1.875rem;\n  --sl-input-height-medium: 2.5rem;\n  --sl-input-height-large: 3.125rem;\n\n  --sl-input-background-color: var(--sl-color-neutral-0);\n  --sl-input-background-color-hover: var(--sl-input-background-color);\n  --sl-input-background-color-focus: var(--sl-input-background-color);\n  --sl-input-background-color-disabled: var(--sl-color-neutral-100);\n  --sl-input-border-color: var(--sl-color-neutral-300);\n  --sl-input-border-color-hover: var(--sl-color-neutral-400);\n  --sl-input-border-color-focus: var(--sl-color-primary-500);\n  --sl-input-border-color-disabled: var(--sl-color-neutral-300);\n  --sl-input-border-width: 1px;\n  --sl-input-required-content: \"*\";\n  --sl-input-required-content-offset: -2px;\n  --sl-input-required-content-color: var(--sl-input-label-color);\n\n  --sl-input-border-radius-small: var(--sl-border-radius-medium);\n  --sl-input-border-radius-medium: var(--sl-border-radius-medium);\n  --sl-input-border-radius-large: var(--sl-border-radius-medium);\n\n  --sl-input-font-family: var(--sl-font-sans);\n  --sl-input-font-weight: var(--sl-font-weight-normal);\n  --sl-input-font-size-small: var(--sl-font-size-small);\n  --sl-input-font-size-medium: var(--sl-font-size-medium);\n  --sl-input-font-size-large: var(--sl-font-size-large);\n  --sl-input-letter-spacing: var(--sl-letter-spacing-normal);\n\n  --sl-input-color: var(--sl-color-neutral-700);\n  --sl-input-color-hover: var(--sl-color-neutral-700);\n  --sl-input-color-focus: var(--sl-color-neutral-700);\n  --sl-input-color-disabled: var(--sl-color-neutral-900);\n  --sl-input-icon-color: var(--sl-color-neutral-500);\n  --sl-input-icon-color-hover: var(--sl-color-neutral-600);\n  --sl-input-icon-color-focus: var(--sl-color-neutral-600);\n  --sl-input-placeholder-color: var(--sl-color-neutral-500);\n  --sl-input-placeholder-color-disabled: var(--sl-color-neutral-600);\n  --sl-input-spacing-small: var(--sl-spacing-small);\n  --sl-input-spacing-medium: var(--sl-spacing-medium);\n  --sl-input-spacing-large: var(--sl-spacing-large);\n\n  --sl-input-focus-ring-color: hsl(198.6 88.7% 48.4% / 40%);\n  --sl-input-focus-ring-offset: 0;\n\n  --sl-input-filled-background-color: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-hover: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-focus: var(--sl-color-neutral-100);\n  --sl-input-filled-background-color-disabled: var(--sl-color-neutral-100);\n  --sl-input-filled-color: var(--sl-color-neutral-800);\n  --sl-input-filled-color-hover: var(--sl-color-neutral-800);\n  --sl-input-filled-color-focus: var(--sl-color-neutral-700);\n  --sl-input-filled-color-disabled: var(--sl-color-neutral-800);\n\n  --sl-input-label-font-size-small: var(--sl-font-size-small);\n  --sl-input-label-font-size-medium: var(--sl-font-size-medium);\n  --sl-input-label-font-size-large: var(--sl-font-size-large);\n  --sl-input-label-color: inherit;\n\n  --sl-input-help-text-font-size-small: var(--sl-font-size-x-small);\n  --sl-input-help-text-font-size-medium: var(--sl-font-size-small);\n  --sl-input-help-text-font-size-large: var(--sl-font-size-medium);\n  --sl-input-help-text-color: var(--sl-color-neutral-500);\n\n  --sl-toggle-size-small: 0.875rem;\n  --sl-toggle-size-medium: 1.125rem;\n  --sl-toggle-size-large: 1.375rem;\n\n  --sl-overlay-background-color: hsl(240 3.8% 46.1% / 33%);\n\n  --sl-panel-background-color: var(--sl-color-neutral-0);\n  --sl-panel-border-color: var(--sl-color-neutral-200);\n  --sl-panel-border-width: 1px;\n\n  --sl-tooltip-border-radius: var(--sl-border-radius-medium);\n  --sl-tooltip-background-color: var(--sl-color-neutral-800);\n  --sl-tooltip-color: var(--sl-color-neutral-0);\n  --sl-tooltip-font-family: var(--sl-font-sans);\n  --sl-tooltip-font-weight: var(--sl-font-weight-normal);\n  --sl-tooltip-font-size: var(--sl-font-size-small);\n  --sl-tooltip-line-height: var(--sl-line-height-dense);\n  --sl-tooltip-padding: var(--sl-spacing-2x-small) var(--sl-spacing-x-small);\n  --sl-tooltip-arrow-size: 6px;\n\n  --sl-z-index-drawer: 999700;\n  --sl-z-index-dialog: 999800;\n  --sl-z-index-dropdown: 999900;\n  --sl-z-index-toast: 999950;\n  --sl-z-index-tooltip: 9991000;\n}\n\n.sl-scroll-lock {\n  padding-right: var(--sl-scroll-lock-size) !important;\n  overflow: hidden !important;\n}\n\n.sl-toast-stack {\n  position: fixed;\n  top: 0;\n  inset-inline-end: 0;\n  z-index: var(--sl-z-index-toast);\n  width: 28rem;\n  max-width: 100%;\n  max-height: 100%;\n  overflow: auto;\n}\n\n.sl-toast-stack sl-alert {\n  margin: var(--sl-spacing-medium);\n}\n\n.sl-toast-stack sl-alert::part(base) {\n  box-shadow: var(--sl-shadow-large);\n}\n\nsl-drawer::part(base) {\n  color: var(--sl-color-neutral-800) !important;\n}\n\n.h5player-popup-wrap {\n  position: relative;\n  z-index: 99999999;\n  opacity: 0;\n}\n\n.h5player-popup-wrap sl-popup {\n  position: relative;\n}\n\n.h5player-popup-wrap .h5player-popup-content {\n  background-color: rgba(0, 0, 0, 0.9);\n  color: #fff;\n  font-size: 16px;\n  min-width: 220px;\n  height: 48px;\n  line-height: 48px;\n  display: flex;\n  padding: 0 16px;\n  border-radius: 6px 6px 0 0;\n  border-bottom: 2px solid rgba(255, 255, 255, 0.2);\n\n  /*  */\n  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n@keyframes text-lumos {\n  0%,100%{ color:#fff; }\n\t50%{ color:#ccc; }\n}\n\n.h5player-popup-content .h5p-logo-mod {\n  white-space: nowrap;\n  font-weight: 500;\n  text-shadow: 0px 0px 2px #666, 0 0 30px #666;\n  animation: text-lumos 5s infinite;\n}\n\n.h5player-popup-content .h5p-menu-wrap {}\n\n.h5player-popup-content .h5p-action-mod {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.h5player-popup-content .h5p-action-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 14px;\n  padding: 0 8px;\n  cursor: pointer;\n  white-space: nowrap;\n}\n\n.h5player-popup-content .h5p-action-btn:hover {\n  background-color: rgba(255, 255, 255, 0.2);\n}\n\n.h5player-popup-content .h5p-action-btn sl-icon {\n  padding: 0 4px;\n}\n\n/*  */\n.h5player-popup-active {\n  opacity: 0.8;\n  transition: opacity 0.2s;\n}\n\n.h5player-popup-content a, .h5player-popup-content a:visited{\n  color: #fff;\n  cursor: pointer;\n  text-decoration: none;\n}\n\n.h5player-popup-wrap:hover, .h5player-popup-full-active {\n  opacity: 1 !important;\n  transition: opacity 0.2s;\n}\n\n.h5player-popup-wrap:hover .h5player-popup-content, .h5player-popup-full-active .h5player-popup-content {\n  border-bottom: 2px solid rgba(255, 255, 255, 0.6);\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu {\n  background-color: rgba(0, 0, 0, 0.9);\n  color: #fff;\n  border-radius: 4px;\n  padding: 5px 0;\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu-item::part(base) {\n  /* background-color: rgba(0, 0, 0, 0.9); */\n  color: #fff;\n  font-size: 14px;\n  padding: 2px 0;\n}\n\n.h5player-popup-content .h5p-action-mod sl-menu-item::part(base):hover {\n  background-color: var(--sl-color-primary-500);\n  color: #fff;\n}\n\n.h5player-popup-content .h5p-recommend-wrap {\n  flex-grow: 1;\n  box-sizing: border-box;\n  margin: 0 20px;\n  text-align: center;\n  font-size: 14px;\n  overflow: hidden;\n  white-space: nowrap;\n\n  display: flex;\n  justify-content: flex-end;\n  align-items: center;\n  position: relative;\n}\n\n@keyframes text-marquee {\n  0% { transform: translateX(0); }\n  100% { transform: translateX(-100%); }\n}\n\n.h5player-popup-content .h5p-recommend-mod {\n  display: inline-block;\n  word-break: keep-all;\n  white-space: nowrap;\n  /*  */\n  /* padding-left: 100%; */\n  /* animation: text-marquee 15s linear infinite; */\n}\n.h5player-popup-content .h5p-recommend-item {\n  word-break: keep-all;\n  white-space: nowrap;\n\n  position: absolute;\n  top: 0;\n  right: 0;\n  pointer-events: none;\n  opacity: 0;\n  transition: opacity 0.4s;\n}\n\n.h5player-popup-content .h5p-recommend-item__active {\n  opacity: 1;\n  z-index: 99;\n  pointer-events: auto;\n}\n\n.h5player-popup-content .h5p-recommend-wrap>div {\n  opacity: 0.5;\n}\n.h5player-popup-content .h5p-recommend-wrap>div:hover{\n  opacity: 1;\n}\n.h5player-popup-content .h5p-recommend-wrap>div:hover .h5p-recommend-mod {\n  animation-play-state: paused;\n}");
 
   /**
    * @license
@@ -11034,19 +10194,19 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
 
   const faq = [
     {
-      title: '倍速刷课为啥学习进度没变化',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%80%8D%E9%80%9F%E5%88%B7%E8%AF%BE%E4%B8%BA%E5%95%A5%E5%AD%A6%E4%B9%A0%E8%BF%9B%E5%BA%A6%E6%B2%A1%E5%8F%98%E5%8C%96'
     },
     {
-      title: '百度网盘视频无法倍速播放',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E6%97%A0%E6%B3%95%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE'
     },
     {
-      title: '倍速播放卡顿、无进度、音画不同步',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%E5%8D%A1%E9%A1%BF%E3%80%81%E6%97%A0%E8%BF%9B%E5%BA%A6%E3%80%81%E9%9F%B3%E7%94%BB%E4%B8%8D%E5%90%8C%E6%AD%A5'
@@ -11058,7 +10218,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#playback-is-stuttering-has-no-progress-or-is-out-of-sync'
     },
     {
-      title: '如何支持本地视频文件的倍速播放',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81%E6%9C%AC%E5%9C%B0%E8%A7%86%E9%A2%91%E6%96%87%E4%BB%B6%E7%9A%84%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE'
@@ -11070,7 +10230,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#how-can-i-support-speed-playback-for-local-video-files'
     },
     {
-      title: '开启插件后网站自身的调速失效了',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%BC%80%E5%90%AF%E6%8F%92%E4%BB%B6%E5%90%8E%E7%BD%91%E7%AB%99%E8%87%AA%E8%BA%AB%E7%9A%84%E8%B0%83%E9%80%9F%E5%A4%B1%E6%95%88%E4%BA%86'
@@ -11082,7 +10242,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#the-site-s-own-speed-control-fails-after-enabling-the-plugin'
     },
     {
-      title: '为什么视频跟音频是分开下载的',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A7%86%E9%A2%91%E8%B7%9F%E9%9F%B3%E9%A2%91%E6%98%AF%E5%88%86%E5%BC%80%E4%B8%8B%E8%BD%BD%E7%9A%84'
@@ -11094,7 +10254,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#why-are-video-and-audio-downloaded-separately'
     },
     {
-      title: '如何合并下载到的音视频文件',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%A6%82%E4%BD%95%E5%90%88%E5%B9%B6%E4%B8%8B%E8%BD%BD%E5%88%B0%E7%9A%84%E9%9F%B3%E8%A7%86%E9%A2%91%E6%96%87%E4%BB%B6'
@@ -11106,7 +10266,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#how-to-merge-downloaded-audio-and-video-files'
     },
     {
-      title: '为什么视频截图不同网站表现不一致',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E4%B8%8D%E5%90%8C%E7%BD%91%E7%AB%99%E8%A1%A8%E7%8E%B0%E4%B8%8D%E4%B8%80%E8%87%B4'
@@ -11118,7 +10278,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       args: '/home/q&a#why-is-video-screenshot-functionality-inconsistent-across-websites'
     },
     {
-      title: '如何禁用或自定义快捷键',
+      title: '',
       action: 'openDocsLink',
       lang: ['zh'],
       args: '/home/q&a#%E5%A6%82%E4%BD%95%E7%A6%81%E7%94%A8%E6%88%96%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BF%AB%E6%8D%B7%E9%94%AE'
@@ -11566,8 +10726,8 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
               disabled: !isGlobalStorageUsable
             },
             {
-              title: `${i18n.t('languageSettings')}「${i18n.t('globalSetting')}」`,
-              desc: `${i18n.t('languageSettings')}「${i18n.t('globalSetting')}」`,
+              title: `${i18n.t('languageSettings')}${i18n.t('globalSetting')}`,
+              desc: `${i18n.t('languageSettings')}${i18n.t('globalSetting')}`,
               disabled: !isGlobalStorageUsable,
               subMenu: [
                 {
@@ -11577,14 +10737,14 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
                   args: 'auto'
                 },
                 {
-                  title: '简体中文',
-                  desc: '简体中文',
+                  title: '',
+                  desc: '',
                   action: 'setLanguage',
                   args: 'zh-CN'
                 },
                 {
-                  title: '繁體中文',
-                  desc: '繁體中文',
+                  title: '',
+                  desc: '',
                   action: 'setLanguage',
                   args: 'zh-TW'
                 },
@@ -11676,7 +10836,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     }
   ];
 
-  /* menuConfig预处理函数，根据指定的参考dom元素，通过判断元素的宽度来决定是否只显示菜单的图标，以节省展示位置 */
   function menuConfigPreprocess (menuConfig, refDom) {
     const refWidth = refDom.offsetWidth;
     const iconOnly = refWidth < 500;
@@ -11693,7 +10852,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     })
   }
 
-  /* 写个函数，支持将menuConfig.dropdownMenu的数据构建成sl-menu组件的template */
   function convertDropdownMenuToTemplate (dropdownMenu, isRootMenu = true) {
     const menuItems = dropdownMenu.map(item => {
       if (item.disabled) return ''
@@ -11727,7 +10885,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     return isRootMenu ? `<sl-menu>${menuItems}</sl-menu>` : menuItems
   }
 
-  /* 写一个函数可以将menuConfig转换成template进行输出 */
   function convertMenuConfigToTemplate (menuConfig) {
     return `
   <div class="h5p-action-mod">
@@ -11788,12 +10945,10 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     recommendList = recommendList.filter(item => !item.disabled);
 
     const curLang = i18n.language() || '';
-    /* 兼容各种可能的语言配置写法 */
     const curLang2 = curLang.replace('-', '');
     const curLang3 = curLang.replace('-', '_');
     const curLang4 = curLang.split('-')[0];
 
-    /* 根据当前的language和recommendList的languages配置过滤出符合当前语言的recommendList */
     recommendList = recommendList.filter(item => {
       const lang = item.lang || item.language || item.languages;
       if (lang) {
@@ -11805,10 +10960,8 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
 
     if (!recommendList.length) { return '' }
 
-    /* 从recommendList里随机取5条数据，多余的不予以展示 */
     if (recommendList.length > 5) { recommendList = recommendList.sort(() => Math.random() - 0.5).slice(0, 5); }
 
-    /* 根据recommendList里的priority字段进行排序，priority值越大越靠前 */
     recommendList = recommendList.sort((a, b) => (b.priority || 0) - (a.priority || 0));
 
     const recommendHtml = recommendList.map(item => {
@@ -11832,8 +10985,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
   }
 
   /**
-   * 注册Recommend切换逻辑，每4s检测一次当前哪个h5p-recommend-item上有h5p-recommend-item__active，然后将h5p-recommend-item__active切换到下一个元素，如此往复
-   * 当鼠标移动到recommendWrap的时候停止切换，移开后继续切换
    */
   function registerRecommendModToggle (recommendWrap, reRender) {
     if (!reRender && (!recommendWrap || recommendWrap.__h5pRecommendModRegistered__)) { return }
@@ -11868,17 +11019,14 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
   }
 
   /**
-   * 通过事件委托的方式处理菜单点击事件，减少事件绑定，提升性能
-   * @param { Event } event -必选 事件对象
    */
   function menuActionHandler (obj) {
     const { event, h5Player, h5playerUI, videoElement, popup, actionCallback } = obj;
     const target = event.target;
 
-    /* 根据target查找是否包含data-action属性，注意这里可能需要使用closest来向上查找 */
     const actionDOM = target.closest('.h5p-menu-action');
     if (!actionDOM) {
-      debug$1.log('[menuActionHandler]', '未找到actionDOM', event.target);
+      debug$1.log('[menuActionHandler]', 'actionDOM', event.target);
       return
     }
 
@@ -11904,7 +11052,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
 
       try {
         if (action === 'setPlaybackRate') {
-          /* 使用UI操作需强行跳过锁检测逻辑 */
           h5Player.setPlaybackRate(args, false, false, true);
         } else if (globalFunctional[action] && globalFunctional[action].fn instanceof Function) {
           globalFunctional[action].fn(args);
@@ -11947,7 +11094,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     if (popupWrapId) { removePopupWrapById(popupWrapId); }
   }
 
-  /* 遍历popupWrapObjs，如果popupWrapObjs中的element元素的offsetParent为null，则移除掉 */
   function cleanPopupWrap () {
     const popupWrapIds = Object.keys(popupWrapObjs);
     popupWrapIds.forEach(popupWrapId => {
@@ -11979,7 +11125,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     async init () {
       debug.log('h5playerUI init');
 
-      /* 插入组件相关的样式 */
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
     },
 
@@ -12000,17 +11145,14 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
     popup (element, h5Player) {
       if (this.__disableGUITemporarily__ || element.__disableGUITemporarily__) { return false }
 
-      /* 如果element元素的宽高比大于2.5，说明可能为视频背景，则也不显示popup */
       if (element.videoWidth / element.videoHeight > 2.5) { return false }
 
-      /* 防止popup渲染过于频繁 */
       if (this.lastRenderedPopupTime && Date.now() - this.lastRenderedPopupTime < 100) {
         return false
       } else {
         this.lastRenderedPopupTime = Date.now();
       }
 
-      /* 防止popup死循环渲染 */
       if (element.__popupRenderedCount__ && element.__popupRenderedCount__ > 15) {
         return false
       } else {
@@ -12063,13 +11205,9 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       const popup = popupWrap.querySelector('sl-popup');
 
       /**
-       * 判断popup初始化是否异常，油管上使用了custom-elements-es5-adapter.js，会导致popup异常，故有此判断
-       * 例如：https://www.youtube.com/watch?v=jsb-5H_hy0M
-       * 例如：https://www.youtube.com/watch?v=-2xb7rGCi2k
        */
       function checkPopupUpdateComplete () {
         if (!popup || !popup.updateComplete || !popup.updateComplete.then) {
-          // debug.error('[h5playerUI][popup][updateComplete], 组件初始化异常', popup, element)
           element.removeAttribute('data-popup-wrap-id');
           popupWrap.remove();
           delete popupWrapObjs[popupWrapId];
@@ -12079,7 +11217,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         return true
       }
 
-      /* 确保popup已经被渲染 */
       customElements.whenDefined('sl-popup').then(() => {
         if (!checkPopupUpdateComplete()) {
           return false
@@ -12093,7 +11230,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         });
       });
 
-      /* 重新渲染h5p-action-mod对应的菜单，以便更新菜单状态 */
       function reRenderMenuMod () {
         const menuWrap = popupWrap.querySelector('.h5player-popup-content .h5p-menu-wrap');
         const actionMod = popupWrap.querySelector('.h5p-action-mod');
@@ -12103,14 +11239,12 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
           const newMenuTemplate = createMenuTemplate(menuConfigPreprocess(menuConfig, element));
           parseHTML(newMenuTemplate, menuWrap);
 
-          /* 图标加载失败时，移除图标元素 */
           const slIcons = popupWrap.querySelectorAll('sl-icon');
           slIcons && slIcons.forEach(slIcon => {
             slIcon.addEventListener('sl-error', (event) => {
               const parent = event.target.parentElement;
               event.target.remove();
 
-              /* 改为只显示文字标题 */
               if (parent.getAttribute('data-title')) {
                 parent.innerText = parent.getAttribute('data-title');
               }
@@ -12121,10 +11255,8 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         }
       }
 
-      /* 油管首次渲染会莫名其妙的出错，所以此处延迟一段时间重新渲染一次菜单 */
       setTimeout(() => { reRenderMenuMod(); }, 400);
 
-      /* 重新渲染h5p-recommend-mod对应的推荐模块，如果位置不够则对隐藏该模块 */
       function reRenderRecommendMod () {
         const recommendWrap = popupWrap.querySelector('.h5player-popup-content .h5p-recommend-wrap');
         const recommendMod = popupWrap.querySelector('.h5player-popup-content .h5p-recommend-wrap>div');
@@ -12144,12 +11276,9 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
       const alwaysShowUIBar = configManager.getGlobalStorage('ui.alwaysShow');
 
       /**
-       * 鼠标移动到popupWrap上时增加fullActiveClass的样式类，移出一段时间后再移除fullActiveClass的样式类
-       * 用于防止鼠标移动到popupWrap上时popupWrap被快速隐藏，以提示操作体验
        */
       let mouseleaveTimer = null;
       popupWrap.addEventListener('mouseenter', () => {
-        /* 元素比例异常，不显示popup */
         if (element.videoWidth / element.videoHeight > 2.5) {
           element.__disableGUITemporarily__ = true;
           removePopupWrapByElement(element);
@@ -12174,7 +11303,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
             !alwaysShowUIBar && !element.paused && popupWrap.classList.remove(activeClass);
             !alwaysShowUIBar && !element.paused && popupWrap.classList.remove(fullActiveClass);
 
-            /* 关闭popupWrap中的所有sl-dropdown */
             const dropdowns = popupWrap.querySelectorAll('sl-dropdown');
             dropdowns.forEach(dropdown => {
               dropdown._open_ = false;
@@ -12240,9 +11368,7 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         }
       }
 
-      /* 移动端下如果注册了mousemove会导致click没法触发，或者导致事件相互干扰，没法唤起sl-dropdown */
       if (!device.isMobile()) {
-        /* 鼠标在popupWrap上移动时，如果检测到isOutOfDocument(element)也移除fullActiveClass的样式类，注意需加上debounce */
         let lastCheckIsOutOfDocumentTime = Date.now();
         popupWrap.addEventListener('mousemove', (event) => {
           const now = Date.now();
@@ -12324,7 +11450,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         }
       });
 
-      /* element切换播放状态时，如果是播放状态，则隐藏popup，否则显示popup */
       element.addEventListener('play', () => {
         if (alwaysShowUIBar) {
           popupWrap.classList.add(activeClass);
@@ -12369,7 +11494,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         cleanPopupWrap();
       });
 
-      /* element的播放进度发生变化时，执行一次popup.reposition() */
       let lastTimeupdateTime = Date.now();
       element.addEventListener('timeupdate', () => {
         const now = Date.now();
@@ -12379,7 +11503,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
         }
       });
 
-      /* 尝试清除popupWrapObjs中的无效元素 */
       cleanPopupWrap();
 
       // debug.log('[h5playerUI][popup]', popup, popupWrap, element)
@@ -12390,7 +11513,6 @@ const h5playerUI = function (window) {var h5playerUI = (function () {
 
 })();return h5playerUI};
 
-/* 定义支持哪些媒体标签 */
 // const supportMediaTags = ['video', 'bwp-video', 'audio']
 const supportMediaTags = ['video', 'bwp-video'];
 
@@ -12401,7 +11523,6 @@ const h5Player = {
   mediaPlusApi: null,
   mediaSource,
   configManager,
-  /* 提示文本的字号 */
   fontSize: 12,
   enable: true,
   globalMode: true,
@@ -12413,9 +11534,7 @@ const h5Player = {
   },
   rotate: 0,
 
-  /* 水平镜像翻转, 0 或 180 */
   rotateY: 0,
-  /* 垂直镜像翻转, 0 或 180 */
   rotateX: 0,
 
   defaultTransform: {
@@ -12429,16 +11548,13 @@ const h5Player = {
     rotateX: 0
   },
 
-  /* 存储旧的Transform值 */
   historyTransform: {},
 
   playbackRate: configManager.get('media.playbackRate'),
   volume: configManager.get('media.volume'),
   lastPlaybackRate: configManager.get('media.lastPlaybackRate'),
-  /* 快进快退步长 */
   skipStep: 5,
 
-  /* 监听鼠标活动的观察对象 */
   mouseObserver: new MouseObserver(),
 
   disableHotkeysTemporarily () {
@@ -12462,7 +11578,6 @@ const h5Player = {
     }
   },
 
-  /* 关闭当前视频实例的UI界面，以便消除UI界面对其他元素遮挡等相关影响 */
   disableCurrentInstanceGUI () {
     const t = this;
     const player = t.player();
@@ -12472,7 +11587,6 @@ const h5Player = {
     }
   },
 
-  /* 获取当前播放器的实例 */
   player: function () {
     const t = this;
     let playerInstance = t.playerInstance;
@@ -12497,7 +11611,6 @@ const h5Player = {
     return isAudioElement(this.player())
   },
 
-  /* 每个网页可能存在的多个video播放器 */
   getPlayerList: function () {
     const list = mediaCore.mediaElementList || [];
 
@@ -12505,7 +11618,6 @@ const h5Player = {
       supportMediaTags.forEach(tagName => {
         context.querySelectorAll(tagName).forEach(function (player) {
           if (player.tagName.toLowerCase() === 'bwp-video') {
-            /* 将B站的BWP-VIDEO标识为HTMLVideoElement */
             player.HTMLVideoElement = true;
           }
 
@@ -12518,7 +11630,6 @@ const h5Player = {
 
     findPlayer(document);
 
-    // 被封装在 shadow dom 里面的video
     if (window._shadowDomList_) {
       window._shadowDomList_.forEach(function (shadowRoot) {
         findPlayer(shadowRoot);
@@ -12547,7 +11658,6 @@ const h5Player = {
     return wrapDom
   },
 
-  /* 挂载到页面上的window对象，用于调试 */
   async mountToGlobal () {
     try {
       const pageWindow = await getPageWindow();
@@ -12557,7 +11667,7 @@ const h5Player = {
           pageWindow._h5PlayerInFrame = h5Player || 'null';
         }
         pageWindow._window = window || '';
-        debug.log('h5Player对象已成功挂载到全局');
+        debug.log('h5Player');
       }
     } catch (e) {
       debug.error(e);
@@ -12565,8 +11675,6 @@ const h5Player = {
   },
 
   /**
-   * 初始化播放器实例
-   * @param isSingle 是否为单实例video标签
    */
   initPlayerInstance (isSingle) {
     const t = this;
@@ -12584,11 +11692,9 @@ const h5Player = {
     t.setPlaybackRate();
     t.lockPlaybackRate(1000);
 
-    /* 增加通用全屏，网页全屏api */
     player._fullScreen_ = new FullScreen(player);
     player._fullPageScreen_ = new FullScreen(player, true);
 
-    /* 注册热键运行器 */
     t.registerHotkeysRunner();
 
     if (!player._hasCanplayEvent_) {
@@ -12598,7 +11704,6 @@ const h5Player = {
       player._hasCanplayEvent_ = true;
     }
 
-    /* 播放的时候进行相关同步操作 */
     if (!player._hasPlayerInitEvent_) {
       let setPlaybackRateOnPlayingCount = 0;
       player.addEventListener('playing', function (event) {
@@ -12606,26 +11711,21 @@ const h5Player = {
         t.setPlaybackRate(null, true);
         t.lockPlaybackRate(1000);
 
-        /* 同步播放音量 */
         if (configManager.get('enhance.blockSetVolume') === true && event.target.muted === false) {
           t.setVolume(configManager.getGlobalStorage('media.volume'), true);
         }
 
-        /* 禁止默认的进度控制 */
         if (configManager.get('enhance.blockSetCurrentTime') === true) {
           t.lockCurrentTime();
         }
 
-        /* 恢复播放进度 */
         t.setPlayProgress(player);
 
         if (setPlaybackRateOnPlayingCount === 0) {
-          /* 同步之前设定的播放速度，音量等 */
           t.unLockPlaybackRate();
           t.setPlaybackRate();
           t.lockPlaybackRate(1000);
 
-          /* 启动播放进度记录 */
           setTimeout(() => {
             t.playProgressRecorder(player);
           }, 2000);
@@ -12640,7 +11740,6 @@ const h5Player = {
       player._hasPlayerInitEvent_ = true;
     }
 
-    /* 进行自定义初始化操作 */
     const taskConf = TCC.getTaskConfig();
     if (taskConf.init) {
       TCC.doTask('init', player);
@@ -12648,12 +11747,9 @@ const h5Player = {
 
     const needInitEvent = !player.__registeredInitEvent__;
 
-    /* 注册鼠标响应事件 */
     needInitEvent && t.mouseObserver.on(player, 'click', function (event, offset, target) {
-      // debug.log('捕捉到鼠标点击事件：', event, offset, target)
     });
 
-    /* 画中画事件监听 */
     needInitEvent && player.addEventListener('enterpictureinpicture', () => {
       monkeyMsg.send('globalPictureInPictureInfo', {
         usePictureInPicture: true
@@ -12671,7 +11767,6 @@ const h5Player = {
 
     // if (debug.isDebugMode()) {}
 
-    /* 记录player使用过的src */
     function srcRecord (player) {
       const src = player.currentSrc || player.src;
       if (!src) { return }
@@ -12683,7 +11778,6 @@ const h5Player = {
     }
 
     function updataBufferedTime (player) {
-      /* 随时记录缓存数据到了哪个时间节点 */
       if (player.buffered.length > 0) {
         const bufferedTime = player.buffered.end(player.buffered.length - 1);
         player.bufferedTime = bufferedTime;
@@ -12708,10 +11802,8 @@ const h5Player = {
       srcRecord(player);
     });
 
-    /* 注册UI界面 */
     t.UI && t.UI.popup && t.UI.popup(player, t);
 
-    /* 在播放或暂停时，也尝试注册UI界面，这样即使popup被意外删除，也还是能正常再次创建回来 */
     needInitEvent && player.addEventListener('play', function () {
       t.UI && t.UI.popup && t.UI.popup(player, t);
     });
@@ -12758,26 +11850,22 @@ const h5Player = {
       this.hotkeysRunner = new HotkeysRunner(configManager.get('hotkeys'));
 
       if (isInIframe() && !isInCrossOriginFrame()) {
-        /* 让顶层页面也可以监听组合键的触发 */
         this.hotkeysRunner.setCombinationKeysMonitor(window.top);
       }
     }
   },
 
-  /* 刚关闭画中画不久，此段时间内允许跨TAB控制 */
   isLeavepictureinpictureAwhile () {
     const t = this;
     return t.leavepictureinpictureTime && (Date.now() - t.leavepictureinpictureTime < 1000 * 10)
   },
 
   /**
-   * 对播放器实例的方法或属性进行代理
    * @param player
    */
   proxyPlayerInstance (player) {
     if (!player) return
 
-    /* 要代理的方法或属性列表 */
     const proxyList = [
       'play',
       'pause'
@@ -12789,14 +11877,12 @@ const h5Player = {
         player[originKey] = player[key];
         const proxy = new Proxy(player[key], {
           apply (target, ctx, args) {
-            // debug.log(key + '被调用')
 
-            /* 处理挂起逻辑 */
             const hangUpInfo = player._hangUpInfo_ || {};
             const hangUpDetail = hangUpInfo[key] || hangUpInfo['hangUp_' + key];
             const needHangUp = hangUpDetail && hangUpDetail.timeout >= Date.now();
             if (needHangUp) {
-              debug.log(key + '已被挂起，本次调用将被忽略');
+              debug.log(key + '');
               return false
             }
 
@@ -12811,9 +11897,6 @@ const h5Player = {
     if (!player._hangUp_) {
       player._hangUpInfo_ = {};
       /**
-       * 挂起player某个函数的调用
-       * @param name {String} -必选 player方法或属性名，名字写对外，还须要该方法或属性被代理了才能进行挂起，否则这将是个无效的调用
-       * @param timeout {Number} -可选 挂起多长时间，默认200ms
        * @private
        */
       player._hangUp_ = function (name, timeout) {
@@ -12824,7 +11907,6 @@ const h5Player = {
         };
       };
 
-      /* 取消挂起 */
       player._unHangUp_ = function (name) {
         if (player._hangUpInfo_ && player._hangUpInfo_[name]) {
           player._hangUpInfo_[name].timeout = Date.now() - 1;
@@ -12834,15 +11916,12 @@ const h5Player = {
   },
 
   /**
-   * 初始化自动播放逻辑
-   * 必须是配置了自动播放按钮选择器得的才会进行自动播放
    */
   initAutoPlay: function (p) {
     const t = this;
     const player = p || t.player();
     const taskConf = TCC.getTaskConfig();
 
-    /* 注册开启禁止自动播放的控制菜单 */
     if (taskConf.autoPlay) {
       if (configManager.getLocalStorage('media.autoPlay') === null) {
         configManager.setLocalStorage('media.autoPlay', true);
@@ -12864,15 +11943,11 @@ const h5Player = {
       });
     }
 
-    // 在轮询重试的时候，如果实例变了，或处于隐藏页面中则不进行自动播放操作
     if (!configManager.get('media.autoPlay') || (!p && t.hasInitAutoPlay) || !player || (p && p !== t.player()) || document.hidden) {
       return false
     }
 
     /**
-     * 元素不在可视范围，不允许进行初始化自动播放逻辑
-     * 由于iframe下元素的可视范围判断不准确，所以iframe下也禁止初始化自动播放逻辑
-     * TODO 待优化
      */
     if (!isInViewPort(player) || isInIframe()) {
       return false
@@ -12887,7 +11962,6 @@ const h5Player = {
     if (player && taskConf.autoPlay && player.paused) {
       TCC.doTask('autoPlay');
       if (player.paused) {
-        // 轮询重试
         if (!player._initAutoPlayCount_) {
           player._initAutoPlayCount_ = 1;
         }
@@ -12923,7 +11997,6 @@ const h5Player = {
     debug.info('[playerInfo]', info);
   },
 
-  /* 设置视频全屏 */
   setFullScreen () {
     const player = this.player();
     const isDo = TCC.doTask('fullScreen');
@@ -12932,7 +12005,6 @@ const h5Player = {
     }
   },
 
-  /* 设置页面全屏 */
   setWebFullScreen: function () {
     const t = this;
     const player = t.player();
@@ -12950,7 +12022,6 @@ const h5Player = {
   playbackRateInfo: {
     lockTimeout: Date.now() - 1,
     time: Date.now(),
-    /* 未初始化播放实列前，不知道倍速是多少，所以设置为-1 */
     value: -1
   },
 
@@ -12965,11 +12036,9 @@ const h5Player = {
     return Number(Number(playbackRate).toFixed(1))
   },
 
-  /* 锁定playbackRate，禁止调速 */
   lockPlaybackRate: function (timeout = 200) {
     if (this.mediaPlusApi) {
       if (configManager.get('enhance.blockSetPlaybackRate') === true) {
-        // 如果配置了要锁死外部对playbackRate的操作，则直接给一个超大的值
         timeout = 1000 * 60 * 60 * 24 * 365;
       }
 
@@ -12997,7 +12066,6 @@ const h5Player = {
     return Date.now() - this.playbackRateInfo.lockTimeout < 0
   },
 
-  /* 解决高低倍速频繁切换后，音画不同步的问题 */
   fixPlaybackRate: function (oldPlaybackRate) {
     const t = this;
     const curPlaybackRate = t.getPlaybackRate();
@@ -13007,13 +12075,12 @@ const h5Player = {
     }
   },
 
-  /* 设置播放速度 */
   setPlaybackRate: function (num, notips, duplicate, skipLock) {
     const t = this;
     const player = t.player();
 
     if (!skipLock && t.isLockPlaybackRate()) {
-      debug.info('调速能力已被锁定');
+      debug.info('');
       return false
     }
 
@@ -13030,7 +12097,7 @@ const h5Player = {
     if (num) {
       num = Number(num);
       if (Number.isNaN(num)) {
-        debug.error('h5player: 播放速度转换出错');
+        debug.error('h5player: ');
         return false
       }
 
@@ -13046,7 +12113,6 @@ const h5Player = {
       curPlaybackRate = t.getPlaybackRate();
     }
 
-    /* 记录播放速度的信息 */
     t.playbackRate = curPlaybackRate;
     if (isInIframe()) {
       configManager.setGlobalStorage('media.playbackRate', curPlaybackRate);
@@ -13061,7 +12127,6 @@ const h5Player = {
         t.tips(i18n.t('tipsMsg.playspeed') + player.playbackRate);
       }
 
-      /* 将播放倍速同步到全部媒体元素 */
       const mediaList = t.getPlayerList();
       mediaList.forEach(media => {
         if (media !== player) {
@@ -13090,8 +12155,6 @@ const h5Player = {
         configurable: true,
         get: function () {
           /**
-           * 在油管，如果返回的是playbackRateDescriptor.get.apply(player, arguments)，调速会出现波动和异常
-           * 暂时不知是什么原因，所以还是先返回curPlaybackRate
            */
           return curPlaybackRate || playbackRateDescriptor.get.apply(player, arguments)
         },
@@ -13100,18 +12163,17 @@ const h5Player = {
             return false
           }
 
-          /* 有些网站是通过定时器不断刷playbackRate的，所以通过计时器减少不必要的信息输出 */
           !Number.isInteger(player._blockSetPlaybackRateTips_) && (player._blockSetPlaybackRateTips_ = 0);
 
           if (TCC.doTask('blockSetPlaybackRate')) {
             player._blockSetPlaybackRateTips_++;
-            player._blockSetPlaybackRateTips_ < 3 && debug.info('调速能力已被自定义的调速任务进行处理');
+            player._blockSetPlaybackRateTips_ < 3 && debug.info('');
             return false
           }
 
           if (configManager.get('enhance.blockSetPlaybackRate') === true) {
             player._blockSetPlaybackRateTips_++;
-            player._blockSetPlaybackRateTips_ < 3 && debug.info('调速能力已被blockSetPlaybackRate锁定');
+            player._blockSetPlaybackRateTips_ < 3 && debug.info('blockSetPlaybackRate');
             return false
           } else {
             t.setPlaybackRate(val);
@@ -13119,10 +12181,9 @@ const h5Player = {
         }
       });
     } catch (e) {
-      debug.error('解锁playbackRate失败', e);
+      debug.error('playbackRate', e);
     }
 
-    /* 本身处于1倍播放速度的时候不再提示 */
     if (!num && curPlaybackRate === 1) {
       return true
     } else {
@@ -13130,8 +12191,6 @@ const h5Player = {
     }
 
     /**
-     * 重复触发最后一次倍速的设定
-     * 解决YouTube快速调速时并不生效，要停顿下来再调节一下才能生效的问题
      */
     if (!duplicate && configManager.get('enhance.blockSetPlaybackRate') === true) {
       clearTimeout(t._setPlaybackRateDuplicate_);
@@ -13142,7 +12201,6 @@ const h5Player = {
         t.lockPlaybackRate(1000);
       };
       t._setPlaybackRateDuplicate_ = setTimeout(duplicatePlaybackRate, 600);
-      /* 600ms时重新触发无效的话，再来个1200ms后触发，如果是1200ms才生效，则调速生效的延迟已经非常明显了 */
       t._setPlaybackRateDuplicate2_ = setTimeout(duplicatePlaybackRate, 1200);
     }
 
@@ -13150,9 +12208,6 @@ const h5Player = {
   },
 
   /**
-   * 加强版的倍速调节，当短时间内设置同一个值时，会认为需更快的跳速能力
-   * 则会对调速的数值进行叠加放大，从而达到快速跳跃地进行倍速调节的目的
-   * 可用于视频广告的高速快进，片头片尾的速看等场景
    * @param {*} num
    */
   setPlaybackRatePlus: function (num) {
@@ -13181,7 +12236,6 @@ const h5Player = {
     t.lockPlaybackRate(1000);
   },
 
-  /* 恢复播放速度，还原到1倍速度、或恢复到上次的倍速 */
   resetPlaybackRate: function (player) {
     const t = this;
     player = player || t.player();
@@ -13197,42 +12251,34 @@ const h5Player = {
 
     t.setPlaybackRate(playbackRate);
 
-    /* 防止外部调速逻辑的干扰，所以锁定一段时间 */
     t.lockPlaybackRate(1000);
   },
 
-  /* 提升播放速率 */
   setPlaybackRateUp (num) {
     num = numUp(num) || 0.1;
     if (this.player()) {
       this.unLockPlaybackRate();
       this.setPlaybackRate(this.player().playbackRate + num);
 
-      /* 防止外部调速逻辑的干扰，所以锁定一段时间 */
       this.lockPlaybackRate(1000);
     }
   },
 
-  /* 降低播放速率 */
   setPlaybackRateDown (num) {
     num = numDown(num) || -0.1;
     if (this.player()) {
       this.unLockPlaybackRate();
       this.setPlaybackRate(this.player().playbackRate + num);
 
-      /* 防止外部调速逻辑的干扰，所以锁定一段时间 */
       this.lockPlaybackRate(1000);
     }
   },
 
   /**
-   * 锁定播放进度的控制逻辑
-   * 跟锁定音量和倍速不一样，播放进度是跟视频实例有密切相关的，所以其锁定信息必须依附于播放实例
    */
   lockCurrentTime: function (timeout = 200) {
     if (this.mediaPlusApi) {
       if (configManager.get('enhance.blockSetCurrentTime') === true) {
-        // 如果配置了要锁死外部对currentTime的操作，则直接给一个超大的值
         timeout = 1000 * 60 * 60 * 24 * 365;
       }
 
@@ -13273,7 +12319,6 @@ const h5Player = {
     }
   },
 
-  /* 设置播放进度 */
   setCurrentTime: function (num) {
     if (!num && num !== 0) return
     num = Number(num);
@@ -13326,7 +12371,7 @@ const h5Player = {
         }
       });
     } catch (e) {
-      debug.error('解锁currentTime失败', e);
+      debug.error('currentTime', e);
     }
   },
 
@@ -13338,7 +12383,6 @@ const h5Player = {
         this.unLockCurrentTime();
         this.setCurrentTime(this.player().currentTime + num);
 
-        /* 防止外部进度控制逻辑的干扰，所以锁定一段时间 */
         this.lockCurrentTime(500);
 
         if (!hideTips) {
@@ -13361,7 +12405,6 @@ const h5Player = {
         this.unLockCurrentTime();
         this.setCurrentTime(currentTime);
 
-        /* 防止外部进度控制逻辑的干扰，所以锁定一段时间 */
         this.lockCurrentTime(500);
 
         this.tips(i18n.t('tipsMsg.backward') + Math.abs(num) + i18n.t('tipsMsg.seconds'));
@@ -13372,7 +12415,6 @@ const h5Player = {
   volumeInfo: {
     lockTimeout: Date.now() - 1,
     time: Date.now(),
-    /* 未初始化播放实列前，不知道音量是多少，所以设置为-1 */
     value: -1
   },
 
@@ -13387,11 +12429,9 @@ const h5Player = {
     return Number(Number(volume).toFixed(2))
   },
 
-  /* 锁定音量，禁止调音 */
   lockVolume: function (timeout = 200) {
     if (this.mediaPlusApi) {
       if (configManager.get('enhance.blockSetVolume') === true) {
-        // 如果配置了要锁死外部对voluem的操作，则直接给一个超大的值
         timeout = 1000 * 60 * 60 * 24 * 365;
       }
 
@@ -13419,7 +12459,6 @@ const h5Player = {
     return Date.now() - this.volumeInfo.lockTimeout < 0
   },
 
-  /* 设置声音大小 */
   setVolume: function (num, notips, outerCall) {
     const t = this;
     const player = t.player();
@@ -13444,10 +12483,9 @@ const h5Player = {
         player._amp_ = player._amp_ || new MediaElementAmplifier(player);
       } catch (e) {
         num = 1;
-        debug.error('媒体声音响度增益逻辑异常', e);
+        debug.error('', e);
       }
 
-      /* 限定增益的最大值 */
       if (num > 6) {
         num = 6;
       }
@@ -13459,10 +12497,8 @@ const h5Player = {
       num = 1;
     }
 
-    /* 记录播放音量信息 */
     t.volume = num;
 
-    /* 使用音量增益逻辑，增益音量不进行本地存储记录 */
     if (num > 1 && player._amp_ && player._amp_.setLoudness) {
       player._amp_.setLoudness(num);
 
@@ -13481,7 +12517,6 @@ const h5Player = {
     if (t.mediaPlusApi) {
       t.mediaPlusApi.setVolume(num);
 
-      /* 将播放音量同步到全部媒体元素 */
       const mediaList = t.getPlayerList();
       mediaList.forEach(media => {
         if (media !== player) {
@@ -13515,11 +12550,10 @@ const h5Player = {
           }
         });
       } catch (e) {
-        debug.error('解锁volume失败', e);
+        debug.error('volume', e);
       }
     }
 
-    /* 调节音量的时候顺便把静音模式关闭 */
     if (!outerCall) { player.muted = false; }
 
     !notips && t.tips(i18n.t('tipsMsg.volume') + parseInt(player.volume * 100) + '%');
@@ -13537,7 +12571,6 @@ const h5Player = {
         this.setVolume(player.volume + num);
       }
 
-      /* 防止外部调音逻辑的干扰，所以锁定一段时间 */
       this.lockVolume(500);
     }
   },
@@ -13554,12 +12587,10 @@ const h5Player = {
         this.setVolume(player.volume + num);
       }
 
-      /* 防止外部调音逻辑的干扰，所以锁定一段时间 */
       this.lockVolume(500);
     }
   },
 
-  /* 采集Transform值的历史变更记录，以便后续进行还原 */
   collectTransformHistoryInfo () {
     const t = this;
     Object.keys(t.defaultTransform).forEach(key => {
@@ -13579,7 +12610,6 @@ const h5Player = {
     });
   },
 
-  /* 判断h5Player下的Transform值是否跟默认的Transform值一致 */
   isSameAsDefaultTransform () {
     let result = true;
     const t = this;
@@ -13599,7 +12629,6 @@ const h5Player = {
     return result
   },
 
-  /* 设置视频画面的缩放与位移 */
   setTransform (notTips) {
     const t = this;
     const player = t.player();
@@ -13622,7 +12651,6 @@ const h5Player = {
       t.tips(tipsMsg);
     }
 
-    /* 始终保持transform样式的正常 */
     if (!t._transformStateGuard_) {
       t._transformStateGuard_ = setInterval(() => {
         t.setTransform(true);
@@ -13630,7 +12658,6 @@ const h5Player = {
     }
   },
 
-  /* 视频画面旋转 90 度 */
   setRotate () {
     const t = this;
     t.rotate += 90;
@@ -13639,7 +12666,6 @@ const h5Player = {
     t.tips(i18n.t('tipsMsg.imgrotate') + t.rotate + '°');
   },
 
-  /* 设置镜像翻转 */
   setMirror (vertical = false) {
     const t = this;
     let tipsMsg = '';
@@ -13655,7 +12681,6 @@ const h5Player = {
     t.tips(tipsMsg);
   },
 
-  /* 缩放视频画面 */
   setScale (num) {
     if (Number.isNaN(this.scale) || Number.isNaN(num)) {
       this.scale = 1;
@@ -13666,19 +12691,16 @@ const h5Player = {
     this.setTransform();
   },
 
-  /* 视频放大 +0.1 */
   setScaleUp (num) {
     num = numUp(num) || 0.05;
     this.setScale(Number(this.scale) + num);
   },
 
-  /* 视频缩小 -0.1 */
   setScaleDown (num) {
     num = numDown(num) || -0.05;
     this.setScale(Number(this.scale) + num);
   },
 
-  /* 设置视频画面的位移属性 */
   setTranslate (x, y) {
     if (typeof x === 'number') {
       this.translate.x = x;
@@ -13691,25 +12713,21 @@ const h5Player = {
     this.setTransform();
   },
 
-  /* 视频画面向右平移 */
   setTranslateRight (num) {
     num = numUp(num) || 10;
     this.setTranslate(this.translate.x + num);
   },
 
-  /* 视频画面向左平移 */
   setTranslateLeft (num) {
     num = numDown(num) || -10;
     this.setTranslate(this.translate.x + num);
   },
 
-  /* 视频画面向上平移 */
   setTranslateUp (num) {
     num = numUp(num) || 10;
     this.setTranslate(null, this.translate.y - num);
   },
 
-  /* 视频画面向下平移 */
   setTranslateDown (num) {
     num = numDown(num) || -10;
     this.setTranslate(null, this.translate.y - num);
@@ -13719,7 +12737,6 @@ const h5Player = {
     const t = this;
 
     if (t.isSameAsDefaultTransform() && Object.keys(t.historyTransform).length) {
-      /* 还原成历史记录中的Transform值 */
       Object.keys(t.historyTransform).forEach(key => {
         if (isObj$1(t.historyTransform[key])) {
           Object.keys(t.historyTransform[key]).forEach(subKey => {
@@ -13730,7 +12747,6 @@ const h5Player = {
         }
       });
     } else {
-      /* 还原成默认的Transform值 */
       const defaultTransform = clone(t.defaultTransform);
       Object.keys(defaultTransform).forEach(key => {
         t[key] = defaultTransform[key];
@@ -13741,21 +12757,16 @@ const h5Player = {
   },
 
   /**
-   * 定格帧画面
-   * @param perFps {Number} -可选 默认 1，即定格到下一帧，如果是-1则为定格到上一帧
    */
   freezeFrame (perFps) {
     perFps = perFps || 1;
     const t = this;
     const player = t.player();
 
-    /* 跳帧 */
     player.currentTime += Number(perFps / t.fps);
 
-    /* 定格画面 */
     if (!player.paused) player.pause();
 
-    /* 有些播放器发现画面所在位置变了会自动进行播放，所以此时需要对播放操作进行挂起 */
     player._hangUp_ && player._hangUp_('play', 400);
 
     if (perFps === 1) {
@@ -13775,7 +12786,6 @@ const h5Player = {
   },
 
   /**
-   * 切换画中画功能
    */
   togglePictureInPicture () {
     const player = this.player();
@@ -13796,15 +12806,13 @@ const h5Player = {
     }
   },
 
-  /* 播放下一个视频，默认是没有这个功能的，只有在TCC里配置了next字段才会有该功能 */
   setNextVideo () {
     const isDo = TCC.doTask('next');
     if (!isDo) {
-      debug.log('当前网页不支持一键播放下个视频功能~');
+      debug.log('~');
     }
   },
 
-  /* 切换播放状态 */
   switchPlayStatus () {
     const t = this;
     const player = t.player();
@@ -13820,7 +12828,6 @@ const h5Player = {
           t.mediaPlusApi.lockPause(400);
           t.mediaPlusApi.applyPlay();
         } else {
-          /* 挂起其它逻辑的暂停操作，确保播放状态生效 */
           if (player._hangUp_ instanceof Function) {
             player._hangUp_('pause', 400);
             player._unHangUp_('play');
@@ -13839,7 +12846,6 @@ const h5Player = {
           t.mediaPlusApi.lockPlay(400);
           t.mediaPlusApi.applyPause();
         } else {
-          /* 挂起其它逻辑的播放操作，确保暂停状态生效 */
           if (player._hangUp_ instanceof Function) {
             player._hangUp_('play', 400);
             player._unHangUp_('pause');
@@ -13859,7 +12865,6 @@ const h5Player = {
     const allowRestoreVal = configManager.get(`media.allowRestorePlayProgress.${window.location.host}`);
     return allowRestoreVal === null || allowRestoreVal
   },
-  /* 切换自动恢复播放进度的状态 */
   switchRestorePlayProgressStatus: function () {
     const t = h5Player;
     let isAllowRestorePlayProgress = t.isAllowRestorePlayProgress();
@@ -13867,13 +12872,11 @@ const h5Player = {
     if (isInCrossOriginFrame()) {
       isAllowRestorePlayProgress = false;
     } else {
-      /* 进行值反转 */
       isAllowRestorePlayProgress = !isAllowRestorePlayProgress;
     }
 
     configManager.set(`media.allowRestorePlayProgress.${window.location.host}`, isAllowRestorePlayProgress);
 
-    /* 操作提示 */
     if (isAllowRestorePlayProgress) {
       t.tips(i18n.t('tipsMsg.arpl'));
       t.setPlayProgress(t.player());
@@ -13886,12 +12889,10 @@ const h5Player = {
   getTipsContainer: function (videoEl) {
     const t = h5Player;
     const player = videoEl || t.player();
-    // 使用getContainer获取到的父节点弊端太多，暂时弃用
     // const _tispContainer_ = player._tispContainer_  ||  getContainer(player);
 
     let tispContainer = player.parentNode || player;
 
-    /* 如果父节点为无长宽的元素，则再往上查找一级 */
     const containerBox = tispContainer.getBoundingClientRect();
     if ((!containerBox.width || !containerBox.height) && tispContainer.parentNode) {
       tispContainer = tispContainer.parentNode;
@@ -13911,13 +12912,12 @@ const h5Player = {
     const parentNode = isAudio ? document.body : t.getTipsContainer();
 
     if (parentNode === player) {
-      debug.info('获取tips的包裹容器异常：', player, str);
+      debug.info('tips', player, str);
       return false
     }
 
     let backupStyle = '';
     if (!isAudio) {
-      // 修复部分提示按钮位置异常问题
       const defStyle = parentNode.getAttribute('style') || '';
 
       backupStyle = parentNode.getAttribute('style-backup') || '';
@@ -13926,8 +12926,6 @@ const h5Player = {
         const backupStyObj = inlineStyleToObj(backupSty);
 
         /**
-         * 修复因为缓存时机获取到错误样式的问题
-         * 例如在：https://www.xuetangx.com/
          */
         if (backupStyObj.opacity === '0') {
           backupStyObj.opacity = '1';
@@ -13941,7 +12939,6 @@ const h5Player = {
         parentNode.setAttribute('style-backup', backupSty);
         backupStyle = defStyle;
       } else {
-        /* 如果defStyle被外部修改了，则需要更新备份样式 */
         if (defStyle && !defStyle.includes('style-backup')) {
           backupStyle = defStyle;
         }
@@ -13959,7 +12956,6 @@ const h5Player = {
 
       const playerBox = player.getBoundingClientRect();
       const parentNodeBox = parentNode.getBoundingClientRect();
-      /* 不存在高宽时，给包裹节点一个最小高宽，才能保证提示能正常显示 */
       if (!parentNodeBox.width || !parentNodeBox.height) {
         newStyleArr.push('min-width:' + playerBox.width + 'px');
         newStyleArr.push('min-height:' + playerBox.height + 'px');
@@ -13970,13 +12966,11 @@ const h5Player = {
       const newPlayerBox = player.getBoundingClientRect();
       if (Math.abs(newPlayerBox.height - playerBox.height) > 50) {
         parentNode.setAttribute('style', backupStyle);
-        // debug.info('应用新样式后给播放器高宽造成了严重的偏差，样式已被还原：', player, playerBox, newPlayerBox)
       }
     }
 
     const tipsSelector = '.' + t.tipsClassName;
 
-    /* 当出现多个tips元素时，将这些tips元素全部移除 */
     const tipsList = document.querySelectorAll(tipsSelector);
     if (tipsList.length > 1) {
       tipsList.forEach(tipsItem => {
@@ -13986,7 +12980,6 @@ const h5Player = {
 
     let tipsDom = parentNode.querySelector(tipsSelector);
 
-    /* 提示dom未初始化的，则进行初始化 */
     if (!tipsDom) {
       t.initTips();
       tipsDom = parentNode.querySelector(tipsSelector);
@@ -14009,7 +13002,6 @@ const h5Player = {
         style.opacity = 1;
       }, 50);
       t.on_off[1] = setTimeout(function () {
-        // 隐藏提示框和还原样式
         style.opacity = 0;
         style.display = 'none';
         if (backupStyle) {
@@ -14029,7 +13021,6 @@ const h5Player = {
     }
   },
 
-  /* 设置提示DOM的样式 */
   initTips: function () {
     const t = h5Player;
     const isAudio = t.isAudioInstance();
@@ -14084,7 +13075,6 @@ const h5Player = {
   },
   on_off: new Array(3),
   fps: 30,
-  /* 滤镜效果 */
   filter: {
     key: [1, 1, 1, 0, 0],
     setup: function () {
@@ -14107,11 +13097,10 @@ const h5Player = {
 
   setFilter (item, num, isDown) {
     if (![0, 1, 2, 3, 4].includes(item) || typeof num !== 'number') {
-      debug.error('[setFilter]', '参数有误', item, num);
+      debug.error('[setFilter]', '', item, num);
       return false
     }
 
-    /* 如果标识为down，则自动取负数值 */
     if (isDown === true) {
       if (num && num > 0) { num = -num; }
     }
@@ -14136,77 +13125,62 @@ const h5Player = {
     t.tips(i18n.t(`tipsMsg.${nameMap[item]}`) + parseInt(t.filter.key[item] * 100) + '%');
   },
 
-  /* 设置视频的亮度 */
   setBrightness (num) {
     this.setFilter(0, num);
   },
 
-  /* 提升视频的亮度 */
   setBrightnessUp (num) {
     this.setFilter(0, num || 0.1);
   },
 
-  /* 降低视频的亮度 */
   setBrightnessDown (num) {
     this.setFilter(0, num || -0.1, true);
   },
 
-  /* 设置视频的对比度 */
   setContrast (num) {
     this.setFilter(1, num);
   },
 
-  /* 提升视频的对比度 */
   setContrastUp (num) {
     this.setFilter(1, num || 0.1);
   },
 
-  /* 降低视频的对比度 */
   setContrastDown (num) {
     this.setFilter(1, num || -0.1, true);
   },
 
-  /* 设置饱和度 */
   setSaturation (num) {
     this.setFilter(2, num);
   },
 
-  /* 提升饱和度 */
   setSaturationUp (num) {
     this.setFilter(2, num || 0.1);
   },
 
-  /* 降低饱和度 */
   setSaturationDown (num) {
     this.setFilter(2, num || -0.1, true);
   },
 
-  /* 设置色相 */
   setHue (num) {
     this.setFilter(3, num);
   },
 
-  /* 增加色相 */
   setHueUp (num) {
     this.setFilter(3, num || 1);
   },
 
-  /* 降低色相 */
   setHueDown (num) {
     this.setFilter(3, num || -1, true);
   },
 
-  /* 设置模糊度 */
   setBlur (num) {
     this.setFilter(4, num);
   },
 
-  /* 增加模糊度 */
   setBlurUp (num) {
     this.setFilter(4, num || 1);
   },
 
-  /* 降低模糊度 */
   setBlurDown (num) {
     this.setFilter(4, num || -1, true);
   },
@@ -14236,7 +13210,6 @@ const h5Player = {
     const player = this.player();
     videoCapturer.capture(player, true);
 
-    /* 暂停画面 */
     if (!player.paused && !document.pictureInPictureElement && document.visibilityState !== 'visible') {
       this.freezeFrame();
     }
@@ -14244,7 +13217,6 @@ const h5Player = {
 
   _isFoucs: false,
 
-  /* 播放器的聚焦事件 */
   isFoucs: function () {
     const t = h5Player;
     const player = t.player();
@@ -14257,7 +13229,6 @@ const h5Player = {
       h5Player._isFoucs = false;
     };
   },
-  /* 播放器事件响应器 */
   palyerTrigger: function (player, event) {
     if (!player || !event) return
     const t = h5Player;
@@ -14265,17 +13236,14 @@ const h5Player = {
     const key = event.key.toLowerCase();
 
     if (event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-      // 网页全屏
       if (key === 'enter') {
         t.setWebFullScreen();
       }
 
-      // 进入或退出画中画模式
       if (key === 'p') {
         t.togglePictureInPicture();
       }
 
-      // 截图并下载保存
       if (key === 's') {
         t.capture();
       }
@@ -14285,7 +13253,6 @@ const h5Player = {
       }
 
       if (key === 'm') {
-        /* 垂直镜像翻转 */
         t.setMirror(true);
       }
 
@@ -14293,21 +13260,17 @@ const h5Player = {
         t.mediaDownload();
       }
 
-      // 视频画面缩放相关事件
       const allowKeys = ['x', 'c', 'z', 'arrowright', 'arrowleft', 'arrowup', 'arrowdown'];
       if (!allowKeys.includes(key)) return
 
       t.scale = Number(t.scale);
       switch (key) {
-        // shift+X：视频缩小 -0.1
         case 'x':
           t.setScaleDown();
           break
-        // shift+C：视频放大 +0.1
         case 'c':
           t.setScaleUp();
           break
-        // shift+Z：视频恢复正常大小
         case 'z':
           t.resetTransform();
           break
@@ -14325,144 +13288,113 @@ const h5Player = {
           break
       }
 
-      // 阻止事件冒泡
       event.stopPropagation();
       event.preventDefault();
       return true
     }
 
-    // ctrl+方向键右→：快进30秒
     if (event.ctrlKey && keyCode === 39) {
       t.setCurrentTimeUp(t.skipStep * 6);
     }
-    // ctrl+方向键左←：后退30秒
     if (event.ctrlKey && keyCode === 37) {
       t.setCurrentTimeDown(-t.skipStep * 6);
     }
 
-    // ctrl+方向键上↑：音量升高 20%
     if (event.ctrlKey && keyCode === 38) {
       t.setVolumeUp(0.2);
     }
-    // 方向键下↓：音量降低 20%
     if (event.ctrlKey && keyCode === 40) {
       t.setVolumeDown(-0.2);
     }
 
-    // 防止其它无关组合键冲突
     if (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) return
 
-    // 方向键右→：快进5秒
     if (keyCode === 39) {
       t.setCurrentTimeUp();
     }
-    // 方向键左←：后退5秒
     if (keyCode === 37) {
       t.setCurrentTimeDown();
     }
 
-    // 方向键上↑：音量升高 10%
     if (keyCode === 38) {
       t.setVolumeUp(0.05);
     }
-    // 方向键下↓：音量降低 10%
     if (keyCode === 40) {
       t.setVolumeDown(-0.05);
     }
 
-    // 空格键：暂停/播放
     if (keyCode === 32) {
       t.switchPlayStatus();
     }
 
-    // 按键X：减速播放 -0.1
     if (keyCode === 88) {
       t.setPlaybackRateDown();
     }
-    // 按键C：加速播放 +0.1
     if (keyCode === 67) {
       t.setPlaybackRateUp();
     }
-    // 按键Z：正常速度播放
     if (keyCode === 90) {
       t.resetPlaybackRate();
     }
 
-    // 按1-4设置播放速度 49-52;97-100
     if ((keyCode >= 49 && keyCode <= 52) || (keyCode >= 97 && keyCode <= 100)) {
       t.setPlaybackRatePlus(event.key);
     }
 
-    // 按键F：下一帧
     if (keyCode === 70) {
       t.freezeFrame(1);
     }
-    // 按键D：上一帧
     if (keyCode === 68) {
       t.freezeFrame(-1);
     }
 
-    // 按键E：亮度增加%
     if (keyCode === 69) {
       t.setBrightnessUp();
     }
-    // 按键W：亮度减少%
     if (keyCode === 87) {
       t.setBrightnessDown();
     }
 
-    // 按键T：对比度增加%
     if (keyCode === 84) {
       t.setContrastUp();
     }
-    // 按键R：对比度减少%
     if (keyCode === 82) {
       t.setContrastDown();
     }
 
-    // 按键U：饱和度增加%
     if (keyCode === 85) {
       t.setSaturationUp();
     }
-    // 按键Y：饱和度减少%
     if (keyCode === 89) {
       t.setSaturationDown();
     }
 
-    // 按键O：色相增加 1 度
     if (keyCode === 79) {
       t.setHueUp();
     }
-    // 按键I：色相减少 1 度
     if (keyCode === 73) {
       t.setHueDown();
     }
 
-    // 按键K：模糊增加 1 px
     if (keyCode === 75) {
       t.setBlurUp();
     }
-    // 按键J：模糊减少 1 px
     if (keyCode === 74) {
       t.setBlurDown();
     }
 
-    // 按键Q：图像复位
     if (keyCode === 81) {
       t.resetFilterAndTransform();
     }
 
-    // 按键S：画面旋转 90 度
     if (keyCode === 83) {
       t.setRotate();
     }
 
-    /* 水平镜像翻转 */
     if (keyCode === 77) {
       t.setMirror();
     }
 
-    // 按键回车，进入全屏
     if (keyCode === 13) {
       t.setFullScreen();
     }
@@ -14471,13 +13403,11 @@ const h5Player = {
       t.setNextVideo();
     }
 
-    // 阻止事件冒泡
     event.stopPropagation();
     event.preventDefault();
     return true
   },
 
-  /* 运行自定义的快捷键操作，如果运行了会返回true */
   runCustomShortcuts: function (player, event) {
     if (!player || !event) return
     const key = event.key.toLowerCase();
@@ -14486,11 +13416,9 @@ const h5Player = {
       Array.isArray(taskConf.shortcuts.register) &&
       taskConf.shortcuts.callback instanceof Function;
 
-    /* 判断当前触发的快捷键是否已被注册 */
     function isRegister () {
       const list = taskConf.shortcuts.register;
 
-      /* 当前触发的组合键 */
       const combineKey = [];
       if (event.ctrlKey) {
         combineKey.push('ctrl');
@@ -14507,7 +13435,6 @@ const h5Player = {
 
       combineKey.push(key);
 
-      /* 通过循环判断当前触发的组合键和已注册的组合键是否完全一致 */
       let hasReg = false;
       list.forEach((shortcut) => {
         const regKey = shortcut.split('+');
@@ -14528,7 +13455,6 @@ const h5Player = {
     }
 
     if (confIsCorrect && isRegister()) {
-      // 执行自定义快捷键操作
       const isDo = TCC.doTask('shortcuts', {
         event,
         player,
@@ -14546,18 +13472,15 @@ const h5Player = {
     }
   },
 
-  /* 按键响应方法 */
   keydownEvent: function (event) {
     const t = h5Player;
     const keyCode = event.keyCode;
     // const key = event.key.toLowerCase()
     const player = t.player();
 
-    /* 处于可编辑元素中不执行任何快捷键 */
     const target = event.composedPath ? event.composedPath()[0] || event.target : event.target;
     if (t.__disableHotkeysTemporarily__ || isEditableTarget(target)) return
 
-    /* 广播按键消息，进行跨域控制 */
     monkeyMsg.send('globalKeydownEvent', event, 0);
 
     if (!player) {
@@ -14567,8 +13490,6 @@ const h5Player = {
         }
 
         /**
-         * 利用热键运行器的匹配能力来决定要不要禁止事件冒泡和阻止默认事件
-         * 解决处于跨TAB、跨域控制时造成其它默认快捷键响应异常的问题
          */
         if (t.hotkeysRunner && t.hotkeysRunner.run) {
           t.hotkeysRunner.run({
@@ -14582,14 +13503,11 @@ const h5Player = {
           event.preventDefault();
         }
 
-        // debug.log('当前页面检出了跨域受限的视频，仍需阻止默认事件和事件冒泡')
       }
 
-      // debug.log('无可用的媒体元素，不执行相关操作')
       return false
     }
 
-    /* 切换插件的可用状态 */
     if (event.ctrlKey && keyCode === 32) {
       t.enable = !t.enable;
       if (t.enable) {
@@ -14600,11 +13518,10 @@ const h5Player = {
     }
 
     if (!t.enable) {
-      debug.log('h5Player 已禁用~');
+      debug.log('h5Player ~');
       return false
     }
 
-    // 按ctrl+\ 键进入聚焦或取消聚焦状态，用于视频标签被遮挡的场景
     if (event.ctrlKey && keyCode === 220) {
       t.globalMode = !t.globalMode;
       if (t.globalMode) {
@@ -14614,13 +13531,10 @@ const h5Player = {
       }
     }
 
-    /* 非全局模式下，不聚焦则不执行快捷键的操作 */
     if (!t.globalMode && !t._isFoucs) return
 
-    /* 判断是否执行了自定义快捷键操作，如果是则不再响应后面默认定义操作 */
     if (t.runCustomShortcuts(player, event) === true) return
 
-    /* 热键运行器匹配到相关执行任务便不在执行后续的palyerTrigger */
     if (t.hotkeysRunner && t.hotkeysRunner.run) {
       const matchResult = t.hotkeysRunner.run({
         event,
@@ -14628,7 +13542,6 @@ const h5Player = {
         stopPropagation: true,
         preventDefault: true,
         conditionHandler (condition) {
-          // TODO 完善条件限定回调逻辑
           if (condition) {
             return true
           }
@@ -14640,17 +13553,13 @@ const h5Player = {
         return true
       }
     } else {
-      /* 未用到的按键不进行任何事件监听 */
       if (!isRegisterKey(event)) { return false }
 
-      /* 响应播放器相关操作 */
       t.palyerTrigger(player, event);
     }
   },
 
   /**
-   * 获取播放进度
-   * @param player -可选 对应的h5 播放器对象， 如果不传，则获取到的是整个播放进度表，传则获取当前播放器的播放进度
    */
   getPlayProgress: function (player) {
     const progressMap = configManager.get('media.progress') || {};
@@ -14660,7 +13569,6 @@ const h5Player = {
     } else {
       const keyName = window.location.href + player.duration;
       if (progressMap[keyName]) {
-        /* 对于直播的视频流，会出现记录的duration和当前视频duration不一致的情况，这时候通过返回currentTime来忽略恢复播放进度 */
         if (Number.isNaN(Number(player.duration)) || Number(progressMap[keyName].duration) !== Number(player.duration)) {
           return player.currentTime
         } else {
@@ -14671,13 +13579,11 @@ const h5Player = {
       }
     }
   },
-  /* 播放进度记录器 */
   playProgressRecorder: function (player) {
     const t = h5Player;
     clearTimeout(player._playProgressTimer_);
     function recorder (player) {
       player._playProgressTimer_ = setTimeout(function () {
-        /* 时长小于两分钟的视频不记录播放进度 */
         const isToShort = !player.duration || Number.isNaN(Number(player.duration)) || player.duration < 120;
         const isLeave = document.visibilityState !== 'visible' && player.paused;
 
@@ -14691,17 +13597,13 @@ const h5Player = {
         const keyName = window.location.href + player.duration;
 
         /**
-         * 对首次记录到progressMap的值进行标记
-         * 用于防止手动切换播放进度时，执行到错误的恢复逻辑
          */
         if (!progressMap[keyName]) {
           t._firstProgressRecord_ = keyName;
           t._hasRestorePlayProgress_ = keyName;
         }
 
-        /* 只保存最近10个视频的播放进度 */
         if (list.length > 10) {
-          /* 根据更新的时间戳，取出最早添加播放进度的记录项 */
           let timeList = [];
           list.forEach(function (keyName) {
             progressMap[keyName] && progressMap[keyName].t && timeList.push(progressMap[keyName].t);
@@ -14709,7 +13611,6 @@ const h5Player = {
           timeList = quickSort(timeList);
           const timestamp = timeList[0];
 
-          /* 删除最早添加的记录项 */
           list.forEach(function (keyName) {
             if (progressMap[keyName].t === timestamp) {
               delete progressMap[keyName];
@@ -14717,34 +13618,28 @@ const h5Player = {
           });
         }
 
-        /* 记录当前播放进度 */
         progressMap[keyName] = {
           progress: player.currentTime,
           duration: player.duration,
           t: new Date().getTime()
         };
 
-        /* 存储播放进度表 */
         configManager.setLocalStorage('media.progress', progressMap);
 
-        /* 循环侦听 */
         recorder(player);
       }, 1000 * 2);
     }
     recorder(player);
   },
 
-  /* 设置播放进度 */
   setPlayProgress: function (player) {
     const t = h5Player;
     if (!player || !player.duration || Number.isNaN(player.duration)) return
 
     const curTime = Number(t.getPlayProgress(player));
 
-    /* 要恢复进度的时间过小或大于player.duration都不符合规范，不进行进度恢复操作 */
     if (!curTime || Number.isNaN(curTime) || curTime < 10 || curTime >= player.duration) return
 
-    /* 忽略恢复进度时间与当前播放进度时间相差不大的情况 */
     if (Math.abs(curTime - player.currentTime) < 2) {
       return false
     }
@@ -14760,7 +13655,6 @@ const h5Player = {
     }
 
     if (t.isAllowRestorePlayProgress()) {
-      // 比curTime少1.5s可以让用户知道是前面的画面，从而有个衔接上了的感觉
       player.currentTime = curTime - 1.5;
       t._hasRestorePlayProgress_ = progressKey;
       t.tips(i18n.t('tipsMsg.playbackrestored'));
@@ -14803,7 +13697,6 @@ const h5Player = {
   },
 
   /**
-   * 视频元素是否出现在视口里的观察对象，用于优化多视频实例的实例切换
    * https://developer.mozilla.org/zh-CN/docs/Web/API/Intersection_Observer_API
    */
   intersectionObserver: new IntersectionObserver(function (entries, observer) {
@@ -14819,13 +13712,11 @@ const h5Player = {
 
         const oldPlayer = t.player();
         if (oldPlayer && oldPlayer._intersectionInfo_ && tmpIntersectionRatio < oldPlayer._intersectionInfo_.intersectionRatio) {
-          /* 新实例的视图范围比旧的小，则不切换实例 */
           return
         }
 
-        /* 切换视频实例 */
         const toggleResult = t.setPlayerInstance(entrie.target);
-        toggleResult && debug.log('[intersectionObserver] 切换视频实例', entrie);
+        toggleResult && debug.log('[intersectionObserver] ', entrie);
       }
     });
   }, {
@@ -14833,7 +13724,6 @@ const h5Player = {
   }),
 
   /**
-   * 检测h5播放器是否存在
    * @param callback
    */
   detecH5Player: function () {
@@ -14841,17 +13731,13 @@ const h5Player = {
     const playerList = t.getPlayerList();
 
     if (playerList.length) {
-      // debug.log('检测到HTML5视频！', location.href, h5Player, playerList)
 
-      /* 单video实例标签的情况 */
       if (playerList.length === 1) {
         t.playerInstance = playerList[0];
         t.initPlayerInstance(true);
       }
 
-      /* 多video实例标签的情况 */
       playerList.forEach(function (player) {
-        /* 鼠标移到其上面的时候重新指定实例 */
         if (!player._hasMouseRedirectEvent_) {
           player.addEventListener('mouseenter', function (event) {
             t.setPlayerInstance(event.target);
@@ -14859,12 +13745,10 @@ const h5Player = {
           player._hasMouseRedirectEvent_ = true;
         }
 
-        /* 播放器开始播放的时候重新指向实例 */
         if (!player._hasPlayingRedirectEvent_) {
           player.addEventListener('playing', function (event) {
             const media = event.target;
 
-            /* 对于超短的音视频可能是某些操作反馈的特效，可忽略对其进行播放实例切换 */
             if (media.duration && media.duration < 8) {
               return false
             }
@@ -14874,7 +13758,6 @@ const h5Player = {
           player._hasPlayingRedirectEvent_ = true;
         }
 
-        /* 当被观察到出现在浏览器视口里时，切换视频实例 */
         if (!player._hasIntersectionObserver_) {
           t.intersectionObserver.observe(player);
           player._hasIntersectionObserver_ = true;
@@ -14882,7 +13765,6 @@ const h5Player = {
       });
 
       if (isInCrossOriginFrame()) {
-        /* 广播检测到H5Player的消息 */
         monkeyMsg.send('videoDetected', {
           src: t.playerInstance.src
         });
@@ -14892,12 +13774,10 @@ const h5Player = {
     }
   },
 
-  /* 响应来自按键消息的广播 */
   bindFakeEvent () {
     const t = this;
     if (t._hasBindFakeEvent_) return
 
-    /* 触发来自消息广播的模拟事件，实现跨域、跨Tab控制视频播放 */
     let triggerFakeEvent = function (name, oldVal, newVal, remote) {
       const player = t.player();
       if (player && !t.__disableHotkeysTemporarily__) {
@@ -14906,31 +13786,25 @@ const h5Player = {
         fakeEvent.preventDefault = () => { };
         t.palyerTrigger(player, fakeEvent);
 
-        debug.log('已响应跨Tab/跨域按键控制信息：', newVal);
+        debug.log('Tab/', newVal);
       }
     };
 
     /**
-     * 操作节流控制，减少按键消息频率，
-     * 注意，开启节流控制后导致复合按键（如：shift+s）没法生效
      */
     if (!crossTabCtl.hasOpenPictureInPicture() && !t.hasCrossOriginVideoDetected) {
       triggerFakeEvent = throttle(triggerFakeEvent, 80);
     }
 
-    /* 注册响应来自按键消息的广播的事件 */
     monkeyMsg.on('globalKeydownEvent', async (name, oldVal, newVal, remote) => {
       if (remote) {
         if (isInCrossOriginFrame()) {
           /**
-           * 同处跨域受限页面，且都处于可见状态，大概率处于同一个Tab标签里，但不是100%
-           * tabId一致则100%为同一标签下
            */
           if (document.visibilityState === 'visible' && newVal.originTab) {
             triggerFakeEvent(name, oldVal, newVal, remote);
           }
         } else if (crossTabCtl.hasOpenPictureInPicture()) {
-          /* 跨Tab控制画中画里面的视频播放 */
           if (!newVal.originTab && (document.pictureInPictureElement || t.isLeavepictureinpictureAwhile())) {
             triggerFakeEvent(name, oldVal, newVal, remote);
           }
@@ -14941,7 +13815,6 @@ const h5Player = {
     t._hasBindFakeEvent_ = true;
   },
 
-  /* 绑定相关事件 */
   bindEvent: function () {
     const t = this;
     if (t._hasBindEvent_) return
@@ -14949,7 +13822,6 @@ const h5Player = {
     document.removeEventListener('keydown', t.keydownEvent);
     document.addEventListener('keydown', t.keydownEvent, true);
 
-    /* 兼容iframe操作 */
     if (isInIframe() && !isInCrossOriginFrame()) {
       window.top.document.removeEventListener('keydown', t.keydownEvent);
       window.top.document.addEventListener('keydown', t.keydownEvent, true);
@@ -14985,12 +13857,11 @@ const h5Player = {
     }
 
     if (TCC && TCC.doTask('disable') === true) {
-      debug.info(`[TCC][disable][${location.host}] 已禁止在该网站运行视频检测逻辑，您可查看任务配置中心的相关配置了解详情`);
+      debug.info(`[TCC][disable][${location.host}] `);
       return true
     }
 
     if (!global) {
-      /* 检测是否存在H5播放器 */
       t.detecH5Player();
       return true
     }
@@ -15002,18 +13873,15 @@ const h5Player = {
 
     setFakeUA();
 
-    /* 初始化任务配置中心 */
     TCC = h5PlayerTccInit(t);
 
-    /* 绑定键盘事件 */
     if (configManager.get('enableHotkeys') !== false) {
       t.bindEvent();
       t.bindFakeEvent();
     } else {
-      debug.warn('快捷键能力已被禁用');
+      debug.warn('');
     }
 
-    /* 响应来自跨域受限的视频检出事件 */
     monkeyMsg.on('videoDetected', async (name, oldVal, newVal, remote) => {
       if (newVal.originTab) {
         t.hasCrossOriginVideoDetected = true;
@@ -15022,7 +13890,6 @@ const h5Player = {
       debug.log('[hasCrossOriginVideoDetected]', t, name, oldVal, newVal, remote);
     });
 
-    /* 当页面处于可视化状态时，初始化自定义播放逻辑 */
     document.addEventListener('visibilitychange', function () {
       h5Player.initAutoPlay();
     });
@@ -15036,7 +13903,7 @@ const h5Player = {
 async function h5PlayerInit () {
   try {
     if (isCloudflareChallengePage()) {
-      console.warn('当前处于cloudflare的人机验证页面，暂停h5player的运行', location.href);
+      console.warn('cloudflareh5player', location.href);
       return false
     }
   } catch (e) {
@@ -15049,7 +13916,7 @@ async function h5PlayerInit () {
   const isInBlackList = blackUrlList.includes(location.href) || blackDomainList.includes(location.host);
 
   if (isInBlackList) {
-    console.warn(`[h5player][config][blacklist][${location.href}] \n当前页面已被加入黑名单，不执行h5player增强脚本的相关逻辑，如有需要开启，请在配置里的blacklist移除对应的地址`);
+    console.warn(`[h5player][config][blacklist][${location.href}] \nh5playerblacklist`);
   }
 
   try {
@@ -15064,13 +13931,10 @@ async function h5PlayerInit () {
         debug.warn('[experimentFeatures][mediaSource][activated]');
       }
 
-      /* 禁止对playbackRate等属性进行锁定 */
       hackDefineProperty();
 
-      /* 禁止对shadowdom使用close模式 */
       hackAttachShadow();
 
-      /* 对所有事件进行接管 */
       proxyHTMLMediaElementEvent();
       // hackEventListener()
     }
@@ -15078,26 +13942,22 @@ async function h5PlayerInit () {
     console.error('h5player hack error', e);
   }
 
-  /* 注意：油猴的菜单注册不能根据isEnabled禁用掉，否则没法通过油猴的菜单进行启用 */
   menuRegister();
 
   if (!isEnabled || isInBlackList) {
-    debug.warn(`[config][disable][${location.host}] 当前网站已禁用脚本，如要启用脚本，请在菜单里开启`);
+    debug.warn(`[config][disable][${location.host}] `);
     return false
   }
 
   try {
-    /* 初始化全局所需的相关方法 */
     h5Player.init(true);
 
-    /* 检测到有视频标签就进行初始化 */
     supportMediaTags.forEach(tagName => {
       ready(tagName, function () {
         h5Player.init();
       });
     });
 
-    /* 检测shadow dom 下面的video */
     document.addEventListener('addShadowRoot', function (e) {
       const shadowRoot = e.detail.shadowRoot;
       supportMediaTags.forEach(tagName => {
@@ -15107,7 +13967,6 @@ async function h5PlayerInit () {
       });
     });
 
-    /* 初始化跨Tab控制逻辑 */
     crossTabCtl.init();
 
     if (isInIframe()) {
@@ -15117,10 +13976,9 @@ async function h5PlayerInit () {
     }
 
     if (isInCrossOriginFrame()) {
-      debug.log('当前处于跨域受限的iframe中，h5Player部分功能可能无法正常开启', window.location.href);
+      debug.log('iframeh5Player', window.location.href);
     }
 
-    /* 注册鼠标控制事件 */
     if (configManager.get('mouse.enable')) {
       registerMouseEvent(h5Player);
     }
@@ -15128,7 +13986,6 @@ async function h5PlayerInit () {
     debug.error('h5Player init fail', e);
   }
 
-  /* 注意：只有明确为fasle才隐藏GUI */
   if (configManager.get('ui.enable') !== false) {
     if (window.customElements && document.adoptedStyleSheets) {
       h5Player.UI = h5playerUI(windowSandbox);
@@ -15136,17 +13993,13 @@ async function h5PlayerInit () {
         h5Player.UI.init();
       }, 400);
     } else {
-      /* webkit内核建议73以上的浏览器才允许使用UI组件，否则兼容或性能都是很大的问题 */
-      debug.warn('当前浏览器不支持customElements或adoptedStyleSheets，无法使用UI组件，建议使用Chrome 83+，Edge 83+');
+      debug.warn('customElementsadoptedStyleSheetsUIChrome 83+Edge 83+');
     }
   } else {
-    debug.warn('UI组件已被禁用', configManager.get('ui.enable'));
+    debug.warn('UI', configManager.get('ui.enable'));
   }
 
   /**
-   * 跟官网远程助手进行互动，有严重安全或信息洁癖的人手动注释下面代码即可
-   * 下面代码不会影响主要功能的正常使用
-   * 不注释代码，禁用UI界面也有同等效果
    */
   try {
     configManager.get('ui.enable') !== false && remoteHelper.init();
@@ -15176,8 +14029,6 @@ function init (retryCount = 0) {
 }
 
 /**
- * 某些极端情况下，直接访问window对象都会导致报错，所以整个init都try起来
- * 例如：www.icourse163.org 就有一定的机率异常
  */
 let initTryCount = 0;
 try {
