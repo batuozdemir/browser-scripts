@@ -2,7 +2,7 @@
 // @name         h5player-lite
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      4.3.5.5
+// @version      4.3.5.6
 // @description  Video speed control. Pruned build of xxxily/h5player.
 // @author       ankvps
 // @match        *://*/*
@@ -3041,8 +3041,11 @@ class FullScreen {
 				z-index: 999999 !important;
 			}
 		`;
-    if (!window._hasInitFullPageStyle_ && window.GM_addStyle) {
-      window.GM_addStyle(fullPageStyle);
+    if (!window._hasInitFullPageStyle_) {
+      /* h5player-lite: plain <style>, GM_addStyle is absent on Safari */
+      const styleEl = document.createElement('style');
+      styleEl.textContent = fullPageStyle;
+      (document.head || document.documentElement).appendChild(styleEl);
       window._hasInitFullPageStyle_ = true;
     }
 

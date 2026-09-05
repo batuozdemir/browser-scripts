@@ -19,7 +19,7 @@ STRIP_UI=1
 # ------------------------------------------------------------------------------
 
 UPSTREAM_VERSION="4.3.5"      # expected upstream @version; build aborts on mismatch
-PATCH="5"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
+PATCH="6"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
 UPSTREAM_URL="https://greasyfork.org/scripts/381682/code/script.user.js"
 RAW_URL="https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js"
 
@@ -261,6 +261,30 @@ src = src.replace(ANCHOR_WFS, "const isDo = false; /* h5player-lite: always use 
 if 'player._fullPageScreen_.toggle();' not in src:
     die('edit 7: the _fullPageScreen_ fallback is gone, re-derive this edit')
 print('==> edit 7: web fullscreen forced to h5player own mode')
+
+# --- Edit 8: inject the web-fullscreen CSS without GM_addStyle ---------------
+# The _webfullscreen_ rules that edit 7's full-page mode depends on had exactly
+# one injection path upstream, `window.GM_addStyle`, guarded by its own presence.
+# Safari's Userscripts app implements only the async GM.* API and has no sync
+# GM_* set (the same reason config.js guards GM_deleteValue), so on Safari the
+# stylesheet never landed: enter() added the classes and nothing was styled, and
+# the key looked dead. A plain <style> element needs no manager API and works in
+# both Userscripts and Violentmonkey. document.head can be null at document-start,
+# hence the documentElement fallback.
+ANCHOR_CSS = """    if (!window._hasInitFullPageStyle_ && window.GM_addStyle) {
+      window.GM_addStyle(fullPageStyle);
+      window._hasInitFullPageStyle_ = true;
+    }"""
+if src.count(ANCHOR_CSS) != 1:
+    die('fullPageStyle anchor matched %d times, expected exactly 1' % src.count(ANCHOR_CSS))
+src = src.replace(ANCHOR_CSS, """    if (!window._hasInitFullPageStyle_) {
+      /* h5player-lite: plain <style>, GM_addStyle is absent on Safari */
+      const styleEl = document.createElement('style');
+      styleEl.textContent = fullPageStyle;
+      (document.head || document.documentElement).appendChild(styleEl);
+      window._hasInitFullPageStyle_ = true;
+    }""")
+print('==> edit 8: web-fullscreen CSS injected without GM_addStyle')
 
 io.open(OUT, 'w', encoding='utf-8').write(src)
 print('==> wrote %s (%d bytes)' % (OUT, len(src.encode('utf-8'))))

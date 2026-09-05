@@ -18,7 +18,7 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.5`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.6`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
    `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
    localized `@description:xx` variants are dropped, and `@description` is
@@ -45,6 +45,11 @@ Upstream source used:
    when no site task ran. `const isDo = TCC.doTask('webFullScreen')` is replaced
    with `const isDo = false`, so every site takes the fallback and no site's own
    button is clicked. See "Web fullscreen" below for why.
+7. **Web-fullscreen CSS injected without `GM_addStyle`.** Upstream injects the
+   `_webfullscreen_` rules only through `window.GM_addStyle`, guarded by its own
+   presence. Safari's Userscripts app has no synchronous `GM_*` set, so on Safari
+   the stylesheet never landed and edit 6's full-page mode was inert. Replaced
+   with a plain `<style>` element, which needs no manager API.
 
 Nothing else is changed. The per-site compatibility table, the playback-rate
 enforcement, and all remaining upstream behavior are untouched.
@@ -116,6 +121,15 @@ site, identically. This is not OS fullscreen, and it is not the site's own
 button. The 16 per-site `webFullScreen` entries stay in the file but are now
 unreachable; `exitWebFullScreen` was already only a table key that nothing
 invoked.
+
+That change alone was not enough, and 4.3.5.6 finishes it. `enter()` in page mode
+only adds the `_webfullscreen_` classes, it never calls the fullscreen API, so it
+is entirely dependent on those CSS rules being present. Upstream injected them
+through `window.GM_addStyle` and nothing else, behind a `&& window.GM_addStyle`
+guard, so on Safari the rules silently never arrived and the key looked dead
+rather than erroring. Edit 7 injects them with a plain `<style>` element instead.
+One unrelated `GM_addStyle` call survives in the `iqiyi.com` site handler and is
+left as upstream wrote it.
 Seek is on `shift+arrows` rather than bare arrows so a site keeps its native
 5-second seek, and it routes through the per-site TCC table
 (`addCurrentTime`/`subtractCurrentTime`) so sites with custom seek handling are
@@ -167,7 +181,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.5`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.6`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 
