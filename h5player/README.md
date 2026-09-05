@@ -25,15 +25,16 @@ Upstream source used:
    replaced with a short English one.
 2. **Configuration override.** A block is injected just before
    `initUiConfigManager` that replaces the entire default hotkey table with the
-   nine bindings below, disables the on-screen UI (`ui.enable: false`), and
+   twelve bindings below, disables the on-screen UI (`ui.enable: false`), and
    disables cross-origin control (`enhance.allowCrossOriginControl: false`).
 3. **Chinese i18n tables removed.** The `zhCN` and `zhTW` language tables and
    their four `messages` entries are deleted. `I18n.t()` resolves
    `_languages[locale]`, then falls back to `_languages['en']`, so a Chinese
    browser locale degrades cleanly to English instead of breaking. `enUS` and
    `ru` are untouched.
-4. **Chinese text removed.** All remaining CJK characters are stripped: 841
-   Chinese comment lines are dropped and the rest are removed in place. This is
+4. **Chinese text removed.** All remaining CJK characters are stripped: 802
+   Chinese comment lines are dropped and the rest are removed in place. (It was
+   841 before modification 5 landed; the UI module carried the other 39.) This is
    safe because CJK never appears in executable code upstream (no CJK
    identifiers, object keys or operators), so removing the characters cannot
    change program structure.
@@ -184,7 +185,7 @@ as `4.3.5.0` and silently break update comparison.
 
 Edits 3 and 4 delete the `h5playerUI` module and the init block that would
 otherwise reference the deleted binding. They are gated behind `STRIP_UI` at the
-top of `build.sh`, set to `1` since 4.3.5.3 (see Versioning for the current version); setting it back to `0` builds the
+top of `build.sh`, set to `1` since 4.3.5.3; setting it back to `0` builds the
 UI-bearing file again without any other change.
 
 Applied against upstream 4.3.5 the output drops from 474,351 to 255,056 bytes,
