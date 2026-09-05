@@ -18,7 +18,7 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.2`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.3`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
    `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
    localized `@description:xx` variants are dropped, and `@description` is
@@ -37,8 +37,9 @@ Upstream source used:
    safe because CJK never appears in executable code upstream (no CJK
    identifiers, object keys or operators), so removing the characters cannot
    change program structure.
-5. **UI removal** *(not yet applied — see "Step 2" below)*. The `h5playerUI`
-   module and its init block are deleted from the built file.
+5. **UI removal.** The `h5playerUI` module and the init block that binds it
+   are deleted from the built file, which is what `ui.enable: false` in edit 2
+   would otherwise only hide at runtime. This is about 46% of the bytes.
 
 Nothing else is changed. The per-site compatibility table, the playback-rate
 enforcement, and all remaining upstream behavior are untouched.
@@ -130,7 +131,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.2`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.3`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 
@@ -140,17 +141,22 @@ The Userscripts app's `isVersionNewer` splits on dots and compares segments as
 integers, treating any non-numeric segment as `0`, so `4.3.5-lite` would parse
 as `4.3.5.0` and silently break update comparison.
 
-### Step 2: UI removal (not yet applied)
+### UI removal (`STRIP_UI`)
 
-Edits 3 and 4 delete the `h5playerUI` module (about 40% of the file) and the
-init block that would otherwise reference the deleted binding. They are written
-and gated behind `STRIP_UI=0` at the top of `build.sh`; flip it to `1` to apply.
+Edits 3 and 4 delete the `h5playerUI` module and the init block that would
+otherwise reference the deleted binding. They are gated behind `STRIP_UI` at the
+top of `build.sh`, set to `1` since 4.3.5.3; setting it back to `0` builds the
+UI-bearing file again without any other change.
 
-Verified by dry run against 4.3.5: the build succeeds, output drops from 474,351
-to 255,056 bytes, and `node --check` passes. The six remaining textual matches
-for `h5playerUI` are all benign: `h5playerUIProvider` is a separate identifier,
-two are comments, and `h5playerUI: t.UI` is a debug-info property that reads an
-attribute which simply stays `undefined` behind an existing guard.
+Applied against upstream 4.3.5 the output drops from 474,351 to 255,056 bytes,
+46% smaller, and `node --check` passes. Four textual matches for `h5playerUI`
+survive and all are benign: three are `h5playerUIProvider`, a separate
+identifier whose definition is outside the deleted span, and the fourth is
+`h5playerUI: t.UI` in `printPlayerInfo`, a debug-info property that reads an
+attribute which stays `undefined` now that nothing assigns `h5Player.UI`. Every
+other `t.UI` use in the file is already guarded by `t.UI &&`, so they all
+short-circuit. (An earlier dry run counted six matches rather than four; the two
+extra were Chinese comments, which edit 6 removes outright.)
 
 ## Install
 

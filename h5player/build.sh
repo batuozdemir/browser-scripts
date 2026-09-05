@@ -13,13 +13,13 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# --- Step 2: delete the ~40% UI block. Off until that session happens. --------
-# Flip to 1 to enable. Requires nothing else; the edits are already written.
-STRIP_UI=0
+# --- Delete the h5playerUI block: 46% of the bytes. On since 4.3.5.3. --------
+# Set to 0 to build the UI-bearing file again; nothing else needs to change.
+STRIP_UI=1
 # ------------------------------------------------------------------------------
 
 UPSTREAM_VERSION="4.3.5"      # expected upstream @version; build aborts on mismatch
-PATCH="2"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
+PATCH="3"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
 UPSTREAM_URL="https://greasyfork.org/scripts/381682/code/script.user.js"
 RAW_URL="https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js"
 
