@@ -18,7 +18,7 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.4`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.5`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
    `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
    localized `@description:xx` variants are dropped, and `@description` is
@@ -40,6 +40,11 @@ Upstream source used:
 5. **UI removal.** The `h5playerUI` module and the init block that binds it
    are deleted from the built file, which is what `ui.enable: false` in edit 2
    would otherwise only hide at runtime. This is about 46% of the bytes.
+6. **Web fullscreen always uses h5player's own mode.** `setWebFullScreen` asks
+   the per-site table first and only falls back to h5player's CSS full-page mode
+   when no site task ran. `const isDo = TCC.doTask('webFullScreen')` is replaced
+   with `const isDo = false`, so every site takes the fallback and no site's own
+   button is clicked. See "Web fullscreen" below for why.
 
 Nothing else is changed. The per-site compatibility table, the playback-rate
 enforcement, and all remaining upstream behavior are untouched.
@@ -98,6 +103,19 @@ is what makes a chosen speed stick when a site tries to reset it.
 Web fullscreen and seek were added in 4.3.5.4. `shift+enter` is upstream's own
 binding for web fullscreen; bare `enter`, upstream's *device* fullscreen, stays
 unbound deliberately, since it was the reason this config override exists at all.
+
+**Web fullscreen is h5player's own, on every site (4.3.5.5).** Upstream resolves
+this key through the per-site table first, and on YouTube that entry is
+`webFullScreen: 'button.ytp-size-button'`, which is the *theater mode* button, so
+the key produced theater mode rather than a full-window video. Edit 7 forces the
+fallback path instead: `player._fullPageScreen_`, a `FullScreen(player, true)`
+created next to the hotkey runner for every player h5player initialises. It
+applies `_webfullscreen_` (`position: fixed`, 100% width and height, black
+background, `z-index: 999999`), so the video fills the browser window on any
+site, identically. This is not OS fullscreen, and it is not the site's own
+button. The 16 per-site `webFullScreen` entries stay in the file but are now
+unreachable; `exitWebFullScreen` was already only a table key that nothing
+invoked.
 Seek is on `shift+arrows` rather than bare arrows so a site keeps its native
 5-second seek, and it routes through the per-site TCC table
 (`addCurrentTime`/`subtractCurrentTime`) so sites with custom seek handling are
@@ -149,7 +167,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.4`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.5`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 

@@ -2,7 +2,7 @@
 // @name         h5player-lite
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      4.3.5.4
+// @version      4.3.5.5
 // @description  Video speed control. Pruned build of xxxily/h5player.
 // @author       ankvps
 // @match        *://*/*
@@ -6779,7 +6779,7 @@ const h5Player = {
   setWebFullScreen: function () {
     const t = this;
     const player = t.player();
-    const isDo = TCC.doTask('webFullScreen');
+    const isDo = false; /* h5player-lite: always use our own full-page mode */
     if (!isDo && player && player._fullPageScreen_) {
       player._fullPageScreen_.toggle();
     }
