@@ -19,7 +19,7 @@ STRIP_UI=1
 # ------------------------------------------------------------------------------
 
 UPSTREAM_VERSION="4.3.5"      # expected upstream @version; build aborts on mismatch
-PATCH="3"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
+PATCH="4"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
 UPSTREAM_URL="https://greasyfork.org/scripts/381682/code/script.user.js"
 RAW_URL="https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js"
 

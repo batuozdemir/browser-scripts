@@ -46,6 +46,19 @@
     { desc: 'Toggle 1x / last',   key: 'z',       command: 'resetPlaybackRate' },
     { desc: 'Screenshot',         key: 'shift+s', command: 'capture' },
     { desc: 'Picture in picture', key: 'shift+p', command: 'togglePictureInPicture' },
-    { desc: 'Resume progress',    key: 'shift+r', command: 'switchRestorePlayProgressStatus' }
+    { desc: 'Resume progress',    key: 'shift+r', command: 'switchRestorePlayProgressStatus' },
+
+    /* shift+enter is upstream's own binding for this. Plain `enter` is upstream's
+     * setFullScreen and stays unbound on purpose: it was the reason for this whole
+     * config override. */
+    { desc: 'Web fullscreen',     key: 'shift+enter',      command: 'setWebFullScreen' },
+
+    /* Seek goes through the per-site TCC table (addCurrentTime/subtractCurrentTime),
+     * so sites with their own seek handling are respected. Bound on shift+arrows
+     * rather than bare arrows so the site keeps its native seek; the hotkey handler
+     * bails on INPUT/TEXTAREA/SELECT/contenteditable, so shift+arrow text selection
+     * is unaffected. */
+    { desc: 'Forward 5s',         key: 'shift+arrowright', command: 'setCurrentTimeUp',   args: 5 },
+    { desc: 'Back 5s',            key: 'shift+arrowleft',  command: 'setCurrentTimeDown', args: -5 }
   ])
 })()

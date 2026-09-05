@@ -18,7 +18,7 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.3`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.4`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
    `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
    localized `@description:xx` variants are dropped, and `@description` is
@@ -84,6 +84,9 @@ the dotless one on the top row.
 | `shift+s` | Screenshot |
 | `shift+p` | Picture in picture |
 | `shift+r` | Toggle resume-play-progress |
+| `shift+enter` | Web fullscreen |
+| `shift+right` | Forward 5s |
+| `shift+left` | Back 5s |
 
 Known and accepted: while a video is present, `l` and `i` override YouTube's
 own seek-forward-10s and miniplayer shortcuts. h5player binds on `document` in
@@ -91,6 +94,21 @@ the capture phase and calls `preventDefault()`, so it wins.
 
 `enhance.blockSetPlaybackRate` is left at its upstream default of `true`. That
 is what makes a chosen speed stick when a site tries to reset it.
+
+Web fullscreen and seek were added in 4.3.5.4. `shift+enter` is upstream's own
+binding for web fullscreen; bare `enter`, upstream's *device* fullscreen, stays
+unbound deliberately, since it was the reason this config override exists at all.
+Seek is on `shift+arrows` rather than bare arrows so a site keeps its native
+5-second seek, and it routes through the per-site TCC table
+(`addCurrentTime`/`subtractCurrentTime`) so sites with custom seek handling are
+respected. `shift+arrow` text selection is unaffected: the hotkey handler returns
+early on `INPUT`, `TEXTAREA`, `SELECT` and `contenteditable` targets.
+
+Upstream commands that remain deliberately unbound, all still present in the file
+and rebindable from `config.js`: media download, zoom/pan/mirror/rotate, freeze
+frame, the brightness/contrast/saturation/hue/blur filters, next video, and
+volume. Volume boost above 100% (`enhance.allowAcousticGain`, up to 6x through a
+GainNode) additionally defaults to `false`.
 
 ## Do not use the built-in config menu for our three keys
 
@@ -131,7 +149,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.3`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.4`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 
@@ -145,7 +163,7 @@ as `4.3.5.0` and silently break update comparison.
 
 Edits 3 and 4 delete the `h5playerUI` module and the init block that would
 otherwise reference the deleted binding. They are gated behind `STRIP_UI` at the
-top of `build.sh`, set to `1` since 4.3.5.3; setting it back to `0` builds the
+top of `build.sh`, set to `1` since 4.3.5.3 (see Versioning for the current version); setting it back to `0` builds the
 UI-bearing file again without any other change.
 
 Applied against upstream 4.3.5 the output drops from 474,351 to 255,056 bytes,
