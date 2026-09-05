@@ -84,3 +84,9 @@ Menus render as `.z-popover` portals at `<body>` level. During automation they'r
 - The in-file `AI AGENT NOTES` banners at the top of each script list features that must not be removed or refactored — read them before editing.
 - After any change to a hand-written script: bump `@version`, ensure no debug `console.log` remains, and verify the IIFE/singleton guard is intact. For `h5player/`, bump `PATCH` in `build.sh` and rebuild instead.
 - When needed, update `README.md`
+- **Never tell Batu a pushed change reached Safari.** Safari's Userscripts app does
+  not update silently: it offers an Update button he has to press, and its own
+  README calls the update process not correctly implemented. Pushing is not
+  deploying. Copy the file into the app's scripts directory (that `cp` needs
+  `dangerouslyDisableSandbox`; see `h5player/README.md`) and verify with `diff`.
+  Violentmonkey on Thorium/Firefox is the only manager here that self-updates.

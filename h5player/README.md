@@ -206,8 +206,19 @@ The built script is served raw from this repository:
 https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js
 ```
 
-Opening that URL with a userscript manager installed offers it for install, and
-`@updateURL` points at the same file so auto-update works.
+Opening that URL with a userscript manager installed offers it for install.
+`@updateURL` and `@downloadURL` both point at that same file, which is the shape
+Violentmonkey and Tampermonkey expect; they refresh on their own schedule.
+
+**Safari's Userscripts app is the exception and never updates silently.** Checked
+against its README on 2026-09-05: it checks periodically, then surfaces an Update
+button that you have to press. It also documents `@updateURL` as ending in
+`.meta.js` (the metadata block alone) with `@downloadURL` ending in `.user.js`,
+which is not the shape used here, and its README flags the whole update process
+as not correctly implemented (upstream issue #248). So treat the Safari copy as
+hand-deployed: copy the file in, verify with `diff`, and never assume it
+refreshed itself. Note also that GitHub's raw CDN can serve the previous version
+for a few minutes after a push before it clears.
 
 On Safari with the Userscripts app, the file can also be dropped straight into
 the app's scripts directory. The app names the installed file from `@name`,

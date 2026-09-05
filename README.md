@@ -223,7 +223,7 @@ spindly in fullscreen and clotted in a small player. To retune, edit the
 
 ### Installation (Safari / Tampermonkey)
 
-1. Install a userscript manager — Tampermonkey, or the **Userscripts** app on
+1. Install a userscript manager: Tampermonkey, or the **Userscripts** app on
    Safari.
 2. Open the raw file and the manager will offer to install it:
    `https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/youtube-subtitles.user.js`
@@ -234,6 +234,16 @@ spindly in fullscreen and clotted in a small player. To retune, edit the
 `@run-at document-start` matters: the caption track is fetched once and cached,
 so the script has to be running before the player asks for it. If subtitles do
 not appear, reload the page rather than toggling captions.
+
+### Updating
+
+Violentmonkey and Tampermonkey refresh from the raw URL on their own schedule.
+**Safari's Userscripts app does not**: it checks periodically and then offers an
+Update button you have to press, and its own README flags the update process as
+not correctly implemented. See the Install section of
+[`h5player/README.md`](h5player/README.md) for the details and the metadata-shape
+caveat. Bump `@version` on every change, and re-copy the file to Safari by hand
+rather than assuming it refreshed.
 
 ### Tests
 
