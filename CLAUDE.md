@@ -17,6 +17,15 @@ into a userscript manager. No build step. Edit them in place.
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Intelligence preset buttons, left-Cmd reasoning cycle, temp chat, URL-param automation, keybindings |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
+| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks |
+
+`youtube-subtitles.user.js` is the one hand-written script with tests:
+`node youtube-subtitles.test.js`. Its pure segmentation functions are exported
+when `window` is undefined, which is the only reason the file is requireable
+from Node — keep that guard if you refactor. It is also the only script here at
+`@run-at document-start`, and that is load-bearing: YouTube fetches the caption
+track once and caches it, so a later hook sees nothing. Read the `AI AGENT
+NOTES` banner in the file before changing any caption logic.
 
 **Generated build** (`h5player/`). `h5player-lite.user.js` is a patched build of
 third-party upstream `xxxily/h5player` and is **generated, not authored**.
