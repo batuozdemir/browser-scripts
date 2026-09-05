@@ -48,10 +48,13 @@
     { desc: 'Picture in picture', key: 'shift+p', command: 'togglePictureInPicture' },
     { desc: 'Resume progress',    key: 'shift+r', command: 'switchRestorePlayProgressStatus' },
 
-    /* shift+enter is upstream's own binding for this. Plain `enter` is upstream's
-     * setFullScreen and stays unbound on purpose: it was the reason for this whole
-     * config override. */
-    { desc: 'Web fullscreen',     key: 'shift+enter',      command: 'setWebFullScreen' },
+    /* Normal fullscreen, not upstream's "web fullscreen" (which on YouTube maps to
+     * the theater-mode button). On sites with a table entry this clicks the site's
+     * own fullscreen button, so YouTube behaves exactly like its `f`. Elsewhere it
+     * falls through to the fullscreen API on the video's container.
+     * Bare `enter` is upstream's key for this and stays unbound on purpose: Enter
+     * triggering fullscreen by accident is why this config override exists. */
+    { desc: 'Fullscreen',         key: 'shift+enter',      command: 'setFullScreen' },
 
     /* Seek goes through the per-site TCC table (addCurrentTime/subtractCurrentTime),
      * so sites with their own seek handling are respected. Bound on shift+arrows

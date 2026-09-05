@@ -18,7 +18,7 @@ Upstream source used:
 ### Modifications made to upstream
 
 1. **Metadata.** `@name` becomes `h5player-lite` and the localized `@name:xx`
-   variants are removed. `@version` becomes `4.3.5.6`. `@downloadURL` and
+   variants are removed. `@version` becomes `4.3.5.7`. `@downloadURL` and
    `@updateURL` point at this repository. `@license` is stated explicitly as
    `GPL-3.0-or-later`. The `@icon` line (a ~9 KB base64 data URI) and the
    localized `@description:xx` variants are dropped, and `@description` is
@@ -40,16 +40,13 @@ Upstream source used:
 5. **UI removal.** The `h5playerUI` module and the init block that binds it
    are deleted from the built file, which is what `ui.enable: false` in edit 2
    would otherwise only hide at runtime. This is about 46% of the bytes.
-6. **Web fullscreen always uses h5player's own mode.** `setWebFullScreen` asks
-   the per-site table first and only falls back to h5player's CSS full-page mode
-   when no site task ran. `const isDo = TCC.doTask('webFullScreen')` is replaced
-   with `const isDo = false`, so every site takes the fallback and no site's own
-   button is clicked. See "Web fullscreen" below for why.
-7. **Web-fullscreen CSS injected without `GM_addStyle`.** Upstream injects the
+6. **Fullscreen CSS injected without `GM_addStyle`.** Upstream injects the
    `_webfullscreen_` rules only through `window.GM_addStyle`, guarded by its own
    presence. Safari's Userscripts app has no synchronous `GM_*` set, so on Safari
-   the stylesheet never landed and edit 6's full-page mode was inert. Replaced
-   with a plain `<style>` element, which needs no manager API.
+   those rules never landed. `FullScreen.enter()` applies them in both its modes,
+   so on a site with no `fullScreen` table entry the video went fullscreen without
+   being sized to fill it. Replaced with a plain `<style>` element, which needs no
+   manager API.
 
 Nothing else is changed. The per-site compatibility table, the playback-rate
 enforcement, and all remaining upstream behavior are untouched.
@@ -94,7 +91,7 @@ the dotless one on the top row.
 | `shift+s` | Screenshot |
 | `shift+p` | Picture in picture |
 | `shift+r` | Toggle resume-play-progress |
-| `shift+enter` | Web fullscreen |
+| `shift+enter` | Fullscreen |
 | `shift+right` | Forward 5s |
 | `shift+left` | Back 5s |
 
@@ -105,31 +102,23 @@ the capture phase and calls `preventDefault()`, so it wins.
 `enhance.blockSetPlaybackRate` is left at its upstream default of `true`. That
 is what makes a chosen speed stick when a site tries to reset it.
 
-Web fullscreen and seek were added in 4.3.5.4. `shift+enter` is upstream's own
-binding for web fullscreen; bare `enter`, upstream's *device* fullscreen, stays
-unbound deliberately, since it was the reason this config override exists at all.
+Fullscreen and seek were added in 4.3.5.4. `shift+enter` runs `setFullScreen`,
+ordinary fullscreen. On a site with a `fullScreen` entry in the per-site table it
+clicks that button, so on YouTube it is exactly the `f` key; elsewhere it calls
+the fullscreen API on the video's container. Bare `enter` is upstream's key for
+this and stays unbound deliberately, since Enter triggering fullscreen by
+accident is why this config override exists at all.
 
-**Web fullscreen is h5player's own, on every site (4.3.5.5).** Upstream resolves
-this key through the per-site table first, and on YouTube that entry is
-`webFullScreen: 'button.ytp-size-button'`, which is the *theater mode* button, so
-the key produced theater mode rather than a full-window video. Edit 7 forces the
-fallback path instead: `player._fullPageScreen_`, a `FullScreen(player, true)`
-created next to the hotkey runner for every player h5player initialises. It
-applies `_webfullscreen_` (`position: fixed`, 100% width and height, black
-background, `z-index: 999999`), so the video fills the browser window on any
-site, identically. This is not OS fullscreen, and it is not the site's own
-button. The 16 per-site `webFullScreen` entries stay in the file but are now
-unreachable; `exitWebFullScreen` was already only a table key that nothing
-invoked.
-
-That change alone was not enough, and 4.3.5.6 finishes it. `enter()` in page mode
-only adds the `_webfullscreen_` classes, it never calls the fullscreen API, so it
-is entirely dependent on those CSS rules being present. Upstream injected them
-through `window.GM_addStyle` and nothing else, behind a `&& window.GM_addStyle`
-guard, so on Safari the rules silently never arrived and the key looked dead
-rather than erroring. Edit 7 injects them with a plain `<style>` element instead.
-One unrelated `GM_addStyle` call survives in the `iqiyi.com` site handler and is
-left as upstream wrote it.
+Upstream's *other* fullscreen, `setWebFullScreen`, is left unbound. It resolves
+through a separate `webFullScreen` table whose YouTube entry is
+`button.ytp-size-button`, the **theater mode** button, so it does not mean what
+the name suggests there. Both 4.3.5.5 and 4.3.5.6 were spent trying to make that
+one behave, and 4.3.5.7 abandoned it for plain fullscreen instead. The only piece
+kept from those two is the CSS injection fix in modification 6, which matters to
+plain fullscreen too: `FullScreen.enter()` applies the `_webfullscreen_` sizing
+rules in both modes, and without them a site with no table entry goes fullscreen
+without the video being sized to fill it. One unrelated `GM_addStyle` call
+survives in the `iqiyi.com` site handler and is left as upstream wrote it.
 Seek is on `shift+arrows` rather than bare arrows so a site keeps its native
 5-second seek, and it routes through the per-site TCC table
 (`addCurrentTime`/`subtractCurrentTime`) so sites with custom seek handling are
@@ -181,7 +170,7 @@ fails loudly instead of quietly producing a wrong file.
 
 ### Versioning
 
-`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.6`. Bump
+`@version` is `<upstream base>.<patch counter>`, currently `4.3.5.7`. Bump
 `PATCH` in `build.sh` on every rebuild; reset it to `1` when rebasing onto a new
 upstream version.
 

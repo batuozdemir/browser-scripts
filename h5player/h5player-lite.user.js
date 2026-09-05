@@ -2,7 +2,7 @@
 // @name         h5player-lite
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      4.3.5.6
+// @version      4.3.5.7
 // @description  Video speed control. Pruned build of xxxily/h5player.
 // @author       ankvps
 // @match        *://*/*
@@ -2043,10 +2043,13 @@ const configManager = new ConfigManager({
     { desc: 'Picture in picture', key: 'shift+p', command: 'togglePictureInPicture' },
     { desc: 'Resume progress',    key: 'shift+r', command: 'switchRestorePlayProgressStatus' },
 
-    /* shift+enter is upstream's own binding for this. Plain `enter` is upstream's
-     * setFullScreen and stays unbound on purpose: it was the reason for this whole
-     * config override. */
-    { desc: 'Web fullscreen',     key: 'shift+enter',      command: 'setWebFullScreen' },
+    /* Normal fullscreen, not upstream's "web fullscreen" (which on YouTube maps to
+     * the theater-mode button). On sites with a table entry this clicks the site's
+     * own fullscreen button, so YouTube behaves exactly like its `f`. Elsewhere it
+     * falls through to the fullscreen API on the video's container.
+     * Bare `enter` is upstream's key for this and stays unbound on purpose: Enter
+     * triggering fullscreen by accident is why this config override exists. */
+    { desc: 'Fullscreen',         key: 'shift+enter',      command: 'setFullScreen' },
 
     /* Seek goes through the per-site TCC table (addCurrentTime/subtractCurrentTime),
      * so sites with their own seek handling are respected. Bound on shift+arrows
@@ -6782,7 +6785,7 @@ const h5Player = {
   setWebFullScreen: function () {
     const t = this;
     const player = t.player();
-    const isDo = false; /* h5player-lite: always use our own full-page mode */
+    const isDo = TCC.doTask('webFullScreen');
     if (!isDo && player && player._fullPageScreen_) {
       player._fullPageScreen_.toggle();
     }

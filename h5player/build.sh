@@ -19,7 +19,7 @@ STRIP_UI=1
 # ------------------------------------------------------------------------------
 
 UPSTREAM_VERSION="4.3.5"      # expected upstream @version; build aborts on mismatch
-PATCH="6"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
+PATCH="7"                     # our patch counter; bump on every rebuild, reset to 1 on rebase
 UPSTREAM_URL="https://greasyfork.org/scripts/381682/code/script.user.js"
 RAW_URL="https://raw.githubusercontent.com/batuozdemir/browser-scripts/main/h5player/h5player-lite.user.js"
 
@@ -246,23 +246,7 @@ src = result
 print('==> edit 6: CJK stripped (%d comment lines dropped, %d functional '
       'selectors preserved)' % (dropped, len(protected)))
 
-# --- Edit 7: always use h5player's own web fullscreen ------------------------
-# setWebFullScreen asks the per-site TCC table first and only falls back to
-# h5player's own CSS full-page mode when no site task ran. On YouTube that task
-# is `webFullScreen: 'button.ytp-size-button'`, which is the theater-mode button,
-# so the key produced theater mode rather than a full-window video. Forcing isDo
-# to False makes every site take the fallback, which is player._fullPageScreen_,
-# a FullScreen(player, true) created alongside the hotkey runner for every player
-# h5player initialises. Site-specific web-fullscreen buttons are never clicked.
-ANCHOR_WFS = "const isDo = TCC.doTask('webFullScreen');"
-if src.count(ANCHOR_WFS) != 1:
-    die('webFullScreen anchor matched %d times, expected exactly 1' % src.count(ANCHOR_WFS))
-src = src.replace(ANCHOR_WFS, "const isDo = false; /* h5player-lite: always use our own full-page mode */")
-if 'player._fullPageScreen_.toggle();' not in src:
-    die('edit 7: the _fullPageScreen_ fallback is gone, re-derive this edit')
-print('==> edit 7: web fullscreen forced to h5player own mode')
-
-# --- Edit 8: inject the web-fullscreen CSS without GM_addStyle ---------------
+# --- Edit 7: inject the web-fullscreen CSS without GM_addStyle ---------------
 # The _webfullscreen_ rules that edit 7's full-page mode depends on had exactly
 # one injection path upstream, `window.GM_addStyle`, guarded by its own presence.
 # Safari's Userscripts app implements only the async GM.* API and has no sync
@@ -284,7 +268,7 @@ src = src.replace(ANCHOR_CSS, """    if (!window._hasInitFullPageStyle_) {
       (document.head || document.documentElement).appendChild(styleEl);
       window._hasInitFullPageStyle_ = true;
     }""")
-print('==> edit 8: web-fullscreen CSS injected without GM_addStyle')
+print('==> edit 7: web-fullscreen CSS injected without GM_addStyle')
 
 io.open(OUT, 'w', encoding='utf-8').write(src)
 print('==> wrote %s (%d bytes)' % (OUT, len(src.encode('utf-8'))))
