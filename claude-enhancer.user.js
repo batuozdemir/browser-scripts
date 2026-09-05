@@ -4,6 +4,7 @@
 // @version      1.6.0
 // @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
 // @author       You
+// @license      GPL-3.0-or-later
 // @match        https://claude.ai/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=claude.ai
 // @grant        none

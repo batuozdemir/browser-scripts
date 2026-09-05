@@ -4,6 +4,7 @@
 // @version      9.3.3
 // @description  Combined model+thinking preset buttons, temporary chat, and silent URL-param automation (model/thinking/search/system-prompt) for Google AI Studio. Rewritten for the Gemini 3 redesign.
 // @author       You
+// @license      GPL-3.0-or-later
 // @match        https://aistudio.google.com/prompts/*
 // @grant        none
 // @run-at       document-idle

@@ -4,6 +4,7 @@
 // @version      1.2
 // @description  Disables right-click block, clicks initial play, skips ad, and plays the main video.
 // @author       You
+// @license      GPL-3.0-or-later
 // @include      *://*macizlevip*.shop/*
 // @include      *://*mactanmaca179.shop/*
 // @grant        none

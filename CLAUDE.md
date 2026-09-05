@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-A collection of Tampermonkey userscripts that enhance AI web interfaces. No build step — files are plain `.user.js` scripts installed directly into a userscript manager.
+A collection of userscripts. Two kinds of file live here, and they are edited
+very differently:
+
+**Hand-written scripts** (repo root). Plain `.user.js` files installed directly
+into a userscript manager. No build step. Edit them in place.
 
 | Script | Target | Purpose |
 |--------|--------|---------|
@@ -12,6 +16,28 @@ A collection of Tampermonkey userscripts that enhance AI web interfaces. No buil
 | `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat, keybindings |
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Intelligence preset buttons, left-Cmd reasoning cycle, temp chat, URL-param automation, keybindings |
+| `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
+
+**Generated build** (`h5player/`). `h5player-lite.user.js` is a patched build of
+third-party upstream `xxxily/h5player` and is **generated, not authored**.
+
+- **Never hand-edit `h5player/h5player-lite.user.js`.** Change `h5player/config.js`
+  or `h5player/build.sh` and re-run `./build.sh`; the built file is committed as
+  an artifact so the raw URL works.
+- The build anchors every edit on a string that must appear exactly once upstream
+  and aborts otherwise. If a build fails on an anchor or the version gate, upstream
+  has changed: re-derive the edits against the new source, do not loosen the anchor.
+- Bump `PATCH` in `build.sh` on every rebuild (reset to `1` when rebasing onto a
+  new upstream version). Never a bare upstream version, never a hyphenated segment.
+- Read `h5player/README.md` before touching anything in that directory.
+
+## License
+
+The whole repository is **GPL-3.0-or-later** (it was MIT until h5player-lite, a
+derivative of the GPL-3.0 `xxxily/h5player`, was added). Every `.user.js` carries
+`@license GPL-3.0-or-later` in its metadata block; keep it there on new scripts.
+`h5player/README.md` carries the GPL section 5 modification notice and must stay
+accurate if the patch set changes.
 
 ## Code Conventions
 
@@ -47,5 +73,5 @@ Menus render as `.z-popover` portals at `<body>` level. During automation they'r
 
 - When a selector breaks, ask the user for "Inspect" input (right-click → Inspect on the target element) rather than guessing.
 - The in-file `AI AGENT NOTES` banners at the top of each script list features that must not be removed or refactored — read them before editing.
-- After any change: bump `@version`, ensure no debug `console.log` remains, and verify the IIFE/singleton guard is intact.
+- After any change to a hand-written script: bump `@version`, ensure no debug `console.log` remains, and verify the IIFE/singleton guard is intact. For `h5player/`, bump `PATCH` in `build.sh` and rebuild instead.
 - When needed, update `README.md`

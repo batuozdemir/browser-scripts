@@ -1,6 +1,8 @@
-# AI Interface Userscripts
+# Browser Scripts
 
-A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, Claude.ai, and ChatGPT.
+A collection of userscripts for Firefox, Safari, Thorium, and other browsers.
+Most enhance AI web interfaces; `h5player-lite` is a pruned build of a
+third-party video speed controller.
 
 | Script | Target | Purpose |
 |--------|--------|---------|
@@ -8,6 +10,8 @@ A collection of Tampermonkey userscripts that enhance Google AI Studio, Gemini, 
 | `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort+thinking preset buttons (S/SX/O/OX), thinking toggle, incognito toggle, custom keybindings |
 | `chatgpt-enhancer.user.js` | `chatgpt.com` | Intelligence preset buttons (I/M/H), left-Cmd reasoning cycle, temporary chat, URL params, custom keybindings |
+| `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
+| `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
 
@@ -175,21 +179,21 @@ The active preset is highlighted when ChatGPT's visible picker label can be read
 
 ---
 
-## Video (`video-enhancer.user.js`)
+## h5player-lite (`h5player/h5player-lite.user.js`)
 
-A universal video speed controller that bypasses iframes, shadow DOMs, and custom players.
+A pruned build of [`xxxily/h5player`](https://github.com/xxxily/h5player) cut
+down to video speed control: the default hotkey table is replaced, the on-screen
+UI is disabled, and cross-origin control is turned off so hotkeys stop firing on
+pages with no video.
 
-### Controls
-- `.` — Increase video speed by 0.25x
-- `ç` — Decrease video speed by 0.25x
-
-### Features
-- Bypasses cross-origin iframe restrictions (works in embedded players).
-- Deep searches Shadow DOMs to find hidden `<video>` tags (e.g., Twitter, Reddit).
-- Shows a brief, centered speed indicator overlay when speed changes.
-
----
+Built by `h5player/build.sh`, which fetches upstream, verifies its version, and
+applies anchored edits. Full details, the hotkey table, and the GPL modification
+notice are in [`h5player/README.md`](h5player/README.md).
 
 ## License
 
-Distributed under the LICENSE file in the repository root.
+GPL-3.0-or-later. See [`LICENSE`](LICENSE).
+
+`h5player/h5player-lite.user.js` is a modified version of `xxxily/h5player`,
+which is GPL-3.0; the modifications are documented in
+[`h5player/README.md`](h5player/README.md) as GPL section 5 requires.
