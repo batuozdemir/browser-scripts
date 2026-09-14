@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.4.1
+// @version      3.5.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -27,7 +27,6 @@
 // │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)       │
 // │     - Must remain on all contenteditable fields.                   │
 // │     - Double-press Option -> toggle model.                         │
-// │     - Right Option single tap -> toggle Temp Chat.                 │
 // │                                                                    │
 // │  3. MODE+THINKING BUTTONS (F, FX, PX) + THINKING + TEMP CHAT     │
 // │     - Injected below the input area in .trailing-actions-wrapper.  │
@@ -233,8 +232,6 @@
     const MODIFIER_DOUBLE_PRESS_MS = 450;
     let lastLeftCmdPressAt = 0;
     let lastOptionPressAt = 0;
-    let rightAltSingleTapTimer = null;
-    let rightAltClean = false; // tracks whether right Alt keydown->keyup was a "clean" tap (no other key pressed)
     let leftCmdClean = false;  // tracks whether left Cmd keydown->keyup was a "clean" tap (no other key pressed)
 
     function handleGlobalKeydown(e) {
@@ -248,12 +245,8 @@
             lastLeftCmdPressAt = 0;
         }
 
-        // Track right Alt clean state
-        if (e.code === 'AltRight') {
-            rightAltClean = true;
-        } else if (e.code !== 'AltLeft') {
-            // Any non-Alt key pressed while Alt held -> not a clean tap
-            if (rightAltClean) rightAltClean = false;
+        // Any non-Option key resets the double-press tracking
+        if (e.code !== 'AltRight' && e.code !== 'AltLeft') {
             lastOptionPressAt = 0;
             return;
         }
@@ -262,8 +255,6 @@
         const now = Date.now();
         if (now - lastOptionPressAt <= MODIFIER_DOUBLE_PRESS_MS) {
             lastOptionPressAt = 0;
-            // Cancel any pending single-tap timer
-            if (rightAltSingleTapTimer) { clearTimeout(rightAltSingleTapTimer); rightAltSingleTapTimer = null; }
             e.preventDefault();
             e.stopPropagation();
             toggleModel();
@@ -290,20 +281,6 @@
                 lastLeftCmdPressAt = now;
             }
             return;
-        }
-
-        // Right Option single-tap -> toggle Temp Chat (fires on keyup after double-press window elapses).
-        if (e.code === 'AltRight') {
-            if (!rightAltClean) return;
-            rightAltClean = false;
-
-            // Wait out the double-press window; if no second press arrives, it's a single tap.
-            if (rightAltSingleTapTimer) clearTimeout(rightAltSingleTapTimer);
-            rightAltSingleTapTimer = setTimeout(() => {
-                rightAltSingleTapTimer = null;
-                console.log('Gemini Enhancer: Right Option tap -> toggling Temp Chat.');
-                toggleTempChat();
-            }, MODIFIER_DOUBLE_PRESS_MS);
         }
     }
 
