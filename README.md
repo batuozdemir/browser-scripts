@@ -9,7 +9,7 @@ third-party video speed controller.
 | `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
 | `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort preset buttons (S/SM/OM/OH), incognito toggle (right Cmd tap), URL params |
-| `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat I/M/H, Work 1-5), temporary chat (right Cmd tap), URL params |
+| `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6/Astra 6 at Medium), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
 | `youtube-subtitles.user.js` | `youtube.com` | Replaces YouTube's rolling auto-captions with stable, movie-style subtitle chunks |
 | `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
@@ -150,10 +150,10 @@ ChatGPT's model picker is a "Power" slider. The buttons move it to a position.
 
 | Tab | Buttons | Positions |
 |-----|---------|-----------|
-| Chat | `I` `M` `H` | Instant / Medium / High |
-| Work | `1` `2` `3` `4` `5` | The five slider steps. In "Default" these are model+effort combinations (e.g. GPT-6 Luna High, GPT-6 Sol Light, ...); with an explicit model they are Light / Medium / High / Extra High / Max. |
+| Chat | `M` `H` | Medium / High |
+| Work | `Sol 5.6` `Sol 6` `Astra 6` | Picks GPT-5.6 Sol, GPT-6 Sol or GPT-6 Astra in the menu, then sets the slider to Medium. |
 
-The active button is highlighted. In Work, each button's tooltip shows the label it was last seen producing; the script learns this whenever the slider moves (by button or by hand).
+The active button is highlighted. After a click, focus goes back to the message box.
 
 ### Controls
 

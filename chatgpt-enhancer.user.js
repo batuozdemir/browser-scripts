@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.2.0
 // @description  Enhancements for ChatGPT: power preset buttons (Chat and Work), temporary chat, URL params, auto-focus, and custom keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -21,15 +21,17 @@
 // │  1. POWER PRESET BUTTONS                                               │
 // │     - The model picker (button[aria-label="Select ChatGPT model"])     │
 // │       holds a "Power" slider: menuitem[data-reasoning-slider].         │
-// │     - Chat has 3 positions (Instant/Medium/High) -> buttons I M H.     │
-// │     - Work has 5 positions (combined model+effort in "Default", or     │
-// │       Light..Max for an explicit model) -> buttons 1..5.               │
+// │     - Chat: slider Instant/Medium/High; buttons M H only (no Instant). │
+// │     - Work: buttons pick a model row in the same menu (the menu stays  │
+// │       open), then set the slider to Medium (Light..Max, position 1).   │
 // │     - The slider is driven with synthetic ArrowLeft/ArrowRight keydown │
 // │       on the focused slider menuitem; that is what commits the value.  │
 // │     - The menu opens on a synthetic pointerdown on the trigger.        │
 // │     - Active state: Chat reads data-selected-reasoning-effort on the   │
-// │       trigger; Work maps the trigger label to a position learned from  │
-// │       the slider (kept in localStorage).                               │
+// │       trigger; Work compares the trigger label ("GPT-6 Sol Medium").   │
+// │     - Closing the menu hands focus back to the trigger a moment after  │
+// │       we focus the editor (blue ring + "Thinking effort" tooltip);     │
+// │       bounceTriggerFocus() sends it back to the editor.                │
 // │                                                                        │
 // │  2. TEMPORARY CHAT (Temp)                                              │
 // │     - Temp clicks the "Temporary chat" / "Turn off temporary chat"     │
@@ -69,16 +71,22 @@
         menu: '[role="menu"]',
         slider: '[role="menu"] [data-reasoning-slider]',
         sliderThumb: '[role="slider"]',
+        modelOption: '[role="menu"] [role="menuitemradio"]',
         tempChatButton: 'button[aria-label="Temporary chat"], button[aria-label="Turn off temporary chat"], button[aria-label*="temporary chat" i]',
         popover: '[data-radix-popper-content-wrapper]'
     };
 
+    // position: 0-based slider step. Chat steps are Instant/Medium/High; with an explicit Work
+    // model they are Light/Medium/High/Extra High/Max. Work `title` is the trigger label it produces.
     const CHAT_PRESETS = [
-        { label: 'I', title: 'Instant', efforts: ['none', 'minimal'] },
-        { label: 'M', title: 'Medium', efforts: ['medium'] },
-        { label: 'H', title: 'High', efforts: ['high'] }
+        { label: 'M', title: 'Medium', position: 1, efforts: ['medium'] },
+        { label: 'H', title: 'High', position: 2, efforts: ['high'] }
     ];
-    const WORK_POSITIONS = 5;
+    const WORK_PRESETS = [
+        { label: 'Sol 5.6', title: 'GPT-5.6 Sol Medium', model: 'GPT-5.6 Sol', position: 1 },
+        { label: 'Sol 6', title: 'GPT-6 Sol Medium', model: 'GPT-6 Sol', position: 1 },
+        { label: 'Astra 6', title: 'GPT-6 Astra Medium', model: 'GPT-6 Astra', position: 1 }
+    ];
 
     const URL_MODEL_ALIASES = { i: 0, instant: 0, fast: 0, m: 1, med: 1, medium: 1, h: 2, high: 2 };
 
@@ -87,8 +95,6 @@
         stepMs: 1000,
         startupMs: 15000
     };
-
-    const STORAGE_KEY = 'tm-chatgpt-work-positions';
 
     let busy = false;
     let urlAutomationCancelled = false;
@@ -143,10 +149,6 @@
         return /work/i.test(findEditor()?.getAttribute('aria-label') || '');
     }
 
-    function presetCount() {
-        return isWorkMode() ? WORK_POSITIONS : CHAT_PRESETS.length;
-    }
-
     // "GPT-6 Sol Light" in Work, "Medium" in Chat. textContent of leaf spans avoids a forced layout.
     function readTriggerLabel(trigger) {
         const el = trigger?.querySelector(SELECTORS.triggerLabel);
@@ -157,32 +159,13 @@
         return (leaves.length ? leaves.map(s => s.textContent.trim()).filter(Boolean).join(' ') : el.textContent).trim();
     }
 
-    function readSettledTriggerLabel() {
-        return waitFor(() => {
-            const l = readTriggerLabel(findTrigger());
-            return l && !/thinking effort|select model/i.test(l) ? l : null;
-        }, WAIT.menuMs);
-    }
-
-    function loadWorkPositions() {
-        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
-    }
-
-    function rememberWorkPosition(label, position) {
-        if (!label || position == null) return;
-        const map = loadWorkPositions();
-        if (map[label] === position) return;
-        map[label] = position;
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(map)); } catch { /* storage blocked */ }
-    }
-
-    // Current slider position without opening the menu, or -1 if unknown.
-    function currentPosition() {
+    // Index of the active preset button without opening the menu, or -1.
+    function currentPresetIndex() {
         const trigger = findTrigger();
         if (!trigger || trigger.getAttribute('aria-expanded') === 'true') return -1;
         if (isWorkMode()) {
-            const pos = loadWorkPositions()[readTriggerLabel(trigger)];
-            return pos == null ? -1 : pos;
+            const label = readTriggerLabel(trigger);
+            return WORK_PRESETS.findIndex(p => p.title === label);
         }
         const effort = trigger.dataset.selectedReasoningEffort;
         return CHAT_PRESETS.findIndex(p => p.efforts.includes(effort));
@@ -217,8 +200,33 @@
         await waitFor(() => !document.querySelector(SELECTORS.menu), WAIT.menuMs);
     }
 
-    // Moves the power slider to `target` (0-based). Returns the final position.
-    async function setPower(target) {
+    // Clicks the model row named `model`; the menu stays open and the slider re-renders for it.
+    async function selectModel(model) {
+        const row = Array.from(document.querySelectorAll(SELECTORS.modelOption))
+            .find(r => r.textContent.trim().startsWith(model));
+        if (!row) {
+            console.warn(`[ChatGPT] Model "${model}" not found in the menu.`);
+            return null;
+        }
+        if (row.getAttribute('aria-checked') !== 'true') row.click();
+        return waitFor(() => row.getAttribute('aria-checked') === 'true' &&
+            document.querySelector(SELECTORS.slider), WAIT.menuMs);
+    }
+
+    // Closing the menu returns focus to the trigger a moment after we focused the editor, which
+    // draws a focus ring and opens the "Thinking effort" tooltip. Bounce it back once if it comes.
+    function bounceTriggerFocus(trigger) {
+        const onFocus = () => {
+            trigger.blur();
+            focusInputField();
+        };
+        trigger.addEventListener('focus', onFocus, { once: true });
+        setTimeout(() => trigger.removeEventListener('focus', onFocus), WAIT.menuMs);
+    }
+
+    // Selects `model` if given, then moves the power slider to `target` (0-based).
+    // Returns the final position.
+    async function setPower(target, model = null) {
         if (busy) return null;
         const trigger = findTrigger();
         if (!trigger) {
@@ -228,10 +236,17 @@
         busy = true;
         document.documentElement.classList.add('tm-chatgpt-hide-menus');
         try {
-            const item = await openSlider(trigger);
+            let item = await openSlider(trigger);
             if (!item) {
                 console.warn('[ChatGPT] Power slider did not open.');
                 return null;
+            }
+            if (model) {
+                item = await selectModel(model);
+                if (!item) {
+                    await closeMenu();
+                    return null;
+                }
             }
             const max = Number(item.querySelector(SELECTORS.sliderThumb)?.getAttribute('aria-valuemax'));
             let value = readSliderValue(item);
@@ -246,15 +261,12 @@
                 value = readSliderValue(item);
             }
             await closeMenu();
-            if (isWorkMode()) {
-                // The trigger label settles after close; learn label -> position for highlighting.
-                rememberWorkPosition(await readSettledTriggerLabel(), value);
-            }
             return value;
         } finally {
             document.documentElement.classList.remove('tm-chatgpt-hide-menus');
             busy = false;
             refresh();
+            bounceTriggerFocus(trigger);
             focusInputField();
         }
     }
@@ -334,26 +346,18 @@
         group.className = 'tm-chatgpt-group';
         group.dataset.mode = work ? 'work' : 'chat';
 
-        const count = work ? WORK_POSITIONS : CHAT_PRESETS.length;
-        for (let i = 0; i < count; i++) {
-            const label = work ? String(i + 1) : CHAT_PRESETS[i].label;
-            const title = work ? `Power ${i + 1}` : CHAT_PRESETS[i].title;
-            group.appendChild(makeButton(`tm-chatgpt-power-${i}`, label, title, () => setPower(i)));
-        }
+        (work ? WORK_PRESETS : CHAT_PRESETS).forEach((p, i) => {
+            group.appendChild(makeButton(`tm-chatgpt-power-${i}`, p.label, p.title,
+                () => setPower(p.position, p.model)));
+        });
         group.appendChild(makeButton('tm-chatgpt-temp-btn', 'Temp', 'Toggle Temporary Chat', toggleTempChat));
         return group;
     }
 
     function updateButtonStates(group) {
-        const pos = currentPosition();
-        const work = group.dataset.mode === 'work';
-        const learned = work ? loadWorkPositions() : null;
+        const active = currentPresetIndex();
         group.querySelectorAll('[id^="tm-chatgpt-power-"]').forEach((btn, i) => {
-            btn.classList.toggle('tm-active', i === pos);
-            if (work) {
-                const name = Object.keys(learned).find(k => learned[k] === i);
-                btn.title = name ? `Power ${i + 1}: ${name}` : `Power ${i + 1}`;
-            }
+            btn.classList.toggle('tm-active', i === active);
         });
         const temp = group.querySelector('#tm-chatgpt-temp-btn');
         temp.classList.toggle('tm-active', isTempChatActive());
@@ -385,14 +389,6 @@
         if (stateKey === lastStateKey) return;
         lastStateKey = stateKey;
         updateButtonStates(group);
-    }
-
-    // Learns Work label -> position when the user moves the slider by hand and closes the menu.
-    async function learnManualSlider(value) {
-        if (busy || value == null || !isWorkMode()) return;
-        rememberWorkPosition(await readSettledTriggerLabel(), value);
-        lastStateKey = '';
-        refresh();
     }
 
     // --- URL params ---
@@ -475,21 +471,12 @@
 
         // One rAF-batched pass per burst of mutations keeps streaming replies cheap.
         let scheduled = false;
-        let openSliderValue = null;
         new MutationObserver(() => {
             if (scheduled) return;
             scheduled = true;
             requestAnimationFrame(() => {
                 scheduled = false;
                 refresh();
-                const item = findTrigger()?.getAttribute('aria-expanded') === 'true' &&
-                    document.querySelector(SELECTORS.slider);
-                if (item) {
-                    openSliderValue = readSliderValue(item);
-                } else if (openSliderValue != null) {
-                    learnManualSlider(openSliderValue);
-                    openSliderValue = null;
-                }
             });
         }).observe(document.body, { childList: true, subtree: true, attributes: true, 
             // class/style/hidden: kept-alive routes are shown again by an attribute flip, not new nodes.
