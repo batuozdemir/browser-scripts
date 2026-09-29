@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.2.0
+// @version      2.2.1
 // @description  Enhancements for ChatGPT: power preset buttons (Chat and Work), temporary chat, URL params, auto-focus, and custom keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -28,7 +28,7 @@
 // │       on the focused slider menuitem; that is what commits the value.  │
 // │     - The menu opens on a synthetic pointerdown on the trigger.        │
 // │     - Active state: Chat reads data-selected-reasoning-effort on the   │
-// │       trigger; Work compares the trigger label ("GPT-6 Sol Medium").   │
+// │       trigger; Work compares the trigger label ("GPT-6.1 Sol Medium"). │
 // │     - Closing the menu hands focus back to the trigger a moment after  │
 // │       we focus the editor (blue ring + "Thinking effort" tooltip);     │
 // │       bounceTriggerFocus() sends it back to the editor.                │
@@ -84,7 +84,7 @@
     ];
     const WORK_PRESETS = [
         { label: 'Sol 5.6', title: 'GPT-5.6 Sol Medium', model: 'GPT-5.6 Sol', position: 1 },
-        { label: 'Sol 6', title: 'GPT-6 Sol Medium', model: 'GPT-6 Sol', position: 1 },
+        { label: 'Sol 6.1', title: 'GPT-6.1 Sol Medium', model: 'GPT-6.1 Sol', position: 1 },
         { label: 'Astra 6', title: 'GPT-6 Astra Medium', model: 'GPT-6 Astra', position: 1 }
     ];
 
@@ -149,7 +149,7 @@
         return /work/i.test(findEditor()?.getAttribute('aria-label') || '');
     }
 
-    // "GPT-6 Sol Light" in Work, "Medium" in Chat. textContent of leaf spans avoids a forced layout.
+    // "GPT-6.1 Sol Light" in Work, "Medium" in Chat. textContent of leaf spans avoids a forced layout.
     function readTriggerLabel(trigger) {
         const el = trigger?.querySelector(SELECTORS.triggerLabel);
         if (!el) return '';
