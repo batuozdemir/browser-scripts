@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.5.0
+// @version      3.6.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -24,7 +24,7 @@
 // │     - Functions: activateTempChatFromUrl(), toggleTempChat()       │
 // │     - Helper: isElementVisible()                                   │
 // │                                                                    │
-// │  2. KEYBINDINGS (Cmd/Ctrl+Enter to send, Enter for newline)       │
+// │  2. KEYBINDINGS (Enter/Cmd+Enter send, Shift+Enter newline)       │
 // │     - Must remain on all contenteditable fields.                   │
 // │     - Double-press Option -> toggle model.                         │
 // │                                                                    │
@@ -198,12 +198,12 @@
         }
     }
 
-    // --- Feature 1: Keybindings (Cmd+Enter to Send, Enter to Newline) ---
+    // --- Feature 1: Keybindings (Cmd+Enter also sends) ---
     function handleInputKeydown(e) {
         const t = e.target;
         if (!t || !t.isContentEditable) return;
         // Ignore Enter while an IME/autocomplete composition is active, otherwise
-        // confirming a composition would be hijacked into a newline.
+        // confirming a composition would be hijacked into a send.
         if (e.key !== 'Enter' || e.isComposing) return;
 
         // CMD+ENTER (or CTRL+ENTER) -> Submit
@@ -220,13 +220,7 @@
             return;
         }
 
-        // SHIFT/ALT+ENTER -> let Gemini's default newline happen.
-        if (e.shiftKey || e.altKey) return;
-
-        // Plain ENTER -> New Line (instead of sending)
-        e.preventDefault();
-        e.stopPropagation();
-        document.execCommand('insertText', false, '\n');
+        // Plain ENTER sends and SHIFT+ENTER adds a newline: Gemini's own defaults.
     }
 
     const MODIFIER_DOUBLE_PRESS_MS = 450;

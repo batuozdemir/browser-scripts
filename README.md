@@ -97,8 +97,8 @@ A `Temp` button toggles Temporary Chat.
 
 ### Keybindings
 
-- `Cmd/Ctrl+Enter` — send message
-- `Enter` — newline
+- `Enter` or `Cmd/Ctrl+Enter` — send message
+- `Shift+Enter` — newline
 
 ### URL parameters
 
