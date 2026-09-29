@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.6.0
+// @version      3.7.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -27,6 +27,7 @@
 // │  2. KEYBINDINGS (Enter/Cmd+Enter send, Shift+Enter newline)       │
 // │     - Must remain on all contenteditable fields.                   │
 // │     - Double-press Option -> toggle model.                         │
+// │     - Right Cmd tap -> toggle Temp Chat.                           │
 // │                                                                    │
 // │  3. MODE+THINKING BUTTONS (F, FX, PX) + THINKING + TEMP CHAT     │
 // │     - Injected below the input area in .trailing-actions-wrapper.  │
@@ -227,9 +228,11 @@
     let lastLeftCmdPressAt = 0;
     let lastOptionPressAt = 0;
     let leftCmdClean = false;  // tracks whether left Cmd keydown->keyup was a "clean" tap (no other key pressed)
+    let rightCmdClean = false; // same for right Cmd; a clean tap toggles Temp Chat
 
     function handleGlobalKeydown(e) {
         if (e.repeat) return;
+        rightCmdClean = e.code === 'MetaRight';
 
         // Track left Cmd clean state
         if (e.code === 'MetaLeft') {
@@ -260,6 +263,14 @@
 
     function handleGlobalKeyup(e) {
         const now = Date.now();
+
+        // Right Cmd clean tap -> toggle Temp Chat
+        if (e.code === 'MetaRight' && rightCmdClean) {
+            rightCmdClean = false;
+            e.preventDefault();
+            toggleTempChat();
+            return;
+        }
 
         // Left Cmd clean release -> double tap check
         if (e.code === 'MetaLeft') {

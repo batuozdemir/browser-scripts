@@ -13,7 +13,7 @@ into a userscript manager. No build step. Edit them in place.
 | Script | Target | Purpose |
 |--------|--------|---------|
 | `claude-enhancer.user.js` | `claude.ai/*` | Model+effort preset buttons, incognito toggle (right Cmd tap) |
-| `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat, keybindings |
+| `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat (right Cmd tap), keybindings |
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6/Astra 6 at Medium), temp chat (right Cmd tap), URL-param automation |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
