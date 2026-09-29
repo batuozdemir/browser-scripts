@@ -107,3 +107,7 @@ with `cmux browser <surface> eval --script "$(cat x.user.js)"`. Traps found on 2
   `keydown Meta`, `press Enter`, `keyup Meta`. `keydown MetaRight` gives the right Cmd key.
 - ProseMirror strips unknown attributes from its editor root, so mark its parent to target it.
 - Sending a real message is the only way to test Enter; do it in a temporary/incognito chat.
+- The cmux tab runs on Batu's real account: every preset click in a test changes his saved
+  model/effort. Note what it was before and put it back, or tell him what it is now.
+- Gemini is signed out in cmux, so its Temp Chat button is missing; only the call can be seen
+  (the script's console log works there, unlike chatgpt.com/claude.ai).
