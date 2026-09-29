@@ -12,10 +12,10 @@ into a userscript manager. No build step. Edit them in place.
 
 | Script | Target | Purpose |
 |--------|--------|---------|
-| `claude-enhancer.user.js` | `claude.ai/*` | Model/effort/thinking preset buttons, incognito toggle, keybindings |
+| `claude-enhancer.user.js` | `claude.ai/*` | Model+effort preset buttons, incognito toggle (right Cmd tap) |
 | `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat, keybindings |
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
-| `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Intelligence preset buttons, left-Cmd reasoning cycle, temp chat, URL-param automation, keybindings |
+| `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat I/M/H, Work 1-5), temp chat (right Cmd tap), URL-param automation |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
 | `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks |
 
@@ -64,7 +64,7 @@ All scripts follow these rules (from `.github/copilot-instructions.md`):
 ## Architecture Patterns
 
 ### SPA survival
-Buttons are injected via `MutationObserver` that watches for the toolbar container to disappear/reappear on navigation. A backup `setInterval` fires for ~30 s after load as a safety net.
+Buttons are injected via `MutationObserver` that watches for the toolbar container to disappear/reappear on navigation. Older scripts (Gemini, AI Studio) add a backup `setInterval` for ~30 s after load; the ChatGPT and Claude scripts rely on a throttled observer alone.
 
 ### Menu automation (claude-enhancer, gemini-enhancer)
 Both scripts use a **two-step menu** pattern:
@@ -74,7 +74,8 @@ Both scripts use a **two-step menu** pattern:
 Menus render as `.z-popover` portals at `<body>` level. During automation they're hidden with `visibility:hidden` (so `.click()` still works without visual flicker).
 
 ### Selector stability notes
-- **Claude:** model rows have **no stable testid** — match by family text (`Opus`/`Sonnet`/`Haiku`/`Fable`). Effort options *do* have stable testids: `effort-option-{low,medium,high,max}`.
+- **Claude:** model rows carry `data-model-id` (`claude-opus-*`, `claude-sonnet-*`); effort rows carry `data-effort-id` (`low/medium/high/xhigh/max`). An open menu is `[role=menu][data-open]`: closed menus stay mounted during their exit animation.
+- **ChatGPT:** the picker is a "Power" slider (`[data-reasoning-slider]`), driven by synthetic arrow keys. ChatGPT keeps visited routes alive as hidden copies, so the DOM holds several composers; always scope to the visible one.
 - **Gemini:** model options use hash-based `data-test-id` values (e.g. `bard-mode-option-56fdd199312815e2`) that can change on Google's end. Always keep `findMenuItemByLabel()` as a text-match fallback.
 - **AI Studio:** all selectors centralized in `SELECTORS` const; re-inspect after Google UI updates.
 

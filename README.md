@@ -8,8 +8,8 @@ third-party video speed controller.
 |--------|--------|---------|
 | `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
 | `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
-| `claude-enhancer.user.js` | `claude.ai` | Model+effort+thinking preset buttons (S/SX/O/OX), thinking toggle, incognito toggle, custom keybindings |
-| `chatgpt-enhancer.user.js` | `chatgpt.com` | Intelligence preset buttons (I/M/H), left-Cmd reasoning cycle, temporary chat, URL params, custom keybindings |
+| `claude-enhancer.user.js` | `claude.ai` | Model+effort preset buttons (S/SM/OM/OH), incognito toggle (right Cmd tap), URL params |
+| `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat I/M/H, Work 1-5), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
 | `youtube-subtitles.user.js` | `youtube.com` | Replaces YouTube's rolling auto-captions with stable, movie-style subtitle chunks |
 | `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
@@ -110,73 +110,72 @@ A `Temp` button toggles Temporary Chat.
 
 ## Claude (`claude-enhancer.user.js`)
 
-Adds quick-access preset buttons, thinking/incognito toggles, and saner keybindings to `claude.ai`. See `claude-enhancer-README.md` for full details.
+Adds model/effort preset buttons and an incognito toggle to `claude.ai`. See `claude-enhancer-README.md` for full details.
 
-### Preset buttons (left of composer toolbar)
+### Preset buttons (in the composer, after the `+` button)
 
-| Button | Model | Effort | Thinking |
-|--------|-------|--------|----------|
-| `S` | Sonnet 4.6 | Low | off |
-| `SM` | Sonnet 4.6 | Medium | off |
-| `SMX` | Sonnet 4.6 | Medium | on |
-| `SX` | Sonnet 4.6 | High | on |
-| `O` | Opus 4.8 | Medium | off |
-| `OX` | Opus 4.8 | Max | on |
+| Button | Model | Effort |
+|--------|-------|--------|
+| `S` | Sonnet | Low |
+| `SM` | Sonnet | Medium |
+| `OM` | Opus | Medium |
+| `OH` | Opus | High |
 
-### Toggle buttons (right of composer toolbar)
+Free plan: `S`, `SM`, `SH` (Sonnet High), `SX` (Sonnet Max). claude.ai no longer has a separate Thinking switch (thinking is part of Effort), so the old `T` button is gone.
 
-- `T` — toggle Thinking on/off
+### Toggle button (left of the model picker)
+
 - `Temp` — toggle Incognito chat
 
 ### Keybindings
 
-- `Cmd/Ctrl+Enter` — send message
-- `Enter` / `Shift+Enter` — newline
+- `Enter` sends and `Shift+Enter` adds a newline (claude.ai's defaults, untouched)
+- Right `Cmd` tap — toggle Incognito
 
 ### URL parameters
 
 - `?model=opus|sonnet|haiku|fable`
-- `?effort=low|medium|high|max`
-- `?thinking=on|off`
+- `?effort=low|medium|high|extra|max`
 - `?incognito=1`
 
 ---
 
 ## ChatGPT (`chatgpt-enhancer.user.js`)
 
-Adds quick-access intelligence preset buttons, left-Cmd reasoning cycling, a Temporary Chat toggle, URL-param automation, auto-focus, and saner keybindings to `chatgpt.com`.
+Adds power preset buttons for both the Chat and Work tabs, a Temporary Chat toggle, URL-param automation, auto-focus, and saner keybindings to `chatgpt.com`.
 
 ### Preset buttons
 
-| Button | Target |
-|--------|--------|
-| `I` | Instant |
-| `M` | Medium |
-| `H` | High |
+ChatGPT's model picker is a "Power" slider. The buttons move it to a position.
 
-The active preset is highlighted when ChatGPT's visible picker label can be read.
+| Tab | Buttons | Positions |
+|-----|---------|-----------|
+| Chat | `I` `M` `H` | Instant / Medium / High |
+| Work | `1` `2` `3` `4` `5` | The five slider steps. In "Default" these are model+effort combinations (e.g. GPT-6 Luna High, GPT-6 Sol Light, ...); with an explicit model they are Light / Medium / High / Extra High / Max. |
+
+The active button is highlighted. In Work, each button's tooltip shows the label it was last seen producing; the script learns this whenever the slider moves (by button or by hand).
 
 ### Controls
 
-- `Temp` — toggle Temporary Chat.
-- Double-press left `Cmd` — cycle one step through Instant / Medium / High.
-- Triple-press left `Cmd` — skip two steps through Instant / Medium / High.
+- `Temp` — toggle Temporary Chat (hidden where ChatGPT offers no temporary chat).
+- Right `Cmd` tap — toggle Temporary Chat.
 
 ### Keybindings
 
-- `Cmd/Ctrl+Enter` — send message
-- `Enter` — newline
+- `Enter` sends and `Shift+Enter` adds a newline (ChatGPT's defaults, untouched)
 
 ### URL parameters
 
-- `?model=instant|medium|high`
-- `?thinking=medium|high`
-- `?temp=1`
+- `?thinking=instant|medium|high` — Chat power level
+- `?power=1..5` — slider position (1-based), either tab
+- `?temp=1` — Temporary Chat
+- `?model=` is also read, but ChatGPT uses that parameter itself and strips it on load, so prefer `?thinking=`.
 
 ### Troubleshooting
 
-- Console logs are prefixed with `[ChatGPT]`.
-- ChatGPT's menu ids are generated per render. If the script stops finding the picker or menu rows after a UI update, re-inspect the composer intelligence picker and update the centralized `SELECTORS` const.
+- Warnings are prefixed with `[ChatGPT]`.
+- ChatGPT keeps visited routes alive as hidden copies, so the DOM holds several composers; the script always works on the visible one.
+- If the buttons stop working after a UI update, re-inspect `button[aria-label="Select ChatGPT model"]` and the `[data-reasoning-slider]` menu row and update the centralized `SELECTORS` const.
 
 ---
 

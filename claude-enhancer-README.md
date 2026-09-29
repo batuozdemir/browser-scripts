@@ -1,107 +1,103 @@
 # Claude Enhancer (`claude-enhancer.user.js`)
 
-A Tampermonkey userscript that adds quick model/effort/thinking presets, a thinking
-toggle, an incognito toggle, and saner keybindings to **claude.ai** — the Claude
-counterpart of `gemini-enhancer.user.js`.
+A userscript (Tampermonkey / Violentmonkey) that adds one-click model/effort presets and an
+incognito toggle (also on a right Cmd tap) to **claude.ai** (desktop layout). It is the
+Claude counterpart of `gemini-enhancer.user.js`.
 
 **Scope:** `https://claude.ai/*`
-**Version:** 1.3
+**Version:** 2.0.0
 
 ---
 
 ## Features
 
-### 1. Model + Effort + Thinking preset buttons (left of the composer toolbar)
-Four one-click presets. Each opens the model menu, selects the model, then opens the
-nested **Effort** submenu to set effort and the **Thinking** switch:
+### 1. Model + Effort preset buttons (in the composer, right after the `+` button)
+Each click opens the model picker out of sight, picks the model, then opens the nested
+**Effort** submenu and picks the level.
 
-| Button | Model | Effort | Thinking |
-|--------|-------------|--------|----------|
-| `S`    | Sonnet 4.6  | Low    | off |
-| `SM`   | Sonnet 4.6  | Medium | off |
-| `SMX`  | Sonnet 4.6  | Medium | on  |
-| `SX`   | Sonnet 4.6  | High   | on  |
-| `O`    | Opus 4.8    | Medium | off |
-| `OX`   | Opus 4.8    | Max    | on  |
+| Button | Model  | Effort |
+|--------|--------|--------|
+| `S`    | Sonnet | Low    |
+| `SM`   | Sonnet | Medium |
+| `OM`   | Opus   | Medium |
+| `OH`   | Opus   | High   |
 
-Models are matched by **family name** (Sonnet/Opus/Haiku/Fable), so version bumps
-(e.g. "Sonnet 4.6" → "Sonnet 4.7") won't break the buttons.
+On a Free plan (Opus unavailable) the buttons become `S`, `SM`, `SH` (Sonnet High) and
+`SX` (Sonnet Max). The plan is read from the sidebar account button ("Name · Max"); if a
+preset finds Opus missing or locked in the picker, the buttons switch to the Free set.
 
-A preset button **highlights** when the live model + effort match it (read from the model
-trigger's `aria-label`, e.g. "Model: Sonnet 4.6 Low"). This also reflects changes you make
-through Claude's own model menu. (Thinking state isn't exposed in that label, so the
-highlight is based on model + effort only.)
+Models are matched by family (the picker's `data-model-id` prefix, `claude-opus-*`,
+`claude-sonnet-*`), so version bumps don't break the buttons. A preset always picks the
+model listed at the top level of the picker, so pressing `OM` in an old chat that runs
+Opus 5 moves it to the current Opus.
 
-**Keyboard shortcuts:**
+A preset button **highlights** when the picker's label (e.g. "Model: Opus 5.5 Medium")
+matches its family and effort, including changes you make through Claude's own menu.
 
-| Shortcut | Action |
-|----------|--------|
-| `Cmd/Ctrl+Shift+0` | toggle Thinking |
-
-(Matched on physical key code, so they work on any keyboard layout.)
-
-### 2. Thinking toggle (`T`) + Incognito (`Temp`) — right of the composer toolbar
-- **`T`** — toggles the Thinking switch on/off (independent of the presets). Highlights
-  when last set to on.
-- **`Temp`** — toggles incognito chat (the control's `aria-label` swaps between
-  "Use incognito" / "Exit incognito"); highlights while you're in an incognito chat.
+### 2. Incognito (`Temp`), in the row under the composer, left of the model picker
+Clicks Claude's own incognito control (`aria-label` "Use incognito" / "Exit incognito")
+and highlights while you're in an incognito chat.
 
 ### 3. Keybindings
-- **Enter** and **Shift+Enter** → newline.
-- **Cmd/Ctrl+Enter** → send (clicks `button[aria-label="Send message"]`).
+- **Enter** sends and **Shift+Enter** adds a newline: claude.ai's defaults, untouched.
+- **Right Cmd tap** (press and release with no other key): toggle incognito.
 
-The editor is TipTap/ProseMirror (`div[data-testid="chat-input"]`); plain Enter is
-re-dispatched as Shift+Enter so Claude's default "Enter sends" never fires.
+These apply only in the main prompt box, not when editing an earlier message.
 
 ### 4. Auto-focus
-Focuses the prompt box on load and places the cursor at the end of any existing text.
+Focuses the prompt box (cursor at the end) when the composer appears, and after a preset
+or incognito toggle. It won't steal focus from another text field you're typing in.
 
 ### 5. URL parameters
-Deep-link a preset by appending query params to a claude.ai URL:
 
 | Param | Values | Effect |
 |-------|--------|--------|
-| `?model=`     | `opus` `sonnet` `haiku` `fable` | select model |
-| `?effort=`    | `low` `medium` `high` `max`     | set effort |
-| `?thinking=`  | `on` `off` (`true`/`false`/`1`) | set thinking switch |
-| `?incognito=` | `1` `true`                       | start incognito chat |
+| `?model=`     | `opus` `sonnet` `haiku` `fable`                 | select model |
+| `?effort=`    | `low` `medium` `high` `extra` (or `xhigh`) `max` | set effort |
+| `?incognito=` | `1` `true`                                       | start incognito chat |
 
-Example: `https://claude.ai/new?model=opus&effort=max&thinking=on`
+Example: `https://claude.ai/new?model=opus&effort=high`
+
+### Removed in 2.0.0
+claude.ai no longer has a separate **Thinking** switch: thinking is folded into the Effort
+levels (Low, Medium, High, Extra, Max). The `T` button, the `Cmd/Ctrl+Shift+0` shortcut
+and `?thinking=` were removed with it.
 
 ---
 
 ## Installation
-1. Install [Tampermonkey](https://www.tampermonkey.net/).
-2. Add `claude-enhancer.user.js` as a new userscript (or open the raw file to let
-   Tampermonkey prompt for install).
+1. Install Tampermonkey or Violentmonkey.
+2. Add `claude-enhancer.user.js` as a new userscript (or open the raw file to let the
+   manager prompt for install).
 3. Reload claude.ai.
 
 ---
 
 ## Implementation notes / gotchas
-- **No stable model testids.** Model rows are `div[role="menuitemradio"]` matched by
-  visible text. base-ui ids (`base-ui-_r_xx_`) are per-render and must never be used as
-  selectors.
-- **Effort options have stable testids:** `effort-option-{low,medium,high,max}`. The
-  **Thinking** switch (`[role="switch"][aria-label="Thinking"]`) lives in that same
-  nested submenu.
-- **Two-step menu navigation:** model selection closes the menu, so the script re-opens
-  it to reach the Effort submenu. Within the submenu it sets the Thinking switch *before*
-  clicking an effort option (the effort click closes the menu).
-- **Overlay hiding:** menus render in `.z-popover` portals at `<body>` level. The script
-  hides them (`visibility:hidden`) and kills transitions during automation so they don't
-  flicker; `.click()` still works on hidden elements.
-- **SPA survival:** a `MutationObserver` re-injects the buttons whenever they go missing
-  (new chat, navigation), plus a 30s backup interval after load.
-- **Fable 5** is skipped automatically if marked "Currently unavailable" (`aria-disabled`).
+- **Stable hooks used:** `data-testid` on the attach button (`chat-input-attach`), the
+  editor (`chat-input`), send (`chat-input-send`) and the picker
+  (`model-selector-dropdown`); `data-model-id` on model rows; `data-effort-id`
+  (`low`, `medium`, `high`, `xhigh`, `max`) on effort rows. base-ui ids
+  (`base-ui-_r_xx_`) change per render and are never used.
+- **Open means `[data-open]`.** A closed menu can stay mounted with `data-closed` until
+  its exit animation ends (indefinitely in a background tab), so the script never treats
+  a bare `[role="menu"]` as open.
+- **Two-step menu:** picking a model closes the picker, so the script re-opens it to reach
+  the Effort submenu. If the model is already selected it skips that click and stays in the
+  open menu.
+- **Overlay hiding:** menus are portals marked `[data-cds-overlay]`; during automation
+  they get `visibility:hidden` with transitions off. `.click()` still works on them.
+- **Waiting:** menu steps wait with a short-lived `MutationObserver` (1.5 s cap), not
+  fixed sleeps.
+- **SPA survival:** one `MutationObserver` on `<body>` whose callback exits after a few
+  `isConnected` checks unless our buttons were detached or the URL changed; re-injection is
+  throttled to once per 150 ms. Highlights follow a separate observer on the picker's
+  `aria-label`. No polling interval.
 
 ---
 
 ## Maintenance
-If Claude updates its UI, the selectors most likely to need attention are centralized in
-the `SELECTORS` and `EFFORT_TESTID` objects at the top of the script. Re-inspect:
-- the composer toolbar container,
-- `button[data-testid="model-selector-dropdown"]` and the model row text,
-- `[data-testid="effort-menu-trigger"]` / `effort-option-*` / the Thinking switch,
-- `button[aria-label="Use incognito"]`, `button[aria-label="Send message"]`,
-- `div[data-testid="chat-input"]`.
+If Claude changes its UI, the selectors are centralized in `SELECTORS` at the top of the
+script. Re-inspect the testids above, the `data-model-id` / `data-effort-id` rows, the
+incognito button's `aria-label`, and the `.ml-auto` wrapper around the model picker
+(where `Temp` is inserted; it falls back to just before the picker).

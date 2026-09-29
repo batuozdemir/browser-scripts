@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
-// @description  Enhancements for Claude.ai: Model+Effort+Thinking preset buttons, Thinking toggle, Incognito toggle & custom keybindings.
+// @version      2.1.0
+// @description  Enhancements for Claude.ai: Model+Effort preset buttons, Incognito toggle & custom keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
 // @match        https://claude.ai/*
@@ -17,424 +17,254 @@
 // │                        AI AGENT NOTES                                  │
 // │  DO NOT REMOVE OR REFACTOR THE FOLLOWING FEATURES:                     │
 // │                                                                        │
-// │  1. MODEL + EFFORT + THINKING PRESET BUTTONS                              │
-// │     - Pro/Max plan: S, SM, OM, OH                                         │
-// │     - Free plan:    S, SM, SH, SX  (Opus unavailable)                     │
-// │     - Plan detected via "Upgrade" button next to Opus in model menu.      │
-// │     - Injected on the LEFT of the composer toolbar (after "Add files").│
-// │     - Each opens the model menu, picks a model by VISIBLE TEXT         │
-// │       (no stable testids exist), then opens the nested Effort submenu  │
-// │       to set effort + the Thinking switch.                             │
+// │  1. MODEL + EFFORT PRESET BUTTONS                                      │
+// │     - Pro/Max plan: S, SM, OM, OH                                      │
+// │     - Free plan:    S, SM, SH, SX  (Opus unavailable)                  │
+// │     - Plan read from the sidebar user button ("Batu · Max"); also      │
+// │       flipped to free if the Opus row is missing/disabled in the menu. │
+// │     - Injected in the composer, right after the "+" (attach) button.   │
+// │     - Each opens the model menu, picks a row by data-model-id prefix   │
+// │       (claude-opus-*, claude-sonnet-*), then re-opens the menu, opens  │
+// │       the nested Effort submenu and clicks [data-effort-id=...].       │
 // │     - Must survive SPA navigation (MutationObserver re-injects).       │
 // │                                                                        │
-// │  2. THINKING TOGGLE (T) + INCOGNITO (Temp) BUTTONS                     │
-// │     - Injected on the RIGHT of the composer toolbar.                   │
-// │     - T toggles the Thinking switch inside the Effort submenu.         │
-// │     - Temp clicks button[aria-label="Use incognito"].                  │
+// │  2. INCOGNITO (Temp) BUTTON                                            │
+// │     - Injected in the row under the composer, left of the model        │
+// │       picker. Clicks button[aria-label="Use incognito"/"Exit ..."].    │
 // │                                                                        │
 // │  3. KEYBINDINGS                                                        │
-// │     - Enter AND Shift+Enter -> newline.                                │
-// │     - Cmd/Ctrl+Enter -> send (button[aria-label="Send message"]).      │
-// │     - Right Option tap -> toggle Incognito (temp chat).                │
+// │     - Enter sends, Shift+Enter newline: claude.ai defaults, untouched. │
+// │     - Right Cmd tap -> toggle Incognito (temp chat).                   │
 // │     - Editor is TipTap/ProseMirror (data-testid="chat-input").         │
 // │                                                                        │
 // │  4. AUTO-FOCUS INPUT FIELD (cursor at end).                            │
 // │                                                                        │
+// │  REMOVED in 2.0.0: the Thinking switch no longer exists in claude.ai   │
+// │  (thinking is folded into Effort), so the T button, Cmd+Shift+0 and    │
+// │  ?thinking= are gone.                                                  │
+// │                                                                        │
 // │  GOTCHAS:                                                              │
-// │   - Model rows have NO stable testid -> matched by family text         │
-// │     (Opus/Sonnet/Haiku/Fable). base-ui ids (base-ui-_r_xx_) are        │
-// │     per-render; never use them as selectors.                          │
-// │   - Effort options DO have stable testids: effort-option-{low,medium,  │
-// │     high,max}. The Thinking switch lives in the same submenu.          │
-// │   - Menus render in .z-popover portals at body level -> query globally │
-// │     and hide them during automation so they don't flicker.            │
+// │   - base-ui ids (base-ui-_r_xx_) are per-render; never use them.       │
+// │   - Effort ids: low, medium, high, xhigh (shown as "Extra"), max.      │
+// │   - Menus are portals with [data-cds-overlay]. A closed menu can stay  │
+// │     mounted (data-closed) until its exit animation ends, so "open"     │
+// │     means [role=menu][data-open], never just [role=menu].              │
+// │   - Menus are hidden during automation so they don't flicker.          │
 // └──────────────────────────────────────────────────────────────────────┘
 
 (function () {
     'use strict';
 
-    // Singleton guard - prevent double execution on SPA navigation
-    if (window.__claudeEnhancerLoaded) {
-        console.log("Claude Enhancer: Already loaded, skipping duplicate injection.");
-        return;
-    }
+    if (window.self !== window.top) return;
+    if (window.__claudeEnhancerLoaded) return;
     window.__claudeEnhancerLoaded = true;
+
+    const LOG = '[ClaudeEnhancer]';
 
     // --- Configuration ---
     const SELECTORS = {
-        // Composer toolbar (injection container)
-        toolbar: 'div.relative.flex.gap-2.w-full.items-center',
-        addFilesBtn: 'button[aria-label="Add files, connectors, and more"]',
+        // Composer: presets go right after the attach button's wrapper
+        attachBtn: '[data-testid="chat-input-attach"]',
+        inputField: '[data-testid="chat-input"]',
 
-        // Model picker
-        modelTrigger: 'button[data-testid="model-selector-dropdown"]',
-        // Model rows: role="menuitemradio" matched by visible family text (see below)
-        menu: '[role="menu"]',
-        modelRow: '[role="menuitemradio"]',
+        // Model picker (row under the composer). aria-label: "Model: Opus 5.5 Medium"
+        modelTrigger: '[data-testid="model-selector-dropdown"]',
+        modelArea: '.ml-auto', // closest wrapper of the picker; Temp goes first in it
+        openMenu: '[role="menu"][data-open]',
+        modelRow: '[role="menuitemradio"][data-model-id]',
+        submenuTrigger: '[role="menuitem"][aria-haspopup="menu"]',
+        effortOption: (id) => `[role="menu"][data-open] [data-effort-id="${id}"]`,
 
-        // Effort nested submenu (lives inside the open model menu)
-        effortTrigger: '[data-testid="effort-menu-trigger"]',
-        // effort-option-{low,medium,high,max}
-        thinkingSwitch: '[role="switch"][aria-label="Thinking"]',
-
-        // Incognito (temp chat) — aria-label swaps between enter/exit states
+        // Incognito: aria-label swaps between the two states
         incognitoBtn: 'button[aria-label="Use incognito"], button[aria-label="Exit incognito"]',
+        incognitoActive: 'button[aria-label="Exit incognito"]',
 
-        // "Upgrade" button rendered next to Opus in the model-selector dropdown
-        upgradeButton: 'button.border-0\\.5.text-accent-000.rounded-3xl',
+        // Sidebar user button; its last text span is the plan name ("Max", "Pro", "Free")
+        userMenuBtn: '[data-testid="user-menu-button"]',
 
-        // Overlay portals (hidden during automation)
-        popover: '.z-popover',
-
-        // Input + Send
-        inputField: 'div[contenteditable="true"][data-testid="chat-input"]',
-        sendButton: 'button[aria-label="Send message"]'
+        // Menu portals (hidden during automation)
+        overlay: '[data-cds-overlay]'
     };
 
-    const EFFORT_TESTID = {
-        low: 'effort-option-low',
-        medium: 'effort-option-medium',
-        high: 'effort-option-high',
-        max: 'effort-option-max'
-    };
+    // data-effort-id values, and the word the picker label shows for each
+    const EFFORT_IDS = ['low', 'medium', 'high', 'xhigh', 'max'];
+    const EFFORT_LABEL_TO_ID = { low: 'low', medium: 'medium', high: 'high', extra: 'xhigh', max: 'max' };
+    const FAMILIES = ['opus', 'sonnet', 'haiku', 'fable'];
 
-    // Preset buttons (left side). Models matched by family word (version-proof).
-    // Pro/Max plan users get Opus presets; Free plan users get Sonnet-only alternatives.
     const PRESETS_PRO = [
-        { label: 'S',   model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
-        { label: 'SM',  model: 'Sonnet', effort: 'medium', thinking: true,  title: 'Sonnet · Medium · Thinking on' },
-        { label: 'OM',  model: 'Opus',   effort: 'medium', thinking: true,  title: 'Opus · Medium · Thinking on' },
-        { label: 'OH',  model: 'Opus',   effort: 'high',   thinking: true,  title: 'Opus · High · Thinking on' }
+        { label: 'S',  model: 'sonnet', effort: 'low',    title: 'Sonnet · Low effort' },
+        { label: 'SM', model: 'sonnet', effort: 'medium', title: 'Sonnet · Medium effort' },
+        { label: 'OM', model: 'opus',   effort: 'medium', title: 'Opus · Medium effort' },
+        { label: 'OH', model: 'opus',   effort: 'high',   title: 'Opus · High effort' }
     ];
     const PRESETS_FREE = [
-        { label: 'S',   model: 'Sonnet', effort: 'low',    thinking: false, title: 'Sonnet · Low · Thinking off' },
-        { label: 'SM',  model: 'Sonnet', effort: 'medium', thinking: true,  title: 'Sonnet · Medium · Thinking on' },
-        { label: 'SH',  model: 'Sonnet', effort: 'high',   thinking: true,  title: 'Sonnet · High · Thinking on' },
-        { label: 'SX',  model: 'Sonnet', effort: 'max',    thinking: true,  title: 'Sonnet · Max · Thinking on' }
+        { label: 'S',  model: 'sonnet', effort: 'low',    title: 'Sonnet · Low effort' },
+        { label: 'SM', model: 'sonnet', effort: 'medium', title: 'Sonnet · Medium effort' },
+        { label: 'SH', model: 'sonnet', effort: 'high',   title: 'Sonnet · High effort' },
+        { label: 'SX', model: 'sonnet', effort: 'max',    title: 'Sonnet · Max effort' }
     ];
 
-    /**
-     * Cached free-plan flag. Detected by the presence of an "Upgrade" button
-     * next to Opus inside the model-selector dropdown. Once detected it
-     * persists for the lifetime of the page — the button can't be dismissed
-     * like the old banner could.
-     */
-    let _detectedFreePlan = null; // null = not yet probed
+    const MENU_TIMEOUT_MS = 1500;     // give up on a menu step after this
+    const INJECT_THROTTLE_MS = 150;   // coalesce re-injection during bursts of DOM changes
 
-    /** Synchronously checks the DOM for the Upgrade button (only meaningful
-     *  while the model menu is open). Caches the result. */
-    function probeFreePlan() {
-        const btn = document.querySelector(SELECTORS.upgradeButton);
-        if (btn && btn.textContent.trim().toLowerCase() === 'upgrade') {
-            _detectedFreePlan = true;
-        }
-        // Don't set false here — absence while menu is closed is meaningless.
+    // --- Plan detection ---
+    let freePlan = false;
+
+    function readPlanFromUserButton() {
+        const btn = document.querySelector(SELECTORS.userMenuBtn);
+        if (!btn) return;
+        const spans = btn.querySelectorAll('span');
+        const last = spans.length ? spans[spans.length - 1].textContent.trim() : '';
+        if (/^free\b/i.test(last)) freePlan = true;
     }
 
-    /** Returns true when the user is known to be on the free plan. */
-    function isFreePlan() {
-        return _detectedFreePlan === true;
-    }
-
-    /** Returns the active preset list based on the current plan. */
-    function getPresets() {
-        return isFreePlan() ? PRESETS_FREE : PRESETS_PRO;
-    }
-
-    // Track last-known plan type so we can rebuild buttons on change.
-    let _lastPlanType = null;
-    let _planProbed = false; // true after we've done the initial background probe
-
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const getPresets = () => (freePlan ? PRESETS_FREE : PRESETS_PRO);
 
     // --- Helpers ---
 
-    function isElementVisible(el) {
-        if (!el) return false;
-        if (el.offsetParent === null) {
-            const style = window.getComputedStyle(el);
-            if (style.position === 'fixed' || style.position === 'sticky') {
-                return style.display !== 'none' && style.visibility !== 'hidden';
-            }
-            return false;
-        }
-        const style = window.getComputedStyle(el);
-        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-    }
-
-    /** Polls for an element matching selector. 10ms intervals for near-instant response. */
-    function waitForSelector(selector, timeoutMs = 400) {
+    /** Resolves with fn()'s first truthy value, re-checked on DOM changes; null on timeout. */
+    function waitFor(fn, timeoutMs = MENU_TIMEOUT_MS) {
         return new Promise((resolve) => {
-            const el = document.querySelector(selector);
-            if (el) return resolve(el);
-            const start = Date.now();
-            const iv = setInterval(() => {
-                const found = document.querySelector(selector);
-                if (found || Date.now() - start > timeoutMs) {
-                    clearInterval(iv);
-                    resolve(found || null);
-                }
-            }, 10);
+            const first = fn();
+            if (first) return resolve(first);
+            const obs = new MutationObserver(() => {
+                const v = fn();
+                if (v) done(v);
+            });
+            const timer = setTimeout(() => done(null), timeoutMs);
+            function done(v) {
+                obs.disconnect();
+                clearTimeout(timer);
+                resolve(v);
+            }
+            obs.observe(document.body, { childList: true, subtree: true, attributes: true });
         });
     }
 
-    /** Finds a non-disabled model row whose visible name starts with the given family word. */
-    function findModelRow(family) {
-        const rows = document.querySelectorAll(SELECTORS.modelRow);
-        const want = family.toLowerCase();
-        for (const row of rows) {
-            if (row.getAttribute('aria-disabled') === 'true') continue;
-            const nameEl = row.querySelector('.font-ui') || row;
-            const name = (nameEl.textContent || '').trim().toLowerCase();
-            if (name.startsWith(want) || name.includes(want)) return row;
+    const getTrigger = () => document.querySelector(SELECTORS.modelTrigger);
+    const isMenuOpen = (t) => !!t && t.getAttribute('aria-expanded') === 'true';
+
+    /** The open top-level model menu (not a nested submenu). */
+    function openModelMenu() {
+        for (const m of document.querySelectorAll(SELECTORS.openMenu)) {
+            if (!m.hasAttribute('data-nested') && m.querySelector(SELECTORS.modelRow)) return m;
         }
         return null;
     }
 
-    function isModelMenuOpen() {
-        const t = document.querySelector(SELECTORS.modelTrigger);
-        return !!(t && t.getAttribute('aria-expanded') === 'true');
-    }
-
-    function closeMenus() {
-        // base-ui closes menus on outside pointerdown / Escape
-        document.body.click();
-        document.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true
-        }));
-    }
-
-    // --- Overlay hiding (so menus don't visibly flash during automation) ---
-    function hideMenuOverlays() {
-        document.body.classList.add('claude-enhancer-hiding-menus');
-    }
-    function showMenuOverlays() {
-        document.body.classList.remove('claude-enhancer-hiding-menus');
-    }
-
-    // --- Menu navigation primitives ---
-
-    async function ensureModelMenuOpen() {
-        if (isModelMenuOpen()) return true;
-        const trigger = document.querySelector(SELECTORS.modelTrigger);
-        if (!trigger) {
-            console.error("Claude Enhancer: Model trigger not found.");
-            return false;
-        }
-        trigger.click();
-        const menu = await waitForSelector(SELECTORS.menu, 500);
-        return !!menu;
-    }
-
-    async function selectModel(family) {
-        if (!(await ensureModelMenuOpen())) return false;
-
-        let row = null;
-        for (let i = 0; i < 40; i++) {
-            row = findModelRow(family);
-            if (row) break;
-            await sleep(10);
-        }
-        if (!row) {
-            console.warn(`Claude Enhancer: Model "${family}" not found in menu.`);
-            return false;
-        }
-        row.click();
-        console.log(`Claude Enhancer: Selected model ${family}`);
-        return true;
-    }
-
-    /** Opens the nested Effort submenu (requires the model menu to be open). */
-    async function openEffortSubmenu() {
-        if (!(await ensureModelMenuOpen())) return false;
-
-        const trigger = await waitForSelector(SELECTORS.effortTrigger, 500);
-        if (!trigger) {
-            console.warn("Claude Enhancer: Effort submenu trigger not found.");
-            return false;
-        }
-        if (trigger.getAttribute('aria-expanded') !== 'true') {
-            trigger.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
-            trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-            trigger.click();
-        }
-        // Wait for any effort option to render
-        const ok = await waitForSelector(`[data-testid="${EFFORT_TESTID.low}"]`, 500);
-        return !!ok;
-    }
-
-    async function selectEffort(level) {
-        const testid = EFFORT_TESTID[level];
-        if (!testid) return false;
-        const opt = await waitForSelector(`[data-testid="${testid}"]`, 400);
-        if (!opt) {
-            console.warn(`Claude Enhancer: Effort option "${level}" not found.`);
-            return false;
-        }
-        opt.click();
-        console.log(`Claude Enhancer: Selected effort ${level}`);
-        return true;
-    }
-
-    function readThinkingState() {
-        const sw = document.querySelector(SELECTORS.thinkingSwitch);
-        if (!sw) return null;
-        return sw.getAttribute('aria-checked') === 'true';
-    }
-
-    /** Sets the Thinking switch to a desired boolean (requires the Effort submenu open). */
-    async function setThinking(desired) {
-        const sw = await waitForSelector(SELECTORS.thinkingSwitch, 400);
-        if (!sw) {
-            console.warn("Claude Enhancer: Thinking switch not found.");
-            return false;
-        }
-        const current = sw.getAttribute('aria-checked') === 'true';
-        if (current !== desired) {
-            sw.click();
-            console.log(`Claude Enhancer: Thinking -> ${desired ? 'on' : 'off'}`);
-        }
-        return true;
-    }
-
-    // --- Combined preset: model + effort + thinking ---
-    async function applyPreset(model, effort, thinking) {
-        hideMenuOverlays();
-        try {
-            await selectModel(model);          // may close the menu
-            await sleep(60);
-
-            if (await openEffortSubmenu()) {
-                // Set thinking FIRST (switch keeps the submenu open),
-                // then effort (clicking a radio closes the menu).
-                if (typeof thinking === 'boolean') await setThinking(thinking);
-                if (effort) await selectEffort(effort);
-            }
-        } finally {
-            closeMenus();
-            showMenuOverlays();
-        }
-        if (typeof thinking === 'boolean') {
-            lastThinkingIntent = thinking;
-            updateThinkingButtonState();
-        }
-        setTimeout(updatePresetButtonStates, 400);
-        focusInputField();
-    }
-
-    // --- Thinking toggle (T button) ---
-    let lastThinkingIntent = null; // optimistic state for button highlight
-
-    async function toggleThinking() {
-        hideMenuOverlays();
-        let result = null;
-        try {
-            if (await openEffortSubmenu()) {
-                const cur = readThinkingState();
-                const next = cur === null ? true : !cur;
-                await setThinking(next);
-                result = next;
-            }
-        } finally {
-            closeMenus();
-            showMenuOverlays();
-        }
-        if (result !== null) {
-            lastThinkingIntent = result;
-            updateThinkingButtonState();
-        }
-        focusInputField();
-        return result;
-    }
-
-    function updateThinkingButtonState() {
-        const btn = document.getElementById('tm-claude-thinking-btn');
-        if (btn) btn.classList.toggle('tm-active', lastThinkingIntent === true);
-    }
-
-    /** Reads the live Thinking switch (only present while the Effort submenu is
-     *  open) and syncs our optimistic state + button highlights to it. This is
-     *  what catches the user flipping Thinking through Claude's own menu. */
-    function syncThinkingFromDOM() {
-        const state = readThinkingState();
-        if (state === null || state === lastThinkingIntent) return;
-        lastThinkingIntent = state;
-        updateThinkingButtonState();
-        updatePresetButtonStates();
-    }
-
-    /** Reads the current model + effort from the model trigger's aria-label
-     *  (e.g. "Model: Sonnet 4.6 Low"). Thinking state is not exposed there. */
+    /** Reads family + effort id from the picker label, e.g. "Model: Opus 5.5 Extra". */
     function getCurrentModelState() {
-        const t = document.querySelector(SELECTORS.modelTrigger);
+        const t = getTrigger();
         if (!t) return null;
-        const label = (t.getAttribute('aria-label') || '').toLowerCase();
-        let family = null;
-        for (const f of ['opus', 'sonnet', 'haiku', 'fable']) {
-            if (label.includes(f)) { family = f; break; }
-        }
-        let effort = null;
-        for (const ef of ['max', 'high', 'medium', 'low']) {
-            if (label.includes(ef)) { effort = ef; break; }
-        }
+        const words = (t.getAttribute('aria-label') || '').toLowerCase().split(/\s+/);
+        const family = FAMILIES.find(f => words.includes(f)) || null;
+        const effort = EFFORT_LABEL_TO_ID[words[words.length - 1]] || null;
         return { family, effort };
     }
 
-    /** Highlights a preset button when the live model + effort (+ thinking) match it.
-     *  When several presets share the same model + effort (e.g. SM vs SMX), the
-     *  Thinking state disambiguates them using lastThinkingIntent. */
-    function updatePresetButtonStates() {
-        const st = getCurrentModelState();
-        const presets = getPresets();
-        // Presets matching on model + effort alone.
-        const baseMatch = (p) => !!st && st.family === p.model.toLowerCase() && st.effort === p.effort;
-        const candidates = presets.filter(baseMatch);
-        const ambiguous = candidates.length > 1;
-
-        presets.forEach((p, i) => {
-            const btn = document.getElementById('tm-claude-preset-' + i);
-            if (!btn) return;
-            let match = baseMatch(p);
-            // Disambiguate by Thinking only when multiple presets collide and we
-            // actually know the current Thinking state.
-            if (match && ambiguous && lastThinkingIntent !== null) {
-                match = p.thinking === lastThinkingIntent;
-            } else if (match && ambiguous) {
-                match = false; // unknown thinking state -> don't guess
-            }
-            btn.classList.toggle('tm-active', match);
-        });
+    function findModelRow(menu, family) {
+        for (const row of menu.querySelectorAll(SELECTORS.modelRow)) {
+            if (row.getAttribute('aria-disabled') === 'true') continue;
+            if (row.dataset.modelId.startsWith('claude-' + family)) return row;
+        }
+        return null;
     }
 
-    // --- Incognito (temp chat) ---
-    let isIncognitoActivating = false;
+    function hideMenus(on) {
+        document.documentElement.classList.toggle('tm-claude-hiding-menus', on);
+    }
 
-    async function toggleIncognito() {
-        if (isIncognitoActivating) return false;
-        isIncognitoActivating = true;
-        try {
-            let btn = document.querySelector(SELECTORS.incognitoBtn);
-            for (let i = 0; i < 40 && !(btn && isElementVisible(btn)); i++) {
-                await sleep(50);
-                btn = document.querySelector(SELECTORS.incognitoBtn);
-            }
-            if (btn && isElementVisible(btn)) {
-                btn.click();
-                console.log("Claude Enhancer: Toggled incognito.");
-                // Reflect new state after the UI updates
-                setTimeout(updateIncognitoButtonState, 300);
-                return true;
-            }
-            console.error("Claude Enhancer: Incognito button not found.");
-            return false;
-        } finally {
-            isIncognitoActivating = false;
+    // --- Menu automation ---
+
+    async function openMenuViaTrigger() {
+        const t = getTrigger();
+        if (!t) return null;
+        if (!isMenuOpen(t)) t.click();
+        return waitFor(openModelMenu);
+    }
+
+    async function closeMenu() {
+        const t = getTrigger();
+        if (isMenuOpen(t)) {
+            t.click();
+            await waitFor(() => !isMenuOpen(getTrigger()));
         }
     }
 
-    /** True when currently in an incognito chat (the toggle reads "Exit incognito"). */
-    function isIncognitoActive() {
-        return !!document.querySelector('button[aria-label="Exit incognito"]');
+    /** Picks a model family. Returns the still-open menu when the model was already
+     *  current (no click needed), otherwise waits for the menu to close and re-opens it. */
+    async function selectModel(family) {
+        let menu = await openMenuViaTrigger();
+        if (!menu) return null;
+        const row = findModelRow(menu, family);
+        if (!row) {
+            // Opus missing or locked in the menu means a free plan
+            if (family === 'opus' && !freePlan) {
+                freePlan = true;
+                rebuildLeftGroup();
+            }
+            console.warn(`${LOG} Model "${family}" not available.`);
+            return null;
+        }
+        if (row.getAttribute('aria-checked') === 'true') return menu;
+        row.click();
+        await waitFor(() => !isMenuOpen(getTrigger()));
+        return openMenuViaTrigger();
+    }
+
+    async function selectEffort(menu, effort) {
+        const sub = [...menu.querySelectorAll(SELECTORS.submenuTrigger)];
+        const trigger = sub.find(el => /effort/i.test(el.textContent)) || sub[0];
+        if (!trigger) {
+            console.warn(`${LOG} Effort submenu not found (model may not support effort).`);
+            return false;
+        }
+        trigger.click();
+        const opt = await waitFor(() => document.querySelector(SELECTORS.effortOption(effort)));
+        if (!opt) {
+            console.warn(`${LOG} Effort "${effort}" not found.`);
+            return false;
+        }
+        if (opt.getAttribute('aria-checked') !== 'true') opt.click();
+        return true;
+    }
+
+    let busy = false;
+
+    async function applyPreset(model, effort) {
+        if (busy) return;
+        busy = true;
+        hideMenus(true);
+        try {
+            // Always go through the menu: the label shows only the family, and an
+            // older chat may sit on an older version (e.g. Opus 5 vs the listed Opus 5.5).
+            const menu = model ? await selectModel(model) : await openMenuViaTrigger();
+            if (menu && effort) await selectEffort(menu, effort);
+        } catch (err) {
+            console.error(`${LOG} Preset failed:`, err);
+        } finally {
+            await closeMenu();
+            hideMenus(false);
+            busy = false;
+            updatePresetButtonStates();
+            focusInputField();
+        }
+    }
+
+    // --- Incognito ---
+    const isIncognitoActive = () => !!document.querySelector(SELECTORS.incognitoActive);
+
+    async function toggleIncognito() {
+        const btn = document.querySelector(SELECTORS.incognitoBtn);
+        if (!btn) {
+            console.warn(`${LOG} Incognito button not found.`);
+            return;
+        }
+        const was = isIncognitoActive();
+        btn.click();
+        await waitFor(() => isIncognitoActive() !== was);
+        updateIncognitoButtonState();
+        focusInputField();
     }
 
     function updateIncognitoButtonState() {
@@ -442,102 +272,64 @@
         if (btn) btn.classList.toggle('tm-active', isIncognitoActive());
     }
 
+    // --- Button highlights ---
+    function updatePresetButtonStates() {
+        const st = getCurrentModelState();
+        getPresets().forEach((p, i) => {
+            const btn = document.getElementById('tm-claude-preset-' + i);
+            if (btn) btn.classList.toggle('tm-active', !!st && st.family === p.model && st.effort === p.effort);
+        });
+    }
+
     // --- Auto-focus input ---
-    async function focusInputField(maxAttempts = 20, delay = 150) {
-        for (let i = 0; i < maxAttempts; i++) {
-            const editor = document.querySelector(SELECTORS.inputField);
-            if (editor) {
-                editor.focus();
-                const selection = window.getSelection();
-                if (selection) {
-                    selection.selectAllChildren(editor);
-                    selection.collapseToEnd();
-                }
-                return;
-            }
-            await sleep(delay);
+    /** Focuses the composer, cursor at end. With `politely`, leaves focus alone when the
+     *  user is typing in some other field (search box, rename, message edit). */
+    function focusInputField(politely = false) {
+        const editor = document.querySelector(SELECTORS.inputField);
+        if (!editor) return;
+        const a = document.activeElement;
+        if (politely && a && a !== editor && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+        editor.focus();
+        const sel = window.getSelection();
+        if (sel) {
+            sel.selectAllChildren(editor);
+            sel.collapseToEnd();
         }
     }
 
     // --- Keybindings ---
-    // Enter & Shift+Enter -> newline ; Cmd/Ctrl+Enter -> send.
-    function handleInputKeydown(e) {
-        const t = e.target;
-        if (!t || !t.isContentEditable) return;
-        if (e.key !== 'Enter' || e.isComposing) return;
+    // Enter sends and Shift+Enter adds a newline: claude.ai's own defaults, left alone.
 
-        // Cmd/Ctrl+Enter -> send
-        if (e.metaKey || e.ctrlKey) {
-            e.preventDefault();
-            e.stopPropagation();
-            const sendBtn = document.querySelector(SELECTORS.sendButton);
-            if (sendBtn && !sendBtn.disabled) sendBtn.click();
-            return;
-        }
+    // Right Cmd tap (keydown + keyup with nothing in between) -> toggle Incognito
+    let rightCmdClean = false;
 
-        // Shift+Enter -> let ProseMirror's default hard break happen (newline)
-        if (e.shiftKey) return;
-
-        // Plain Enter -> convert to a Shift+Enter (newline) so Claude doesn't send
-        e.preventDefault();
-        e.stopPropagation();
-        t.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Enter', code: 'Enter', keyCode: 13, which: 13,
-            shiftKey: true, bubbles: true, cancelable: true
-        }));
-    }
-
-    // --- Keyboard shortcuts ---
-    // Cmd/Ctrl+Shift+0 -> toggle thinking.
-    // Matched on e.code so it works regardless of keyboard layout.
-    function handleShortcuts(e) {
-        const mod = e.metaKey || e.ctrlKey;
-        if (!mod || !e.shiftKey || e.altKey) return;
-
-        if (e.code === 'Digit0') {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleThinking();
-        }
-    }
-
-    // --- Right Option tap -> toggle Incognito ---
-    // A "tap" = keydown + keyup of right Alt with no other key pressed in between.
-    let rightAltClean = false;
-
-    function handleRightOptionKeydown(e) {
+    function handleRightCmdKeydown(e) {
         if (e.repeat) return;
-        if (e.code === 'AltRight') {
-            rightAltClean = true;
-            return;
-        }
-        // Any other key while Alt held -> not a clean tap
-        if (rightAltClean) rightAltClean = false;
+        rightCmdClean = e.code === 'MetaRight';
     }
 
-    function handleRightOptionKeyup(e) {
-        if (e.code === 'AltRight' && rightAltClean) {
-            rightAltClean = false;
+    function handleRightCmdKeyup(e) {
+        if (e.code === 'MetaRight' && rightCmdClean) {
+            rightCmdClean = false;
             e.preventDefault();
             e.stopPropagation();
-            console.log('Claude Enhancer: Right Option tap -> toggling Incognito.');
             toggleIncognito();
         }
     }
 
-    // --- UI: button builders ---
-    function makeButton({ id, label, title, onClick }) {
+    // --- UI ---
+    function makeButton(id, label, title, onClick) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'tm-claude-btn';
-        if (id) btn.id = id;
+        btn.id = id;
         btn.title = title;
         btn.textContent = label;
-        btn.onclick = (e) => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             onClick();
-        };
+        });
         return btn;
     }
 
@@ -545,14 +337,9 @@
         const group = document.createElement('div');
         group.id = 'tm-claude-left';
         group.className = 'tm-claude-group';
-        const presets = getPresets();
-        presets.forEach((p, i) => {
-            group.appendChild(makeButton({
-                id: 'tm-claude-preset-' + i,
-                label: p.label,
-                title: p.title,
-                onClick: () => applyPreset(p.model, p.effort, p.thinking)
-            }));
+        getPresets().forEach((p, i) => {
+            group.appendChild(makeButton('tm-claude-preset-' + i, p.label, p.title,
+                () => applyPreset(p.model, p.effort)));
         });
         return group;
     }
@@ -561,154 +348,87 @@
         const group = document.createElement('div');
         group.id = 'tm-claude-right';
         group.className = 'tm-claude-group';
-        group.appendChild(makeButton({
-            id: 'tm-claude-thinking-btn',
-            label: 'T',
-            title: 'Toggle Thinking',
-            onClick: () => toggleThinking()
-        }));
-        group.appendChild(makeButton({
-            id: 'tm-claude-temp-btn',
-            label: 'Temp',
-            title: 'Toggle Incognito chat',
-            onClick: () => toggleIncognito()
-        }));
+        group.appendChild(makeButton('tm-claude-temp-btn', 'Temp', 'Toggle Incognito chat (Right Option)',
+            () => toggleIncognito()));
         return group;
     }
 
-    // --- Injection ---
+    let leftGroup = null;
+    let rightGroup = null;
+    let watchedTrigger = null;
+    const triggerObserver = new MutationObserver(updatePresetButtonStates);
+
+    function rebuildLeftGroup() {
+        if (leftGroup) leftGroup.remove();
+        leftGroup = null;
+        injectButtons();
+    }
+
     function injectButtons() {
-        const toolbar = document.querySelector(SELECTORS.toolbar);
-        if (!toolbar) return;
-
-        // On first injection, silently open the model menu to probe for the
-        // Upgrade button, then close it — caches the free-plan flag.
-        if (!_planProbed) {
-            _planProbed = true;
-            (async () => {
-                const trigger = document.querySelector(SELECTORS.modelTrigger);
-                if (!trigger) return;
-                hideMenuOverlays();
-                try {
-                    trigger.click();
-                    await waitForSelector(SELECTORS.menu, 600);
-                    await sleep(80); // let menu items render
-                    probeFreePlan();
-                } finally {
-                    closeMenus();
-                    showMenuOverlays();
-                }
-                // If free-plan was detected, rebuild the left group now.
-                if (isFreePlan() && _lastPlanType !== 'free') {
-                    const old = document.getElementById('tm-claude-left');
-                    if (old) old.remove();
-                    _lastPlanType = 'free';
-                    injectButtons();
-                }
-            })();
-        }
-
-        // Also probe opportunistically whenever the model menu is open
-        // (catches upgrades / downgrades mid-session).
-        if (isModelMenuOpen()) probeFreePlan();
-
-        // Detect plan-type changes (free ↔ paid) and rebuild preset buttons.
-        const currentPlanType = isFreePlan() ? 'free' : 'pro';
-        if (_lastPlanType !== null && _lastPlanType !== currentPlanType) {
-            const old = document.getElementById('tm-claude-left');
-            if (old) old.remove();
-        }
-        _lastPlanType = currentPlanType;
-
-        // LEFT group: into the empty slot right after the "Add files" group
-        if (!document.getElementById('tm-claude-left')) {
-            const left = buildLeftGroup();
-            const addBtn = toolbar.querySelector(SELECTORS.addFilesBtn);
-            const leadingGroup = addBtn ? addBtn.closest('div.relative.shrink-0') : null;
-            const slot = leadingGroup && leadingGroup.nextElementSibling;
-            if (slot && slot.matches('div.flex.flex-row.items-center')) {
-                slot.appendChild(left);
-            } else if (leadingGroup) {
-                leadingGroup.insertAdjacentElement('afterend', left);
-            } else {
-                toolbar.insertBefore(left, toolbar.firstChild);
+        if (!(leftGroup && leftGroup.isConnected)) {
+            const attach = document.querySelector(SELECTORS.attachBtn);
+            if (attach && attach.parentElement) {
+                readPlanFromUserButton();
+                leftGroup = buildLeftGroup();
+                attach.parentElement.insertAdjacentElement('afterend', leftGroup);
+                focusInputField(true);
             }
         }
 
-        // RIGHT group: just before the model-selector wrapper
-        if (!document.getElementById('tm-claude-right')) {
-            const right = buildRightGroup();
-            const modelTrigger = toolbar.querySelector(SELECTORS.modelTrigger);
-            const modelGroup = modelTrigger
-                ? modelTrigger.closest('div.flex.items-center.gap-2.min-w-0')
-                : null;
-            if (modelGroup && modelGroup.parentElement === toolbar) {
-                toolbar.insertBefore(right, modelGroup);
-            } else {
-                toolbar.appendChild(right);
-            }
-            updateThinkingButtonState();
+        const trigger = getTrigger();
+        if (trigger && !(rightGroup && rightGroup.isConnected)) {
+            rightGroup = buildRightGroup();
+            const area = trigger.closest(SELECTORS.modelArea);
+            if (area) area.insertBefore(rightGroup, area.firstChild);
+            else trigger.parentElement.insertBefore(rightGroup, trigger);
         }
 
-        // Keep highlights in sync with whatever the live UI shows (also catches
-        // changes the user makes through Claude's own model menu).
+        // Follow the picker label so highlights also track changes made in Claude's own menu
+        if (trigger && trigger !== watchedTrigger) {
+            watchedTrigger = trigger;
+            triggerObserver.disconnect();
+            triggerObserver.observe(trigger, { attributes: true, attributeFilter: ['aria-label'] });
+        }
+
         updatePresetButtonStates();
         updateIncognitoButtonState();
     }
 
-    // --- URL parameters ---
-    let urlParamsHandled = false;
-    function checkUrlParams() {
-        if (urlParamsHandled) return;
-        urlParamsHandled = true;
+    // Cheap early exit: only re-inject when one of our nodes (or the picker) was detached,
+    // or the URL changed (incognito state lives in the page top bar, not in the composer).
+    let injectTimer = null;
+    let lastHref = location.href;
 
-        const params = new URLSearchParams(window.location.search);
-        const modelParam = params.get('model');
-        const effortParam = params.get('effort');
-        const thinkingParam = params.get('thinking');
-        const incognitoParam = params.get('incognito');
+    function onMutations() {
+        const hrefChanged = location.href !== lastHref;
+        if (!hrefChanged && leftGroup && leftGroup.isConnected && rightGroup && rightGroup.isConnected
+            && watchedTrigger && watchedTrigger.isConnected) return;
+        if (injectTimer) return;
+        injectTimer = setTimeout(() => {
+            injectTimer = null;
+            lastHref = location.href;
+            injectButtons();
+        }, INJECT_THROTTLE_MS);
+    }
 
-        const MODEL_MAP = {
-            opus: 'Opus', sonnet: 'Sonnet', haiku: 'Haiku', fable: 'Fable'
-        };
+    // --- URL parameters: ?model= ?effort= ?incognito=1 ---
+    async function handleUrlParams() {
+        const params = new URLSearchParams(location.search);
+        const modelParam = (params.get('model') || '').toLowerCase();
+        let effortParam = (params.get('effort') || '').toLowerCase();
+        if (effortParam === 'extra') effortParam = 'xhigh';
 
-        const model = modelParam ? MODEL_MAP[modelParam.toLowerCase()] : null;
-        const effort = effortParam && EFFORT_TESTID[effortParam.toLowerCase()]
-            ? effortParam.toLowerCase() : null;
-        let thinking;
-        if (thinkingParam != null) {
-            const v = thinkingParam.toLowerCase();
-            thinking = (v === 'on' || v === 'true' || v === '1');
+        const model = FAMILIES.includes(modelParam) ? modelParam : null;
+        const effort = EFFORT_IDS.includes(effortParam) ? effortParam : null;
+
+        if (model || effort) {
+            if (await waitFor(getTrigger, 15000)) await applyPreset(model, effort);
         }
-
-        if (model || effort || thinking !== undefined) {
-            setTimeout(async () => {
-                // Wait for the toolbar to exist before driving menus
-                await waitForSelector(SELECTORS.modelTrigger, 8000);
-                if (model) {
-                    await applyPreset(model, effort, thinking);
-                } else {
-                    // No model: only adjust effort/thinking on the current model
-                    hideMenuOverlays();
-                    try {
-                        if (await openEffortSubmenu()) {
-                            if (thinking !== undefined) await setThinking(thinking);
-                            if (effort) await selectEffort(effort);
-                        }
-                    } finally {
-                        closeMenus();
-                        showMenuOverlays();
-                    }
-                    focusInputField();
-                }
-            }, 1200);
-        }
-
-        if (incognitoParam === '1' || incognitoParam === 'true') {
-            (async () => {
-                await waitForSelector(SELECTORS.incognitoBtn, 8000);
+        if (params.get('incognito') === '1' || params.get('incognito') === 'true') {
+            if (await waitFor(() => document.querySelector(SELECTORS.incognitoBtn), 15000)
+                && !isIncognitoActive()) {
                 await toggleIncognito();
-            })();
+            }
         }
     }
 
@@ -716,12 +436,12 @@
     function injectStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            .claude-enhancer-hiding-menus ${SELECTORS.popover} {
+            .tm-claude-hiding-menus ${SELECTORS.overlay} {
                 visibility: hidden !important;
                 pointer-events: none !important;
             }
-            .claude-enhancer-hiding-menus ${SELECTORS.popover},
-            .claude-enhancer-hiding-menus ${SELECTORS.popover} * {
+            .tm-claude-hiding-menus ${SELECTORS.overlay},
+            .tm-claude-hiding-menus ${SELECTORS.overlay} * {
                 transition: none !important;
                 animation: none !important;
             }
@@ -732,25 +452,26 @@
                 gap: 4px;
                 flex-shrink: 0;
             }
+            #tm-claude-left { margin-left: 4px; }
+            #tm-claude-right { margin-right: 4px; }
 
             .tm-claude-btn {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 4px;
-                height: 28px;
-                padding: 0 9px;
+                height: 26px;
+                padding: 0 8px;
                 border-radius: 8px;
                 border: 1px solid rgba(128, 128, 128, 0.22);
                 background-color: transparent;
-                font-family: var(--font-ui, 'Söhne', ui-sans-serif, system-ui, sans-serif);
+                font-family: inherit;
                 font-size: 12px;
                 font-weight: 500;
                 line-height: 1;
                 color: inherit;
                 opacity: 0.75;
                 cursor: pointer;
-                transition: background-color 0.15s ease, opacity 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+                transition: background-color 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
                 white-space: nowrap;
                 flex-shrink: 0;
             }
@@ -759,13 +480,10 @@
                 opacity: 1;
                 border-color: rgba(128, 128, 128, 0.4);
             }
-            .tm-claude-btn:active {
-                transform: scale(0.96);
-            }
             .tm-claude-btn.tm-active {
                 opacity: 1;
-                color: var(--cds-fill-accent, #c96442);
-                border-color: var(--cds-fill-accent, #c96442);
+                color: #c96442;
+                border-color: #c96442;
             }
         `;
         document.head.appendChild(style);
@@ -773,27 +491,14 @@
 
     // --- Init ---
     function init() {
-        console.log("Claude Enhancer v1.0: Initializing...");
-
-        document.addEventListener('keydown', handleInputKeydown, true);
-        document.addEventListener('keydown', handleShortcuts, true);
-        document.addEventListener('keydown', handleRightOptionKeydown, true);
-        document.addEventListener('keyup', handleRightOptionKeyup, true);
+        document.addEventListener('keydown', handleRightCmdKeydown, true);
+        document.addEventListener('keyup', handleRightCmdKeyup, true);
 
         injectStyles();
         injectButtons();
+        new MutationObserver(onMutations).observe(document.body, { childList: true, subtree: true });
 
-        const observer = new MutationObserver(() => {
-            injectButtons();
-            syncThinkingFromDOM();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        const interval = setInterval(injectButtons, 2000);
-        setTimeout(() => clearInterval(interval), 30000);
-
-        checkUrlParams();
-        focusInputField();
+        handleUrlParams();
     }
 
     init();
