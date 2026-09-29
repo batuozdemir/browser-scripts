@@ -91,3 +91,19 @@ Menus render as `.z-popover` portals at `<body>` level. During automation they'r
   deploying. Copy the file into the app's scripts directory (that `cp` needs
   `dangerouslyDisableSandbox`; see `h5player/README.md`) and verify with `diff`.
   Violentmonkey on Thorium/Firefox is the only manager here that self-updates.
+
+## Testing in the cmux browser
+
+Scripts can be checked live by reloading a signed-in cmux browser tab and injecting the file
+with `cmux browser <surface> eval --script "$(cat x.user.js)"`. Traps found on 2026-09-29:
+
+- chatgpt.com and claude.ai forbid `eval` in the page (CSP), so cmux silently retries in an
+  isolated world. DOM events cross over fine, but page globals and `console list` do not, and
+  `cmux browser wait --function` fails immediately instead of waiting: poll with `eval` instead.
+- A cmux tab that is not on screen reports `visibilityState=hidden`, so `requestAnimationFrame`
+  never fires and nothing paints. Scripts that batch work in rAF look dead there. For tests
+  only, prepend `var requestAnimationFrame = cb => setTimeout(cb, 16);` to the injected text.
+- `cmux browser press` takes no key combos ("Meta+Enter" is sent literally); use
+  `keydown Meta`, `press Enter`, `keyup Meta`. `keydown MetaRight` gives the right Cmd key.
+- ProseMirror strips unknown attributes from its editor root, so mark its parent to target it.
+- Sending a real message is the only way to test Enter; do it in a temporary/incognito chat.
