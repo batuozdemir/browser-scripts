@@ -12,6 +12,7 @@ third-party video speed controller.
 | `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
 | `youtube-subtitles.user.js` | `youtube.com` | Replaces YouTube's rolling auto-captions with stable, movie-style subtitle chunks |
+| `youtube-summary.user.js` | `youtube.com` | A Summarize button: Claude Haiku summarizes the captions in Turkish, with clickable section timestamps (needs `youtube-subtitles`) |
 | `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
@@ -256,6 +257,44 @@ revision count collapsing.
 - Console logs are prefixed with `[YTSubs]`.
 - Nothing appears: confirm the track really is "English (auto-generated)". A
   video carrying a manual track of the same language is left to YouTube.
+
+---
+
+## YouTube summary (`youtube-summary.user.js`)
+
+An "Özetle" button in the bottom-right corner of every watch page. It sends the
+video's captions to Claude Haiku 5.5 and shows a Turkish summary in a panel: a few
+sentences, then the sections with their start times. Clicking a time jumps the video
+there. A second click on the button closes the panel, and a summary is kept for the
+rest of the visit to that video, so reopening it costs nothing.
+
+### How it works
+
+- **It needs `youtube-subtitles.user.js` installed and enabled.** That script runs in
+  the page and is the only thing that can read the player's caption request (fetching
+  the track directly returns an empty body). It passes every captured track across by
+  `postMessage`, a manual track in preference to the auto-generated one.
+- This one runs in the extension's content world, because Safari's Userscripts app
+  only provides `GM.xmlHttpRequest` there.
+- YouTube only downloads captions once they are turned on. If none were captured, the
+  button turns captions on, waits up to 8 s for the track, and turns them back off.
+- The request goes to **Aperture**, the AI gateway on the tailnet
+  (`https://aperture.ladon-minor.ts.net`), which recognises the Mac by its Tailscale login. There is no
+  API key in the script. Tailscale has to be connected.
+- Captions are sent as one timestamped line per 30 s of video. A 10-minute video came to
+  about 1,600 input and 500 output tokens (measured 2026-10-09), a small fraction of a cent.
+
+### Tests
+
+`node youtube-summary.test.js` covers the timestamp formatting, the 30 s caption
+blocks and the parsing of clickable times.
+
+### Troubleshooting
+
+- Console logs are prefixed with `[YTSummary]`.
+- "altyazı bulunamadı": the video has no captions at all, or `youtube-subtitles` is
+  disabled.
+- "could not reach Aperture": Tailscale is off, or the gateway is down.
 
 ---
 

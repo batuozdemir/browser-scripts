@@ -17,10 +17,13 @@ into a userscript manager. No build step. Edit them in place.
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temp chat (right Cmd tap), URL-param automation |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
-| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks |
+| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks; also passes every captured track to `youtube-summary` |
+| `youtube-summary.user.js` | `youtube.com/*` | Summarize button: Haiku 5.5 through Aperture, Turkish summary with clickable timestamps |
 
-`youtube-subtitles.user.js` is the one hand-written script with tests:
-`node youtube-subtitles.test.js`. Its pure segmentation functions are exported
+The two YouTube scripts are the hand-written ones with tests:
+`node youtube-subtitles.test.js` and `node youtube-summary.test.js`. `youtube-summary`
+depends on `youtube-subtitles` (page world, owns the caption hook) and talks to it by
+`postMessage`; read the banners in both before changing that handshake. Its pure segmentation functions are exported
 when `window` is undefined, which is the only reason the file is requireable
 from Node — keep that guard if you refactor. It is also the only script here at
 `@run-at document-start`, and that is load-bearing: YouTube fetches the caption
@@ -91,6 +94,41 @@ Menus render as `.z-popover` portals at `<body>` level. During automation they'r
   deploying. Copy the file into the app's scripts directory (that `cp` needs
   `dangerouslyDisableSandbox`; see `h5player/README.md`) and verify with `diff`.
   Violentmonkey on Thorium/Firefox is the only manager here that self-updates.
+
+## LLM calls through Aperture (keyless)
+
+When a new or changed script would be better with an LLM step (summarize, translate,
+classify, rewrite what is on the page), say so to Batu and propose it. Batu asked for this
+on 2026-10-09. Scripts call Aperture, the tailnet AI gateway, never a provider directly. Aperture knows
+the caller from the Mac's Tailscale identity, so **no API key ever goes into a script**.
+Endpoint `https://aperture.ladon-minor.ts.net/v1/messages` (Anthropic messages format), model
+`claude-haiku-5-5`, the only Claude model Aperture serves today. State and how the config
+is changed: `~/Workspace/infra/tailscale/aperture/README.md`.
+
+A page `fetch` cannot reach it (Aperture sends no CORS headers, measured 2026-10-09): use
+`GM.xmlHttpRequest` with `@connect aperture.ladon-minor.ts.net`. Use the HTTPS name, not
+`http://100.78.187.17`. **On Safari the request is CORS-checked** (it comes from the
+extension's background page, origin `safari-web-extension://<uuid>`); Aperture answers
+only because Batu's grant sets CORS for that one origin on `/v1/messages`. A new endpoint
+path or a reinstalled Userscripts (new UUID) means updating that grant in
+`infra/tailscale/aperture/config.hujson`. A failed CORS check shows up in the script only
+as GM's onerror; the real reason is in Develop → Web Extension Background Content →
+Userscripts. On
+Safari's Userscripts app (Batu watches and browses there) GM.* exists only with
+`@inject-into content`, so a script that also needs the page world is split in two and
+talks by `postMessage`, the way `youtube-summary` does. `youtube-summary.user.js` is the
+first script built this way and the reference for the next one.
+
+Ideas Batu approved on 2026-10-09, not built yet:
+
+- **One new script for every page**: translate or explain the selected text (TR/EN) in a
+  small box next to the selection, and summarize a long page or discussion (Hacker News,
+  Reddit, GitHub issues). One script rather than two, since both run everywhere and share
+  the Aperture call.
+- **Shopping reviews**: on a product page, a button (never automatic) that pulls recurring
+  complaints and praise out of the reviews. Can live in the same script, with per-site
+  selectors.
+- Turned down for now: a GitHub repo card, and cleaning up YouTube's auto-captions.
 
 ## Testing in the cmux browser
 

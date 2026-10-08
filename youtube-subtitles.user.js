@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         youtube-subtitles
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Turns YouTube auto-generated captions into stable movie-style subtitles.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -54,6 +54,9 @@
  * to branch on — both from outside the browser and same-origin from inside the
  * page. Passively reading the player's own request is the only route that
  * works, which is why this is a hook and not a fetch.
+ *
+ * shareTranscript() feeds youtube-summary.user.js, which cannot hook the
+ * player itself. Keep it, and keep its message shape in step with that file.
  *
  * Styles are injected as a plain <style> element on purpose. Safari's
  * Userscripts app has no synchronous GM_* API, so GM_addStyle would be a
@@ -241,13 +244,42 @@
     return m ? decodeURIComponent(m[1]) : '';
   }
 
+  /* youtube-summary.user.js summarizes the captions, and it has to run in the
+   * content world: Safari's Userscripts app only gives GM.xmlHttpRequest there.
+   * This world can hook the player's request and that one cannot, so every
+   * captured track, manual or ASR, goes across by postMessage, and again on
+   * request because either script may start first. A manual track is better
+   * text than the ASR one, so it is not replaced by an ASR track of the same video. */
+  var shared = null;
+
+  function shareTranscript (url, cues) {
+    var videoId = param(url, 'v') || new URLSearchParams(location.search).get('v') || '';
+    var kind = param(url, 'kind') || 'manual';
+    if (shared && shared.videoId === videoId && shared.kind !== 'asr' && kind === 'asr') return;
+    shared = {
+      source: 'yts-transcript',
+      videoId: videoId,
+      kind: kind,
+      lang: param(url, 'tlang') || param(url, 'lang'),
+      cues: cues.map(function (c) { return [c.start, c.text]; })
+    };
+    window.postMessage(shared, location.origin);
+  }
+
+  window.addEventListener('message', function (e) {
+    if (e.source === window && e.data && e.data.source === 'yts-transcript-request' && shared) {
+      window.postMessage(shared, location.origin);
+    }
+  });
+
   /* Only ASR responses become our cue source. A manually authored track is
    * already stable and is left entirely to YouTube. */
   function onTimedText (url, body) {
+    var cues = parseJson3(body);
+    if (cues) shareTranscript(url, cues);
+
     capturedAsr = param(url, 'kind') === 'asr';
     if (!capturedAsr) return;
-
-    var cues = parseJson3(body);
     if (!cues) return;
 
     chunks = segmentCues(cues);
