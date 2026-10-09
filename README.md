@@ -12,7 +12,7 @@ third-party video speed controller.
 | `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
 | `youtube-subtitles.user.js` | `youtube.com` | Replaces YouTube's rolling auto-captions with stable, movie-style subtitle chunks |
-| `youtube-summary.user.js` | `youtube.com` | A Summarize button: Claude Haiku summarizes the captions in Turkish, with clickable section timestamps (needs `youtube-subtitles`) |
+| `youtube-summary.user.js` | `youtube.com` | An "Özetle" button next to Like: Claude Haiku summarizes the captions in Turkish in a panel above the description, with clickable section timestamps (needs `youtube-subtitles`) |
 | `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
 
 This is intended for use with Tampermonkey, Greasemonkey, or other userscript managers in modern browsers.
@@ -262,11 +262,19 @@ revision count collapsing.
 
 ## YouTube summary (`youtube-summary.user.js`)
 
-An "Özetle" button in the bottom-right corner of every watch page. It sends the
-video's captions to Claude Haiku 5.5 and shows a Turkish summary in a panel: a few
-sentences, then the sections with their start times. Clicking a time jumps the video
-there. A second click on the button closes the panel, and a summary is kept for the
-rest of the visit to that video, so reopening it costs nothing.
+An "Özetle" button next to Like/Dislike on every watch page. It sends the video's
+captions to Claude Haiku 5.5 and opens a panel above the description, styled like it,
+with a Turkish summary: one line on what the video is about, the key takeaways, then
+the video section by section, each with its start time and a few bullets. Clicking a
+time jumps the video there, and the section that is playing is highlighted as the
+video runs. The panel can copy the summary as Markdown or regenerate it. A second
+click on the button closes the panel, and a summary is kept for the rest of the visit,
+so reopening it costs nothing; moving to another video closes it.
+
+The model writes Markdown and the script renders a small subset of it (headings,
+nested bullets, bold, italic, inline code, timestamps) into DOM nodes, never as HTML.
+Colours come from YouTube's own theme variables, so the panel follows the light or
+dark theme.
 
 ### How it works
 
@@ -283,18 +291,22 @@ rest of the visit to that video, so reopening it costs nothing.
   API key in the script. Tailscale has to be connected.
 - Captions are sent as one timestamped line per 30 s of video. A 10-minute video came to
   about 1,600 input and 500 output tokens (measured 2026-10-09), a small fraction of a cent.
+  The structured summary is longer: a 14-minute talk came to 4,600 input and 2,400 output
+  tokens and took about 15 s (measured 2026-10-09).
 
 ### Tests
 
 `node youtube-summary.test.js` covers the timestamp formatting, the 30 s caption
-blocks and the parsing of clickable times.
+blocks, the parsing of clickable times and the Markdown parser.
 
 ### Troubleshooting
 
 - Console logs are prefixed with `[YTSummary]`.
 - "altyazı bulunamadı": the video has no captions at all, or `youtube-subtitles` is
   disabled.
-- "could not reach Aperture": Tailscale is off, or the gateway is down.
+- "Aperture'a ulaşılamadı": Tailscale is off, or the gateway is down.
+- No button: YouTube changed its action row. The selectors are in `SELECTORS` at the
+  top of the script.
 
 ---
 

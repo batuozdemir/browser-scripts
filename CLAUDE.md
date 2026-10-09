@@ -18,7 +18,7 @@ into a userscript manager. No build step. Edit them in place.
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temp chat (right Cmd tap), URL-param automation |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
 | `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks; also passes every captured track to `youtube-summary` |
-| `youtube-summary.user.js` | `youtube.com/*` | Summarize button: Haiku 5.5 through Aperture, Turkish summary with clickable timestamps |
+| `youtube-summary.user.js` | `youtube.com/*` | Summarize button next to Like: Haiku 5.5 through Aperture, structured Turkish Markdown summary in a panel above the description, clickable timestamps |
 
 The two YouTube scripts are the hand-written ones with tests:
 `node youtube-subtitles.test.js` and `node youtube-summary.test.js`. `youtube-summary`
@@ -141,6 +141,8 @@ with `cmux browser <surface> eval --script "$(cat x.user.js)"`. Traps found on 2
 - A cmux tab that is not on screen reports `visibilityState=hidden`, so `requestAnimationFrame`
   never fires and nothing paints. Scripts that batch work in rAF look dead there. For tests
   only, prepend `var requestAnimationFrame = cb => setTimeout(cb, 16);` to the injected text.
+  On youtube.com that global `var` did not take (2026-10-09); wrap the shim and the script in
+  one function, `(function(){ var requestAnimationFrame = ...; <script> })()`, instead.
 - `cmux browser press` takes no key combos ("Meta+Enter" is sent literally); use
   `keydown Meta`, `press Enter`, `keyup Meta`. `keydown MetaRight` gives the right Cmd key.
 - ProseMirror strips unknown attributes from its editor root, so mark its parent to target it.
