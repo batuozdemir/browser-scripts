@@ -7,7 +7,7 @@ third-party video speed controller.
 | Script | Target | Purpose |
 |--------|--------|---------|
 | `ai-studio-enhancer.user.js` | `aistudio.google.com` | Model+thinking preset buttons (Lite/F/FX/P/PX), temp chat, and silent model/thinking/search/system-prompt automation via URL params |
-| `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (FL/F/FX/P/PX), temp chat toggle, custom keybindings |
+| `gemini-enhancer.user.js` | `gemini.google.com` | Model+thinking preset buttons (F/FX/PX), temp chat toggle, custom keybindings |
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort preset buttons (S/SM/OM/OH), incognito toggle (right Cmd tap), URL params |
 | `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
@@ -88,12 +88,13 @@ Adds quick-access preset buttons, temp chat toggle, and saner keybindings to `ge
 
 | Button | Model | Thinking |
 |--------|-------|----------|
-| `FL` | Flash-Lite | Extended |
-| `F` | Flash | Standard |
-| `FX` | Flash | Extended |
-| `P` | Pro | Standard |
-| `PX` | Pro | Extended |
+| `F` | Flash | Standard (old UI) / Low (new UI) |
+| `FX` | Flash | Extended / High |
+| `PX` | Pro | Extended / High |
 
+Google is rolling out Low/Medium/High thinking in place of the Extended thinking
+toggle, account by account; the script detects which menu it sees and works with both.
+A `Thinking` button (or a left `Cmd` double tap) flips Extended on/off, or Low ↔ High.
 A `Temp` button toggles Temporary Chat.
 
 ### Keybindings
@@ -105,7 +106,7 @@ A `Temp` button toggles Temporary Chat.
 ### URL parameters
 
 - `?model=flashlite|flash|pro` — auto-select model
-- `?thinking=standard|extended` — auto-set thinking level
+- `?thinking=standard|extended|low|medium|high` — auto-set thinking level (`medium` is new-UI only; on the old UI it means Extended)
 - `?temp=true` — activate temporary chat
 
 ---

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.7.0
+// @version      3.8.0
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -57,12 +57,14 @@
         // Model picker trigger (unchanged)
         triggerBtn: '[data-test-id="bard-mode-menu-button"]',
 
-        // Model options (hash-based IDs — may change when Google updates models)
-        optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"]',
-        optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"]',
+        // Model options (hash-based IDs — they differ per account and change
+        // when Google updates models, so the label fallback stays essential)
+        optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"], [data-test-id="bard-mode-option-fbb127bbb056c959"]',
+        optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"], [data-test-id="bard-mode-option-9d8ca3786ebdfbea"]',
 
-        // Extended thinking toggle (flat item in model menu, no submenu)
-        // No stable test-id — found by label text via findMenuItemByLabel()
+        // Thinking: flat items in the model menu, no test-id, found by label via
+        // findMenuItemByLabel(). Accounts are mid-rollout, so both exist:
+        // old UI = one 'Extended thinking' toggle, new UI = 'Low'/'Medium'/'High' rows.
 
         // Temp Chat
         tempChatTrigger: 'button[aria-label="Temporary chat"]',
@@ -89,15 +91,16 @@
     }
 
     /**
-     * Finds a menu item by its label text content (fallback for hash-based selectors).
-     * Searches within currently visible overlay/menu panels.
+     * Finds a menu item whose label ENDS with the given text (fallback for
+     * hash-based selectors). Matching the end keeps 'Flash' from hitting
+     * '3.5 Flash-Lite' while still matching versioned labels like '3.6 Flash'.
      * @param {string} labelText - The text to match (trimmed)
      * @returns {Element|null}
      */
     function findMenuItemByLabel(labelText) {
         const items = document.querySelectorAll('gem-menu-item .label');
         for (const label of items) {
-            if (label.textContent.trim().toLowerCase().includes(labelText.toLowerCase())) {
+            if (label.textContent.trim().toLowerCase().endsWith(labelText.toLowerCase())) {
                 return label.closest('gem-menu-item');
             }
         }
@@ -418,29 +421,32 @@
         }
     }
 
+    const THINKING_LEVELS = ['low', 'medium', 'high'];
+    // Old-UI names map onto the new levels, so presets mean the same on both.
+    const THINKING_ALIASES = { standard: 'low', extended: 'high' };
+
     /**
-     * Returns the "Extended thinking" toggle item from the currently-open model
-     * menu, or null if it cannot be found.
-     * @returns {Element|null}
+     * Waits for the open model menu's thinking control. Returns
+     * { kind: 'toggle', item } on the old UI (Extended thinking toggle),
+     * { kind: 'levels', items: { low, medium, high } } on the new UI, or null.
      */
-    function findExtendedThinkingToggle() {
-        return findMenuItemByLabel('Extended thinking');
+    async function findThinkingControl() {
+        for (let i = 0; i < 30; i++) {
+            const toggle = findMenuItemByLabel('Extended thinking');
+            if (toggle) return { kind: 'toggle', item: toggle };
+            const items = {};
+            THINKING_LEVELS.forEach(l => { items[l] = findMenuItemByLabel(l); });
+            if (Object.values(items).some(Boolean)) return { kind: 'levels', items };
+            await new Promise(r => setTimeout(r, 10));
+        }
+        return null;
     }
 
     /**
-     * Returns true when the Extended thinking toggle is currently ON
-     * (the item carries the .selected class when active).
-     * @param {Element} toggleItem
-     * @returns {boolean}
-     */
-    function isExtendedThinkingOn(toggleItem) {
-        return toggleItem.classList.contains('selected');
-    }
-
-    /**
-     * Sets the Extended thinking toggle to the desired state.
-     * The model menu must already be open (or will be opened here).
-     * @param {'standard'|'extended'} level
+     * Sets the thinking level on whichever UI the account has.
+     * The model menu is opened here if needed.
+     * @param {'standard'|'extended'|'low'|'medium'|'high'} level
+     *   Old UI: low → off, medium/high → Extended. New UI: standard → Low, extended → High.
      * @returns {Promise<boolean>}
      */
     async function selectThinkingLevel(level) {
@@ -450,28 +456,34 @@
             return false;
         }
 
-        // Wait for the toggle item to appear in the flat menu list
-        let toggleItem = null;
-        for (let i = 0; i < 30; i++) {
-            toggleItem = findExtendedThinkingToggle();
-            if (toggleItem) break;
-            await new Promise(r => setTimeout(r, 10));
-        }
-
-        if (!toggleItem) {
-            console.warn("Gemini Enhancer: Extended thinking toggle not found.");
+        const control = await findThinkingControl();
+        if (!control) {
+            console.warn("Gemini Enhancer: Thinking control not found.");
             document.body.click();
             return false;
         }
 
-        const wantExtended = level === 'extended';
-        const isOn = isExtendedThinkingOn(toggleItem);
-
-        if (wantExtended !== isOn) {
-            toggleItem.click();
-            console.log(`Gemini Enhancer: Extended thinking toggled ${wantExtended ? 'ON' : 'OFF'}.`);
+        const key = THINKING_ALIASES[level] || level;
+        let item, wantSelected;
+        if (control.kind === 'toggle') {
+            item = control.item;
+            wantSelected = key !== 'low';
         } else {
-            console.log(`Gemini Enhancer: Extended thinking already ${isOn ? 'ON' : 'OFF'}, no change needed.`);
+            item = control.items[key];
+            wantSelected = true;
+        }
+
+        if (!item) {
+            console.warn(`Gemini Enhancer: Thinking level '${level}' not offered for this model.`);
+            document.body.click();
+            return false;
+        }
+
+        if (isMenuItemSelected(item) !== wantSelected) {
+            item.click();
+            console.log(`Gemini Enhancer: Thinking set to '${level}'.`);
+        } else {
+            console.log(`Gemini Enhancer: Thinking already '${level}', no change needed.`);
             document.body.click(); // close menu
         }
         return true;
@@ -484,10 +496,10 @@
      *
      * Flow:
      *  1. Open menu → click model option (menu closes automatically).
-     *  2. Re-open menu → find the flat Extended thinking toggle → set state.
+     *  2. Re-open menu → find the thinking toggle or level row → set state.
      *
      * @param {string} modelKey - SELECTORS key (e.g., 'optionFlash')
-     * @param {'standard'|'extended'} thinkingLevel
+     * @param {'standard'|'extended'|'low'|'medium'|'high'} thinkingLevel
      */
     async function setModeAndThinking(modelKey, thinkingLevel) {
         hideMenuOverlays();
@@ -557,9 +569,8 @@
     }
 
     /**
-     * Toggles the Extended thinking toggle on the current model.
-     * Opens the model menu once, reads the current state from the flat
-     * toggle item's .selected class, then clicks to flip it.
+     * Flips thinking on the current model: the Extended toggle on the old UI,
+     * Low <-> High on the new UI (Medium counts as not-High, so it goes to High).
      * All overlays are hidden to prevent visual flicker.
      */
     async function toggleThinking() {
@@ -570,23 +581,29 @@
                 return;
             }
 
-            // Wait for the Extended thinking toggle item to appear
-            let toggleItem = null;
-            for (let i = 0; i < 30; i++) {
-                toggleItem = findExtendedThinkingToggle();
-                if (toggleItem) break;
-                await new Promise(r => setTimeout(r, 10));
-            }
-
-            if (!toggleItem) {
-                console.warn("Gemini Enhancer: Extended thinking toggle not found.");
+            const control = await findThinkingControl();
+            if (!control) {
+                console.warn("Gemini Enhancer: Thinking control not found.");
                 document.body.click();
                 return;
             }
 
-            const wasOn = isExtendedThinkingOn(toggleItem);
-            toggleItem.click();
-            console.log(`Gemini Enhancer: Extended thinking toggled ${wasOn ? 'OFF' : 'ON'}.`);
+            if (control.kind === 'toggle') {
+                const wasOn = isMenuItemSelected(control.item);
+                control.item.click();
+                console.log(`Gemini Enhancer: Extended thinking toggled ${wasOn ? 'OFF' : 'ON'}.`);
+                return;
+            }
+
+            const high = control.items.high;
+            const target = high && isMenuItemSelected(high) ? control.items.low : high;
+            if (!target) {
+                console.warn("Gemini Enhancer: Low/High thinking rows not found.");
+                document.body.click();
+                return;
+            }
+            target.click();
+            console.log(`Gemini Enhancer: Thinking set to ${target === high ? 'High' : 'Low'}.`);
         } finally {
             showMenuOverlays();
         }
@@ -692,21 +709,21 @@
                 label: 'F',
                 modelKey: 'optionFlash',
                 thinking: 'standard',
-                title: 'Flash · Standard Thinking',
+                title: 'Flash · Standard / Low Thinking',
                 path: 'M7 2v11h3v9l7-12h-4l4-8z' // Lightning Bolt
             },
             {
                 label: 'FX',
                 modelKey: 'optionFlash',
                 thinking: 'extended',
-                title: 'Flash · Extended Thinking',
+                title: 'Flash · Extended / High Thinking',
                 path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
             },
             {
                 label: 'PX',
                 modelKey: 'optionPro',
                 thinking: 'extended',
-                title: 'Pro · Extended Thinking',
+                title: 'Pro · Extended / High Thinking',
                 path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
             }
         ];
@@ -751,7 +768,7 @@
         // Thinking Toggle Button
         const thinkBtn = document.createElement('button');
         thinkBtn.className = "gemini-mode-btn";
-        thinkBtn.title = "Toggle Thinking (Standard ↔ Extended)";
+        thinkBtn.title = "Toggle Thinking (Standard ↔ Extended, Low ↔ High)";
         thinkBtn.type = "button";
 
         // Brain/Thinking Icon (lightbulb outline)
@@ -820,7 +837,7 @@
 
         // ?model=flashlite|flash|pro
         const modelParam = params.get('model');
-        // ?thinking=standard|extended
+        // ?thinking=standard|extended|low|medium|high
         const thinkingParam = params.get('thinking');
 
         if (modelParam) {
