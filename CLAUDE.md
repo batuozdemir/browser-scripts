@@ -79,7 +79,7 @@ Menus render as `.z-popover` portals at `<body>` level. During automation they'r
 ### Selector stability notes
 - **Claude:** model rows carry `data-model-id` (`claude-opus-*`, `claude-sonnet-*`); effort rows carry `data-effort-id` (`low/medium/high/xhigh/max`). An open menu is `[role=menu][data-open]`: closed menus stay mounted during their exit animation.
 - **ChatGPT:** the picker is a "Power" slider (`[data-reasoning-slider]`), driven by synthetic arrow keys. ChatGPT keeps visited routes alive as hidden copies, so the DOM holds several composers; always scope to the visible one.
-- **Gemini:** model options use hash-based `data-test-id` values (e.g. `bard-mode-option-56fdd199312815e2`) that can change on Google's end. Always keep `findMenuItemByLabel()` as a text-match fallback.
+- **Gemini:** model options use hash-based `data-test-id` values (e.g. `bard-mode-option-56fdd199312815e2`) that can change on Google's end and also differ per account (two accounts showed two different sets on 2026-10-10, so `SELECTORS` lists both). Always keep `findMenuItemByLabel()` as a text-match fallback; it matches the label's end so `Flash` cannot hit `3.5 Flash-Lite`. Thinking is mid-rollout per account: the old UI has one `Extended thinking` toggle, the new one `Low`/`Medium`/`High` rows in the same flat menu, and the script handles both.
 - **AI Studio:** all selectors centralized in `SELECTORS` const; re-inspect after Google UI updates.
 
 ## Agent Workflow Notes
@@ -149,5 +149,5 @@ with `cmux browser <surface> eval --script "$(cat x.user.js)"`. Traps found on 2
 - Sending a real message is the only way to test Enter; do it in a temporary/incognito chat.
 - The cmux tab runs on Batu's real account: every preset click in a test changes his saved
   model/effort. Note what it was before and put it back, or tell him what it is now.
-- Gemini is signed out in cmux, so its Temp Chat button is missing; only the call can be seen
-  (the script's console log works there, unlike chatgpt.com/claude.ai).
+- Gemini in cmux was signed in on 2026-10-10 (Batu switches accounts there to reach the old or
+  new thinking UI). The script's console log works on gemini.google.com, unlike chatgpt.com/claude.ai.
