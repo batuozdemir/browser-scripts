@@ -17,7 +17,7 @@ into a userscript manager. No build step. Edit them in place.
 | `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
 | `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temp chat (right Cmd tap), URL-param automation |
 | `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
-| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints auto-generated captions as stable movie-style subtitle chunks; also passes every captured track to `youtube-summary` |
+| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints captions (auto-generated merged into chunks, manual as they are) as stable movie-style subtitles; also passes every captured track to `youtube-summary` |
 | `youtube-summary.user.js` | `youtube.com/*` | Summarize button next to Like: Haiku 5.5 through Aperture, structured Turkish Markdown summary in a panel above the description, clickable timestamps |
 
 The two YouTube scripts are the hand-written ones with tests:

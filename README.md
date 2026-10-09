@@ -11,7 +11,7 @@ third-party video speed controller.
 | `claude-enhancer.user.js` | `claude.ai` | Model+effort preset buttons (S/SM/OM/OH), incognito toggle (right Cmd tap), URL params |
 | `chatgpt-enhancer.user.js` | `chatgpt.com` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temporary chat (right Cmd tap), URL params |
 | `autoplay-bypass-ads.user.js` | streaming sites | Disables right-click block, clicks initial play, skips ad, plays the main video |
-| `youtube-subtitles.user.js` | `youtube.com` | Replaces YouTube's rolling auto-captions with stable, movie-style subtitle chunks |
+| `youtube-subtitles.user.js` | `youtube.com` | Shows YouTube captions as stable movie-style subtitles; rolling auto-captions are merged into sentence chunks |
 | `youtube-summary.user.js` | `youtube.com` | An "Özetle" button next to Like: Claude Haiku summarizes the captions in Turkish in a panel above the description, with clickable section timestamps (needs `youtube-subtitles`) |
 | `h5player/h5player-lite.user.js` | all sites | Video speed control. Pruned, reconfigured build of `xxxily/h5player` — see [`h5player/README.md`](h5player/README.md) |
 
@@ -186,7 +186,8 @@ The active button is highlighted. After a click, focus goes back to the message 
 Makes YouTube's **auto-generated** captions behave like normal movie subtitles:
 one stable block of text that appears whole and stays put, instead of a line
 that grows word by word and scrolls. Manually authored subtitles are already
-stable and are left completely alone.
+stable, so they are not merged, but they are drawn in the same style, since
+YouTube's own renderer draws them small.
 
 ### How it works
 
@@ -216,8 +217,9 @@ spindly in fullscreen and clotted in a small player. To retune, edit the
 
 ### Behavior
 
-- Engages only while the **active** track is auto-generated. Switching to a
-  manual track hands captions straight back to YouTube.
+- Draws whichever track is **active**, auto-generated or manual, and follows
+  the viewer switching between them. A track it has not captured yet (a new
+  language just picked) is left to YouTube until its captions arrive.
 - Hides itself during ads, and while captions are toggled off.
 - Follows SPA navigation, fullscreen, and player resizing (the font scales with
   player height, and the text lifts clear of the control bar while it is up).
@@ -255,8 +257,8 @@ revision count collapsing.
 ### Troubleshooting
 
 - Console logs are prefixed with `[YTSubs]`.
-- Nothing appears: confirm the track really is "English (auto-generated)". A
-  video carrying a manual track of the same language is left to YouTube.
+- Nothing appears: reload the page with captions on; the track has to be
+  fetched while the script is running.
 
 ---
 

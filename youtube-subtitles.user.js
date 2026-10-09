@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         youtube-subtitles
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
-// @description  Turns YouTube auto-generated captions into stable movie-style subtitles.
+// @version      1.3.0
+// @description  Shows YouTube captions as stable movie-style subtitles; auto-generated ones are merged into sentence chunks.
 // @author       You
 // @license      GPL-3.0-or-later
 // @match        https://www.youtube.com/*
@@ -34,14 +34,17 @@
  *
  * DO NOT "restore" tOffsetMs handling — it is the bug, not a missing feature.
  *
- * There are two separate ASR gates and both are needed. `kind=asr` on the
- * request URL decides whether a response becomes our cue source. The player's
- * getOption('captions','track').kind decides whether we draw, because a video
- * can carry both an ASR and a manual track: on one measured page YouTube
- * fetched the manual track and then the ASR one, so "the last response wins"
- * picks the wrong answer. getOption also catches the viewer switching tracks,
- * which does not always trigger a new request. Manually authored subtitles are
- * already stable and must be left to YouTube.
+ * Manually authored tracks are drawn by the same overlay, because YouTube's
+ * own renderer draws them small (2026-10-09, an Apple TV video whose only
+ * listed track was a manual one). Their cues are already subtitle-sized and
+ * never overlap, so they are shown as they come: only ASR lines are merged.
+ *
+ * Every captured track is kept, keyed by kind and language, and the player's
+ * getOption('captions','track') picks which one we draw. A video can carry
+ * both an ASR and a manual track: on one measured page YouTube fetched the
+ * manual track and then the ASR one, so "the last response wins" picks the
+ * wrong answer. getOption also catches the viewer switching tracks, which
+ * does not always trigger a new request.
  *
  * The hook must stay at document-start. YouTube requests the caption track
  * once, early, and caches it; a hook installed at document-idle misses it and
@@ -182,9 +185,9 @@
 
   var TRACK_POLL_MS = 500;
 
-  var chunks = [];
-  var cueLang = '';        // language of the cues we are holding
-  var capturedAsr = false; // last timedtext response was an ASR one
+  var tracks = {};         // 'kind:lang' -> chunks, every track captured for this video
+  var lastKey = '';        // the latest of them, used when the player API is unavailable
+  var chunks = [];         // the track on screen
   var nativeHidden = false;
   var overlay = null;
   var playerEl = null;
@@ -193,7 +196,6 @@
   var lastHref = '';
   var lastVideoId = '';
   var trackCheckedAt = 0;
-  var trackIsOurs = false;
 
   function log (msg) { console.log(LOG, msg); }
 
@@ -272,44 +274,46 @@
     }
   });
 
-  /* Only ASR responses become our cue source. A manually authored track is
-   * already stable and is left entirely to YouTube. */
+  function trackKey (kind, lang) { return (kind === 'asr' ? 'asr' : 'manual') + ':' + lang; }
+
+  /* A manual track is already cut into subtitle-sized cues by its author, so
+   * only ASR lines go through segmentCues. */
   function onTimedText (url, body) {
     var cues = parseJson3(body);
-    if (cues) shareTranscript(url, cues);
-
-    capturedAsr = param(url, 'kind') === 'asr';
-    if (!capturedAsr) return;
     if (!cues) return;
+    shareTranscript(url, cues);
 
-    chunks = segmentCues(cues);
-    cueLang = param(url, 'tlang') || param(url, 'lang');
+    var kind = param(url, 'kind');
+    var lang = param(url, 'tlang') || param(url, 'lang');
+    lastKey = trackKey(kind, lang);
+    tracks[lastKey] = kind === 'asr' ? segmentCues(cues) : cues;
     trackCheckedAt = 0;
     lastText = null;
-    log('captured ' + cues.length + ' ASR lines (' + cueLang + ') -> ' + chunks.length + ' subtitle chunks');
+    log('captured ' + cues.length + ' ' + lastKey + ' lines -> ' + tracks[lastKey].length + ' subtitle chunks');
   }
 
-  /* Which track is on screen right now. The captured request URL only says what
-   * was downloaded; a video can carry both an ASR and a manual track, and the
-   * player may hold either. getOption is the authoritative answer, so it also
-   * catches the user switching tracks with no new request. Returns null when
-   * the API is unavailable, in which case the caller falls back to the URL. */
-  function activeTrackIsOurs (player) {
+  /* Key of the track on screen right now. The captured request URL only says
+   * what was downloaded; a video can carry both an ASR and a manual track, and
+   * the player may hold either. getOption is the authoritative answer, so it
+   * also catches the user switching tracks with no new request. Returns '' when
+   * captions are off, null when the API is unavailable, in which case the
+   * caller falls back to the latest capture. */
+  function activeTrackKey (player) {
     var api = player.getOption ? player : document.getElementById('movie_player');
     if (!api || typeof api.getOption !== 'function') return null;
     var track;
     try { track = api.getOption('captions', 'track'); } catch (e) { return null; }
     if (!track || typeof track !== 'object') return null;
-    if (track.kind !== 'asr') return false;
+    if (!track.languageCode) return '';
     /* On a translated track the player reports the SOURCE language in
      * languageCode and the target in translationLanguage, which is the one
      * that matches the request's tlang. Comparing languageCode alone rejects
      * every translated track. */
     var active = (track.translationLanguage && track.translationLanguage.languageCode) ||
                  track.languageCode;
-    /* Holding cues for a different language means the switch has happened but
-     * its track has not arrived yet — let YouTube draw until it does. */
-    return !cueLang || !active || active === cueLang;
+    /* A key we hold no cues for means the switch has happened but its track
+     * has not arrived yet; YouTube draws until it does. */
+    return trackKey(track.kind, active);
   }
 
   function hideNative (yes) {
@@ -319,12 +323,11 @@
   }
 
   function release () {
+    tracks = {};
+    lastKey = '';
     chunks = [];
-    cueLang = '';
-    capturedAsr = false;
     lastText = null;
     trackCheckedAt = 0;
-    trackIsOurs = false;
     hideNative(false);
     if (overlay) {
       overlay.textContent = '';
@@ -430,17 +433,15 @@
     var player = getPlayer();
     if (!player) { lastText = null; return; }
 
-    if (!chunks.length) { hideNative(false); paint(player, ''); return; }
-
     /* Re-asking the player which track is live on every frame is wasteful and
      * the answer only changes when the viewer changes it. */
     var now = performance.now();
     if (now - trackCheckedAt > TRACK_POLL_MS) {
       trackCheckedAt = now;
-      var live = activeTrackIsOurs(player);
-      trackIsOurs = live === null ? capturedAsr : live;
+      var live = activeTrackKey(player);
+      chunks = tracks[live === null ? lastKey : live] || [];
     }
-    if (!trackIsOurs) { hideNative(false); paint(player, ''); return; }
+    if (!chunks.length) { hideNative(false); paint(player, ''); return; }
 
     /* Ads run through the same <video>; its currentTime is not ours. */
     if (player.classList.contains('ad-showing')) { hideNative(false); paint(player, ''); return; }
