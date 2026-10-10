@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A collection of userscripts. Two kinds of file live here, and they are edited
 very differently:
 
-status: every script is committed on main and local origin/main equals HEAD 8c17428 (2026-10-10): youtube-subtitles 1.3.0, youtube-summary 2.0.1, chatgpt-enhancer 2.2.1, claude-enhancer 2.1.0, gemini-enhancer 3.8.0, h5player-lite 4.3.5.7; real-use checks in Safari are still open, see `NOTES.md` "Open work".
+status: every script is committed on main and commit 2a46248 (1.3.0) is in local origin/main (measured 2026-10-10): youtube-subtitles 1.3.0, youtube-summary 2.0.1, chatgpt-enhancer 2.2.1, claude-enhancer 2.1.0, gemini-enhancer 3.8.0, h5player-lite 4.3.5.7; real-use checks in Safari are still open, see `NOTES.md` "Open work".
 
 **Hand-written scripts** (repo root). Plain `.user.js` files installed directly
 into a userscript manager. No build step. Edit them in place.
