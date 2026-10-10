@@ -2,23 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+<!-- path-lint-exempt: .user.js xxxily/h5player console.log .github/copilot-instructions.md -- file-name pattern, GitHub repo slug, code identifier, and a cited upstream rules file that is not in this repo -->
+
 ## Repository Overview
 
 A collection of userscripts. Two kinds of file live here, and they are edited
 very differently:
 
+status: every script is committed on main and local origin/main equals HEAD 8c17428 (2026-10-10): youtube-subtitles 1.3.0, youtube-summary 2.0.1, chatgpt-enhancer 2.2.1, claude-enhancer 2.1.0, gemini-enhancer 3.8.0, h5player-lite 4.3.5.7; real-use checks in Safari are still open, see `NOTES.md` "Open work".
+
 **Hand-written scripts** (repo root). Plain `.user.js` files installed directly
 into a userscript manager. No build step. Edit them in place.
-
-| Script | Target | Purpose |
-|--------|--------|---------|
-| `claude-enhancer.user.js` | `claude.ai/*` | Model+effort preset buttons, incognito toggle (right Cmd tap) |
-| `gemini-enhancer.user.js` | `gemini.google.com/*` | Model+thinking preset buttons, temp chat (right Cmd tap), keybindings |
-| `ai-studio-enhancer.user.js` | `aistudio.google.com/prompts/*` | Combined model+thinking preset buttons (Lite/F/FX/P/PX) + temp chat + URL-param automation (model, thinking, search, system prompt) |
-| `chatgpt-enhancer.user.js` | `chatgpt.com/*` | Power preset buttons (Chat M/H, Work Sol 5.6/Sol 6.1/Astra 6 at Medium), temp chat (right Cmd tap), URL-param automation |
-| `autoplay-bypass-ads.user.js` | streaming sites | Right-click unblock, initial play click, ad skip |
-| `youtube-subtitles.user.js` | `youtube.com/*` | Repaints captions (auto-generated merged into chunks, manual as they are) as stable movie-style subtitles; also passes every captured track to `youtube-summary` |
-| `youtube-summary.user.js` | `youtube.com/*` | Summarize button next to Like: Haiku 5.5 through Aperture, structured Turkish Markdown summary in a panel above the description, clickable timestamps |
 
 The two YouTube scripts are the hand-written ones with tests:
 `node youtube-subtitles.test.js` and `node youtube-summary.test.js`. `youtube-summary`
@@ -30,16 +24,16 @@ from Node — keep that guard if you refactor. It is also the only script here a
 track once and caches it, so a later hook sees nothing. Read the `AI AGENT
 NOTES` banner in the file before changing any caption logic.
 
-**Generated build** (`h5player/`). `h5player-lite.user.js` is a patched build of
+**Generated build** (`h5player/`). `h5player/h5player-lite.user.js` is a patched build of
 third-party upstream `xxxily/h5player` and is **generated, not authored**.
 
 - **Never hand-edit `h5player/h5player-lite.user.js`.** Change `h5player/config.js`
-  or `h5player/build.sh` and re-run `./build.sh`; the built file is committed as
+  or `h5player/build.sh` and re-run `h5player/build.sh`; the built file is committed as
   an artifact so the raw URL works.
 - The build anchors every edit on a string that must appear exactly once upstream
   and aborts otherwise. If a build fails on an anchor or the version gate, upstream
   has changed: re-derive the edits against the new source, do not loosen the anchor.
-- Bump `PATCH` in `build.sh` on every rebuild (reset to `1` when rebasing onto a
+- Bump `PATCH` in `h5player/build.sh` on every rebuild (reset to `1` when rebasing onto a
   new upstream version). Never a bare upstream version, never a hyphenated segment.
 - Read `h5player/README.md` before touching anything in that directory.
 
@@ -64,29 +58,24 @@ All scripts follow these rules (from `.github/copilot-instructions.md`):
 - **Singleton guard** for SPA re-entry (e.g. `window.__geminiEnhancerLoaded`)
 - **Main-page guard** for scripts that must not run in iframes: `if (window.self !== window.top) return;`
 
-## Architecture Patterns
+## Before doing X, read Y
 
-### SPA survival
-Buttons are injected via `MutationObserver` that watches for the toolbar container to disappear/reappear on navigation. Older scripts (Gemini, AI Studio) add a backup `setInterval` for ~30 s after load; the ChatGPT and Claude scripts rely on a throttled observer alone.
+- Before changing menu automation, selectors or SPA handling in an enhancer, read `NOTES.md` "Architecture patterns" (SPA survival, two-step menus, per-site selector stability).
+- Before testing a script in the cmux browser, read `NOTES.md` "Testing in the cmux browser".
+- Before proposing or building a new script, read `NOTES.md` "Script ideas Batu approved".
+- Before touching a script, find the table row for it in `NOTES.md` "Scripts".
+- Open work and the first checks for the next session are in `NOTES.md` "Open work" and "Next session starts here".
 
-### Menu automation (claude-enhancer, gemini-enhancer)
-Both scripts use a **two-step menu** pattern:
-1. Open model menu → select model (this closes the menu)
-2. Re-open menu → navigate to nested submenu → set options → close
+Traps (2026-09-29, testing in the cmux browser):
 
-Menus render as `.z-popover` portals at `<body>` level. During automation they're hidden with `visibility:hidden` (so `.click()` still works without visual flicker).
-
-### Selector stability notes
-- **Claude:** model rows carry `data-model-id` (`claude-opus-*`, `claude-sonnet-*`); effort rows carry `data-effort-id` (`low/medium/high/xhigh/max`). An open menu is `[role=menu][data-open]`: closed menus stay mounted during their exit animation.
-- **ChatGPT:** the picker is a "Power" slider (`[data-reasoning-slider]`), driven by synthetic arrow keys. ChatGPT keeps visited routes alive as hidden copies, so the DOM holds several composers; always scope to the visible one.
-- **Gemini:** model options use hash-based `data-test-id` values (e.g. `bard-mode-option-56fdd199312815e2`) that can change on Google's end and also differ per account (two accounts showed two different sets on 2026-10-10, so `SELECTORS` lists both). Always keep `findMenuItemByLabel()` as a text-match fallback; it matches the label's end so `Flash` cannot hit `3.5 Flash-Lite`. Thinking is mid-rollout per account: the old UI has one `Extended thinking` toggle, the new one `Low`/`Medium`/`High` rows in the same flat menu, and the script handles both.
-- **AI Studio:** all selectors centralized in `SELECTORS` const; re-inspect after Google UI updates.
+- The cmux tab runs on Batu's real account: every preset click in a test changes his saved
+  model/effort. Note what it was before and put it back, or tell him what it is now.
 
 ## Agent Workflow Notes
 
 - When a selector breaks, ask the user for "Inspect" input (right-click → Inspect on the target element) rather than guessing.
 - The in-file `AI AGENT NOTES` banners at the top of each script list features that must not be removed or refactored — read them before editing.
-- After any change to a hand-written script: bump `@version`, ensure no debug `console.log` remains, and verify the IIFE/singleton guard is intact. For `h5player/`, bump `PATCH` in `build.sh` and rebuild instead.
+- After any change to a hand-written script: bump `@version`, ensure no debug `console.log` remains, and verify the IIFE/singleton guard is intact. For `h5player/`, bump `PATCH` in `h5player/build.sh` and rebuild instead.
 - When needed, update `README.md`
 - **Never tell Batu a pushed change reached Safari.** Safari's Userscripts app does
   not update silently: it offers an Update button he has to press, and its own
@@ -118,36 +107,3 @@ Safari's Userscripts app (Batu watches and browses there) GM.* exists only with
 `@inject-into content`, so a script that also needs the page world is split in two and
 talks by `postMessage`, the way `youtube-summary` does. `youtube-summary.user.js` is the
 first script built this way and the reference for the next one.
-
-Ideas Batu approved on 2026-10-09, not built yet:
-
-- **One new script for every page**: translate or explain the selected text (TR/EN) in a
-  small box next to the selection, and summarize a long page or discussion (Hacker News,
-  Reddit, GitHub issues). One script rather than two, since both run everywhere and share
-  the Aperture call.
-- **Shopping reviews**: on a product page, a button (never automatic) that pulls recurring
-  complaints and praise out of the reviews. Can live in the same script, with per-site
-  selectors.
-- Turned down for now: a GitHub repo card, and cleaning up YouTube's auto-captions.
-
-## Testing in the cmux browser
-
-Scripts can be checked live by reloading a signed-in cmux browser tab and injecting the file
-with `cmux browser <surface> eval --script "$(cat x.user.js)"`. Traps found on 2026-09-29:
-
-- chatgpt.com and claude.ai forbid `eval` in the page (CSP), so cmux silently retries in an
-  isolated world. DOM events cross over fine, but page globals and `console list` do not, and
-  `cmux browser wait --function` fails immediately instead of waiting: poll with `eval` instead.
-- A cmux tab that is not on screen reports `visibilityState=hidden`, so `requestAnimationFrame`
-  never fires and nothing paints. Scripts that batch work in rAF look dead there. For tests
-  only, prepend `var requestAnimationFrame = cb => setTimeout(cb, 16);` to the injected text.
-  On youtube.com that global `var` did not take (2026-10-09); wrap the shim and the script in
-  one function, `(function(){ var requestAnimationFrame = ...; <script> })()`, instead.
-- `cmux browser press` takes no key combos ("Meta+Enter" is sent literally); use
-  `keydown Meta`, `press Enter`, `keyup Meta`. `keydown MetaRight` gives the right Cmd key.
-- ProseMirror strips unknown attributes from its editor root, so mark its parent to target it.
-- Sending a real message is the only way to test Enter; do it in a temporary/incognito chat.
-- The cmux tab runs on Batu's real account: every preset click in a test changes his saved
-  model/effort. Note what it was before and put it back, or tell him what it is now.
-- Gemini in cmux was signed in on 2026-10-10 (Batu switches accounts there to reach the old or
-  new thinking UI). The script's console log works on gemini.google.com, unlike chatgpt.com/claude.ai.
