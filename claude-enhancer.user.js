@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.1.1
 // @description  Enhancements for Claude.ai: Model+Effort preset buttons, Incognito toggle & custom keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -69,7 +69,7 @@
 
         // Model picker (row under the composer). aria-label: "Model: Opus 5.5 Medium"
         modelTrigger: '[data-testid="model-selector-dropdown"]',
-        modelArea: '.ml-auto', // closest wrapper of the picker; Temp goes first in it
+        modelArea: '.ms-auto, .ml-auto', // closest wrapper of the picker; Temp goes first in it
         openMenu: '[role="menu"][data-open]',
         modelRow: '[role="menuitemradio"][data-model-id]',
         submenuTrigger: '[role="menuitem"][aria-haspopup="menu"]',

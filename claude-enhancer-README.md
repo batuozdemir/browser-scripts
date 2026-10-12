@@ -99,5 +99,6 @@ and `?thinking=` were removed with it.
 ## Maintenance
 If Claude changes its UI, the selectors are centralized in `SELECTORS` at the top of the
 script. Re-inspect the testids above, the `data-model-id` / `data-effort-id` rows, the
-incognito button's `aria-label`, and the `.ml-auto` wrapper around the model picker
-(where `Temp` is inserted; it falls back to just before the picker).
+incognito button's `aria-label`, and the `.ms-auto` wrapper around the model picker
+(`.ml-auto` before 2026-10; `Temp` is inserted first in it, and without it the button
+falls back inside the picker's own clipped box, stacked above the picker).
