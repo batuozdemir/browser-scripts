@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      2.2.1
+// @version      2.2.2
 // @description  Enhancements for ChatGPT: power preset buttons (Chat and Work), temporary chat, URL params, auto-focus, and custom keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -364,6 +364,16 @@
         temp.hidden = !findVisible(SELECTORS.tempChatButton) && !isTempChatActive();
     }
 
+    // The trigger sits inside wrappers (a display:contents span, a block div), so the group goes
+    // before the outermost one whose parent is the flex row; anywhere deeper it stacks above.
+    function findAnchor(trigger) {
+        let anchor = trigger;
+        while (anchor.parentElement && getComputedStyle(anchor.parentElement).display !== 'flex') {
+            anchor = anchor.parentElement;
+        }
+        return anchor;
+    }
+
     // Injects or updates the button group; cheap no-op when nothing relevant changed.
     function refresh() {
         const trigger = findTrigger();
@@ -375,7 +385,7 @@
             group.remove();
             group = null;
         }
-        const anchor = trigger.parentElement;
+        const anchor = findAnchor(trigger);
         if (!group || group.parentElement !== anchor.parentElement) {
             group?.remove();
             group = buildGroup(work);
