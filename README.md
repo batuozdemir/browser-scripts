@@ -1,5 +1,7 @@
 # Browser Scripts
 
+<!-- path-lint-exempt: xxxily/h5player -- GitHub repo slug of the upstream project, not a path -->
+
 A collection of userscripts for Firefox, Safari, Thorium, and other browsers.
 Most enhance AI web interfaces; `h5player-lite` is a pruned build of a
 third-party video speed controller.
@@ -91,6 +93,7 @@ Adds quick-access preset buttons, temp chat toggle, and saner keybindings to `ge
 | `F` | Flash | Standard (old UI) / Low (new UI) |
 | `FX` | Flash | Extended / High |
 | `PX` | Pro | Extended / High |
+| `AX` | Argon | High |
 
 Google is rolling out Low/Medium/High thinking in place of the Extended thinking
 toggle, account by account; the script detects which menu it sees and works with both.
@@ -105,7 +108,7 @@ A `Temp` button toggles Temporary Chat.
 
 ### URL parameters
 
-- `?model=flashlite|flash|pro` — auto-select model
+- `?model=flash|pro|argon` — auto-select model. Without `?model=` a new chat opens on Flash High; an existing conversation keeps its model.
 - `?thinking=standard|extended|low|medium|high` — auto-set thinking level (`medium` is new-UI only; on the old UI it means Extended)
 - `?temp=true` — activate temporary chat
 

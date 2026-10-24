@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.8.0
+// @version      3.9.1
 // @description  Enhancements for Google Gemini: Model+Thinking Toggles, Temp Chat & Custom Keybindings.
 // @author       You
 // @license      GPL-3.0-or-later
@@ -29,7 +29,7 @@
 // │     - Double-press Option -> toggle model.                         │
 // │     - Right Cmd tap -> toggle Temp Chat.                           │
 // │                                                                    │
-// │  3. MODE+THINKING BUTTONS (F, FX, PX) + THINKING + TEMP CHAT     │
+// │  3. MODE+THINKING BUTTONS (F, FX, PX, AX) + THINKING + TEMP CHAT │
 // │     - Injected below the input area in .trailing-actions-wrapper.  │
 // │     - Must survive SPA navigation.                                 │
 // │     - Each button selects a model AND a thinking level via         │
@@ -61,6 +61,8 @@
         // when Google updates models, so the label fallback stays essential)
         optionFlash: '[data-test-id="bard-mode-option-56fdd199312815e2"], [data-test-id="bard-mode-option-fbb127bbb056c959"]',
         optionPro: '[data-test-id="bard-mode-option-e6fa609c3fa255c0"], [data-test-id="bard-mode-option-9d8ca3786ebdfbea"]',
+        // Argon's hash ID is not known yet: found by label ('4 Argon') only.
+        optionArgon: null,
 
         // Thinking: flat items in the model menu, no test-id, found by label via
         // findMenuItemByLabel(). Accounts are mid-rollout, so both exist:
@@ -397,17 +399,17 @@
         const selector = SELECTORS[modelKey];
         let targetOption = selector ? await waitForSelector(selector, 300) : null;
 
-        // Fallback: find by label text
-        if (!targetOption) {
-            await new Promise(r => setTimeout(r, 50));
-            const labelMap = {
-                optionFlash: 'Flash',
-                optionPro: 'Pro'
-            };
-            const label = labelMap[modelKey];
-            if (label) {
-                targetOption = findMenuItemByLabel(label);
-            }
+        // Fallback: find by label text. Polls, because with no selector the
+        // menu may still be rendering.
+        const labelMap = {
+            optionFlash: 'Flash',
+            optionPro: 'Pro',
+            optionArgon: 'Argon'
+        };
+        const label = labelMap[modelKey];
+        for (let i = 0; !targetOption && label && i < 30; i++) {
+            await new Promise(r => setTimeout(r, 10));
+            targetOption = findMenuItemByLabel(label);
         }
 
         if (targetOption) {
@@ -725,6 +727,13 @@
                 thinking: 'extended',
                 title: 'Pro · Extended / High Thinking',
                 path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
+            },
+            {
+                label: 'AX',
+                modelKey: 'optionArgon',
+                thinking: 'high',
+                title: 'Argon · High Thinking',
+                path: 'M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z' // Lightbulb
             }
         ];
 
@@ -835,66 +844,47 @@
 
         const params = new URLSearchParams(window.location.search);
 
-        // ?model=flashlite|flash|pro
-        const modelParam = params.get('model');
+        // ?model=flash|pro|argon; with no ?model= a new chat (/app, /u/1/app)
+        // opens on Flash High, while an existing conversation keeps its model.
+        const explicitModel = params.get('model');
+        const isNewChat = /^(\/u\/\d+)?(\/app)?\/?$/.test(window.location.pathname);
+        const modelParam = explicitModel || (isNewChat ? 'flash' : '');
         // ?thinking=standard|extended|low|medium|high
         const thinkingParam = params.get('thinking');
 
-        if (modelParam) {
-            const modelMap = {
-                'flash': 'optionFlash',
-                'pro': 'optionPro',
-                // Legacy aliases
-                'fast': 'optionFlash',
-                'thinking': 'optionFlash'
-            };
-            const modelKey = modelMap[modelParam.toLowerCase()];
-            if (modelKey) {
-                const thinking = thinkingParam ? thinkingParam.toLowerCase() : 'standard';
-                // Fire as soon as the mode trigger exists (near-instant) rather than
-                // a fixed delay, and bail out if the user already clicked a preset.
-                // Hold the overlay hidden for the whole operation so no menu flashes.
-                (async () => {
-                    hideMenuOverlays();
-                    try {
-                        const trigger = await waitForSelector(SELECTORS.triggerBtn, 8000);
-                        if (urlModelActionCancelled) {
-                            console.log("Gemini Enhancer: URL model selection cancelled by user preset click.");
-                            return;
-                        }
-                        if (!trigger) {
-                            console.warn("Gemini Enhancer: Mode trigger never appeared; skipping URL model selection.");
-                            return;
-                        }
-                        console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' with thinking '${thinking}' from URL`);
-                        await setModeAndThinking(modelKey, thinking);
-                        await waitForModeMenuClosed();
-                    } finally {
-                        showMenuOverlays();
-                    }
-                })();
-            }
-        } else if (thinkingParam) {
-            // Only thinking level specified — just set thinking on current model.
+        const modelMap = {
+            'flash': 'optionFlash',
+            'pro': 'optionPro',
+            'argon': 'optionArgon',
+            // Legacy aliases
+            'fast': 'optionFlash',
+            'thinking': 'optionFlash'
+        };
+        const modelKey = modelMap[modelParam.toLowerCase()];
+        if (modelKey) {
+            const thinking = thinkingParam ? thinkingParam.toLowerCase() :
+                (explicitModel ? 'standard' : 'high');
+            // Fire as soon as the mode trigger exists (near-instant) rather than
+            // a fixed delay, and bail out if the user already clicked a preset.
+            // Hold the overlay hidden for the whole operation so no menu flashes.
             (async () => {
                 hideMenuOverlays();
                 try {
                     const trigger = await waitForSelector(SELECTORS.triggerBtn, 8000);
                     if (urlModelActionCancelled) {
-                        console.log("Gemini Enhancer: URL thinking selection cancelled by user preset click.");
+                        console.log("Gemini Enhancer: URL model selection cancelled by user preset click.");
                         return;
                     }
                     if (!trigger) {
-                        console.warn("Gemini Enhancer: Mode trigger never appeared; skipping URL thinking selection.");
+                        console.warn("Gemini Enhancer: Mode trigger never appeared; skipping URL model selection.");
                         return;
                     }
-                    console.log(`Gemini Enhancer: Auto-selecting thinking level '${thinkingParam}' from URL`);
-                    await selectThinkingLevel(thinkingParam.toLowerCase());
+                    console.log(`Gemini Enhancer: Auto-selecting model '${modelParam}' with thinking '${thinking}' from URL`);
+                    await setModeAndThinking(modelKey, thinking);
                     await waitForModeMenuClosed();
                 } finally {
                     showMenuOverlays();
                 }
-                focusInputField();
             })();
         }
 

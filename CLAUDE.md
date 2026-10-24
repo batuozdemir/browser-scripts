@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A collection of userscripts. Two kinds of file live here, and they are edited
 very differently:
 
-status: every script is committed on main (2026-10-21): youtube-subtitles 1.3.0, youtube-summary 2.0.1, chatgpt-enhancer 2.2.2 (button row fix, 2026-10-21, in Safari), claude-enhancer 2.1.1 (Temp placement fix, in Safari), gemini-enhancer 3.8.0, h5player-lite 4.3.5.7; all pushed to origin/main on 2026-10-21; real-use checks in Safari are still open (ChatGPT 2.2.2 preset clicks untested on the new DOM), see `NOTES.md` "Open work".
+status: every script is committed on main (2026-10-24): youtube-subtitles 1.3.0, youtube-summary 2.0.1, chatgpt-enhancer 2.2.2 (button row fix, 2026-10-21, in Safari), claude-enhancer 2.1.1 (Temp placement fix, in Safari), gemini-enhancer 3.9.1 (Argon High button, new chat opens on Flash High; 2026-10-24, in Safari), h5player-lite 4.3.5.7; real-use checks in Safari are still open (ChatGPT 2.2.2 preset clicks untested on the new DOM, Argon's High row never seen), see `NOTES.md` "Open work".
 
 **Hand-written scripts** (repo root). Plain `.user.js` files installed directly
 into a userscript manager. No build step. Edit them in place.
